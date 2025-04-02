@@ -1,0 +1,120 @@
+!
+!+ Includes for optimised RTTOVP diagnostics output
+!
+! Description:
+!   Includes for optimised RTTOVP diagnostics output
+!
+! Current Code Owner: DWD, Robin Faulwetter
+!    phone: +49 69 8062 2746
+!    fax:   +49 69 8062 3721
+!    email:  robin.faulwetter@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_31        2014-08-21 Robin Faulwetter
+!  Includes for optimised RTTOVP diagnostics output
+! V1_42        2015-06-08 Andreas Rhodin
+!  minor cleanup
+!
+! Code Description:
+! Language: Fortran 2003.
+! Software Standards:
+!==============================================================================
+    subroutine write_var_TYPE(var)
+      type(t_nc_var), intent(in) :: var
+      integer :: i, n, iset
+      logical :: lwrite
+      character(len=3) :: unit = ''
+#if defined(DIMS2)
+      integer :: n1
+      n1 = size(TYPEdat,1)
+#define ADD_DIMS :,
+#define ADD_START 1,
+#define ADD_CNT n1,
+#ifndef DAT_MASK
+#define DAT_MASK :,
+#endif
+#elif defined(DIMS3)
+      integer :: n1, n2
+      n1 = size(TYPEdat,1)
+      n2 = size(TYPEdat,2)
+#define ADD_DIMS :,:,
+#define ADD_START 1,1,
+#define ADD_CNT n1,n2,
+#ifndef DAT_MASK
+#define DAT_MASK :,:,
+#endif
+#else
+#define ADD_DIMS
+#define ADD_START
+#define ADD_CNT
+#define DAT_MASK
+#endif
+
+      lwrite = .false.
+      do iset = 1, nset
+        if (associated(TYPE(iset)%d)) lwrite = .true.
+      end do
+      if (.not.lwrite) return
+
+      i = 0
+      unit = ''
+      do iset = 1, nset
+        n = r_arr(iset)% n_rec
+        if (n > 0) unit = r_arr(iset)% p_unit
+        if (associated(TYPE(iset)%d)) then
+#ifdef DIMS2
+          if (size(TYPE(iset)%d, 2) == 1 .and. n /= 1) then
+            if (lsorted) then
+              TYPEdat(ADD_DIMS ipos(i+1:i+n)) = spread(TYPE(iset)%d(DAT_MASK 1),2,n)
+            else
+              TYPEdat(ADD_DIMS i+1:i+n) = spread(TYPE(iset)%d(DAT_MASK 1),2,n)
+            end if
+          else
+#endif
+            if (lsorted) then
+              TYPEdat(ADD_DIMS ipos(i+1:i+n)) = TYPE(iset)%d(DAT_MASK 1:n)
+            else
+              TYPEdat(ADD_DIMS i+1:i+n) = TYPE(iset)%d(DAT_MASK 1:n)
+            end if
+#ifdef DIMS2
+          endif
+#endif
+          if (TYPE(iset)%alloc) then
+            deallocate(TYPE(iset)% d)
+          else
+            nullify(TYPE(iset)% d)
+          end if
+        else
+          if (lsorted) then
+            TYPEdat(ADD_DIMS ipos(i+1:i+n)) = TYPE(iset)% fill
+          else
+            TYPEdat(ADD_DIMS i+1:i+n) = TYPE(iset)% fill
+          end if
+        end if
+        i = i + n
+      end do
+
+      if (lwrite) then
+        if (trim(uppercase(var%unit)) == 'PA' .and. uppercase(unit) == 'HPA') then
+          where (TYPEdat /= nf90_fill_float)
+            TYPEdat = TYPEdat * 100
+          end where
+        end if
+        if (var%lpar) then
+          stat = nf90_put_var(nc%id, var%id, TYPEdat(ADD_DIMS 1:nprof), &
+                              start=(/ADD_START ipar,istart/), count=(/ADD_CNT 1,nprof/))
+          NF_ERR('nf90_put_var',trim(var%name))
+        else
+          stat = nf90_put_var(nc%id, var%id, TYPEdat(ADD_DIMS 1:nprof), &
+                              start=(/ADD_START istart/), count=(/ADD_CNT nprof/))
+          NF_ERR('nf90_put_var',trim(var%name))
+        end if
+      end if
+
+#undef ADD_DIMS
+#undef ADD_START
+#undef ADD_CNT
+#undef DAT_MASK
+    end subroutine write_var_TYPE

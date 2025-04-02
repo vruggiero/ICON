@@ -1,0 +1,111 @@
+!
+!+ Includes for optimised RTTOVP diagnostics output
+!
+! Description:
+!   Includes for optimised RTTOVP diagnostics output
+!
+! Current Code Owner: DWD, Robin Faulwetter
+!    phone: +49 69 8062 2746
+!    fax:   +49 69 8062 3721
+!    email:  robin.faulwetter@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_31        2014-08-21 Robin Faulwetter
+!  Includes for optimised RTTOVP diagnostics output
+! V1_42        2015-06-08 Andreas Rhodin
+!  minor cleanup
+!
+! Code Description:
+! Language: Fortran 2003.
+! Software Standards:
+!==============================================================================
+    subroutine write_var_TYPE_chan(var)
+      type(t_nc_var), intent(in) :: var
+      integer :: i, j, k, n, m, iset, nch
+      logical :: lwrite
+      integer :: nchan
+#if defined(DIMS3)
+      integer :: n2
+      n2 = size(TYPEdat,2)
+#define ADD_DIMS :,
+#define ADD_START 1,
+#define ADD_CNT n2,
+#else
+#define ADD_DIMS
+#define ADD_START
+#define ADD_CNT
+#endif
+
+      lwrite = .false.
+      do iset = 1, nset
+        if (associated(TYPE(iset)%d)) lwrite = .true.
+      end do
+      if (.not.lwrite) return
+
+      nchan = size(TYPEdat,1)
+
+      i = 0
+      do iset = 1, nset
+        n = r_arr(iset)% n_rec
+        if (associated(TYPE(iset)%d)) then
+          nch = size(TYPE(iset)%d, 1)
+          if (lsorted) then
+            do j = 1, n
+              m = 0
+              do k = 1, nch
+                if (r_arr(iset)% valid(k,j)) then
+                  m = m + 1
+                  TYPEdat(m, ADD_DIMS ipos(i+j)) = TYPE(iset)%d(k, ADD_DIMS j)
+                endif
+              enddo
+              do k = m+1, nchan
+                TYPEdat(k, ADD_DIMS ipos(i+j)) = TYPE(iset)% fill
+              enddo
+            enddo
+          else
+            do j = 1, n
+              m = 0
+              do k = 1, nch
+                if (r_arr(iset)% valid(k,j)) then
+                  m = m + 1
+                  TYPEdat(m, ADD_DIMS i+j) = TYPE(iset)%d(k, ADD_DIMS j)
+                endif
+              enddo
+              do k = m+1, nchan
+                TYPEdat(k, ADD_DIMS i+j) = TYPE(iset)% fill
+              enddo
+            enddo
+          end if
+          if (TYPE(iset)%alloc) then
+            deallocate(TYPE(iset)% d)
+          else
+            nullify(TYPE(iset)% d)
+          end if
+        else
+          if (lsorted) then
+            TYPEdat(:, ADD_DIMS ipos(i+1:i+n)) = TYPE(iset)% fill
+          else
+            TYPEdat(:, ADD_DIMS i+1:i+n) = TYPE(iset)% fill
+          end if
+        end if
+        i = i + n
+      end do
+
+      if (lwrite) then
+        if (var%lpar) then
+          stat = nf90_put_var(nc%id, var%id, TYPEdat(:, ADD_DIMS 1:nprof), &
+                              start=(/1, ADD_START ipar,istart/), count=(/nchan, ADD_CNT 1,nprof/))
+          NF_ERR('nf90_put_var',trim(var%name))
+        else
+          stat = nf90_put_var(nc%id, var%id, TYPEdat(:, ADD_DIMS 1:nprof), &
+                              start=(/1, ADD_START istart/), count=(/nchan, ADD_CNT nprof/))
+          NF_ERR('nf90_put_var',trim(var%name))
+        end if
+      end if
+
+#undef ADD_DIMS
+#undef ADD_START
+#undef ADD_CNT
+    end subroutine write_var_TYPE_chan

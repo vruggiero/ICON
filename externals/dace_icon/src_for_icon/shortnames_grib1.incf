@@ -1,0 +1,1877 @@
+!
+!+ Shortname definitions automatically extracted from shortName.def
+!
+! Description:
+! Shortname definitions automatically extracted from:
+! /hpc/sw/eccodes/definitions/release/2.36.0/definitions.edzw/grib1/localConcepts/edzw/shortName.def
+!
+! Synopsis:
+! PARAM(paramID,shortName,GRIB_API parameter list)
+! PDESC(paramID,longName)
+!
+! Usage: define before inclusion
+!   #define PARAM call addpar
+!   #define PDESC call adddes
+! where addpar(), adddes() are suitable generic subroutines.
+! Note: Fortran preprocessors do not handle variadic macros.
+!
+! Remarks:
+! LongNames are truncated to 100 characters.
+! GRIB_API parameter names have been shortened.
+! The number of definitions (TABSIZE) is defined at the end.
+!
+! Current Code Owner: DWD, Harald Anlauf
+!    phone: +49 69 8062 4941
+!    fax:   +49 69 8062 3721
+!    email: harald.anlauf@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_23        2013-03-26 Harald Anlauf
+!  Shortname definitions automatically extracted from shortName.def
+! V1_26        2013/06/27 Harald Anlauf
+!  Extend for ECMWF GRIB1/GRIB2 handling, properly read/set grib2 metadata
+! V1_27        2013-11-08 Harald Anlauf
+!  Update parameter shortname tables from GRIB_API 1.11.0 release
+! V1_43        2015-08-19 Harald Anlauf
+!  Update parameter shortname tables from GRIB_API 1.13.1 release
+! V1_47        2016-06-06 Harald Anlauf
+!  Split localdefs1 from shortnames_grib1.incf
+!  Split localdefs2 from shortnames_grib2.incf
+! V1_48        2016-10-06 Harald Anlauf
+!  restore DUMMY_* for diagnostic purposes
+!
+! BEGIN definitions
+PARAM(500000,'PS',table=2,code=1,leveltype=1,&
+      longname='Pressure (S) (not reduced)')
+PARAM(500001,'P',table=2,code=1,&
+      longname='Pressure')
+PARAM(500002,'PMSL',table=2,code=2,&
+      longname='Pressure Reduced to MSL')
+PARAM(500003,'DPSDT',table=2,code=3,leveltype=1,&
+      longname='Pressure Tendency (S)')
+PARAM(500004,'FIS',table=2,code=6,leveltype=1,&
+      longname='Geopotential (S)')
+PARAM(500005,'FIF',table=2,code=6,leveltype=110,&
+      longname='Geopotential (full lev)')
+PARAM(500006,'FI',table=2,code=6,&
+      longname='Geopotential')
+PARAM(500007,'HSURF',table=2,code=8,leveltype=1,&
+      longname='Geometric Height of the earths surface above sea level')
+PARAM(500008,'HHL',table=2,code=8,leveltype=109,&
+      longname='Geometric Height of the layer limits above sea level(NN)')
+PARAM(500009,'TO3',table=2,code=10,&
+      longname='Total Column Integrated Ozone')
+PARAM(500010,'T_G',table=2,code=11,leveltype=1,&
+      longname='Temperature (G)')
+PARAM(500011,'T_2M',table=2,code=11,leveltype=105,level=2,&
+      longname='2m Temperature')
+PARAM(500012,'T_2M_AV',table=2,code=11,leveltype=105,range=3,level=2,&
+      longname='2m Temperature (AV)')
+PARAM(500013,'T_2M_CL',table=2,code=11,leveltype=105,range=3,level=2,&
+      longname='Climat. temperature, 2m Temperature')
+PARAM(500014,'T',table=2,code=11,&
+      longname='Temperature')
+PARAM(500015,'TMAX_2M',table=2,code=15,leveltype=105,level=2,&
+      longname='Max 2m Temperature (i)')
+PARAM(500016,'TMIN_2M',table=2,code=16,leveltype=105,level=2,&
+      longname='Min 2m Temperature (i)')
+PARAM(500017,'TD_2M',table=2,code=17,leveltype=105,level=2,&
+      longname='2m Dew Point Temperature')
+PARAM(500018,'TD_2M_AV',table=2,code=17,leveltype=105,range=3,level=2,&
+      longname='2m Dew Point Temperature (AV)')
+PARAM(500019,'DBZ_MAX',table=2,code=21,&
+      longname='Radar spectra (1)')
+PARAM(500020,'WVSP1',table=2,code=28,&
+      longname='Wave spectra (1)')
+PARAM(500021,'WVSP2',table=2,code=29,&
+      longname='Wave spectra (2)')
+PARAM(500022,'WVSP3',table=2,code=30,&
+      longname='Wave spectra (3)')
+PARAM(500023,'DD_10M',table=2,code=31,leveltype=105,level=10,&
+      longname='Wind Direction (DD_10M)')
+PARAM(500024,'DD',table=2,code=31,&
+      longname='Wind Direction (DD)')
+PARAM(500025,'SP_10M',table=2,code=32,leveltype=105,level=10,&
+      longname='Wind speed (SP_10M)')
+PARAM(500026,'SP',table=2,code=32,&
+      longname='Wind speed (SP)')
+PARAM(500027,'U_10M',table=2,code=33,leveltype=105,level=10,&
+      longname='U-Component of Wind')
+PARAM(500028,'U',table=2,code=33,&
+      longname='U-Component of Wind')
+PARAM(500029,'V_10M',table=2,code=34,leveltype=105,level=10,&
+      longname='V-Component of Wind')
+PARAM(500030,'V',table=2,code=34,&
+      longname='V-Component of Wind')
+PARAM(500031,'OMEGA',table=2,code=39,&
+      longname='Vertical Velocity (Pressure) ( omega=dp/dt )')
+PARAM(500032,'W',table=2,code=40,&
+      longname='Vertical Velocity (Geometric) (w)')
+PARAM(500034,'QV_2M',table=2,code=51,leveltype=105,level=2,&
+      longname='Specific Humidity (2m)')
+PARAM(500035,'QV',table=2,code=51,&
+      longname='Specific Humidity')
+PARAM(500036,'RELHUM_2M',table=2,code=52,leveltype=105,level=2,&
+      longname='2m Relative Humidity')
+PARAM(500037,'RELHUM',table=2,code=52,&
+      longname='Relative Humidity')
+PARAM(500038,'TQV',table=2,code=54,&
+      longname='Total column integrated water vapour')
+PARAM(500039,'AEVAP_S',table=2,code=57,leveltype=1,&
+      longname='Evaporation (s)')
+PARAM(500040,'TQI',table=2,code=58,&
+      longname='Total Column-Integrated Cloud Ice')
+PARAM(500041,'TOT_PREC',table=2,code=61,&
+      longname='Total Precipitation (Accumulation)')
+PARAM(500042,'PREC_GSP',table=2,code=62,range=4,&
+      longname='Large-Scale Precipitation (Accumulation)')
+PARAM(500043,'PREC_CON',table=2,code=63,range=4,&
+      longname='Convective Precipitation (Accumulation)')
+PARAM(500044,'W_SNOW',table=2,code=65,&
+      longname='Snow depth water equivalent')
+PARAM(500045,'H_SNOW',table=2,code=66,&
+      longname='Snow Depth')
+PARAM(500046,'CLCT',table=2,code=71,&
+      longname='Total Cloud Cover')
+PARAM(500047,'CLC_CON',table=2,code=72,&
+      longname='Convective Cloud Cover')
+PARAM(500048,'CLCL',table=2,code=73,leveltype=1,&
+      longname='Cloud Cover (800 hPa - Soil)')
+PARAM(500049,'CLCM',table=2,code=74,leveltype=1,&
+      longname='Cloud Cover (400 - 800 hPa)')
+PARAM(500050,'CLCH',table=2,code=75,leveltype=1,&
+      longname='Cloud Cover (0 - 400 hPa)')
+PARAM(500051,'TQC',table=2,code=76,&
+      longname='Total Column-Integrated Cloud Water')
+PARAM(500052,'SNOW_CON',table=2,code=78,&
+      longname='Convective Snowfall water equivalent (s)')
+PARAM(500053,'SNOW_GSP',table=2,code=79,&
+      longname='Large-Scale snowfall - water equivalent (Accumulation)')
+PARAM(500054,'FR_LAND',table=2,code=81,&
+      longname='Land Cover (1=land, 0=sea)')
+PARAM(500055,'Z0',table=2,code=83,&
+      longname='Surface Roughness length Surface Roughness')
+PARAM(500056,'ALB_RAD',table=2,code=84,&
+      longname='Albedo (in short-wave)')
+PARAM(500057,'ALBEDO_B',table=2,code=84,range=3,&
+      longname='Albedo (in short-wave, average)')
+PARAM(500058,'T_CL',table=2,code=85,leveltype=111,level=36,&
+      longname='Soil Temperature  ( 36 cm depth, vv=0h)')
+PARAM(500059,'T_CL_LM',table=2,code=85,leveltype=111,level=41,&
+      longname='Soil Temperature (41 cm depth)')
+PARAM(500060,'T_M',table=2,code=85,leveltype=111,level=9,&
+      longname='Soil Temperature')
+PARAM(500061,'T_S',table=2,code=85,leveltype=111,&
+      longname='Soil Temperature')
+PARAM(500062,'W_CL',table=2,code=86,leveltype=112,topLevel=100,bottomLevel=190,&
+      longname='Column-integrated Soil Moisture')
+PARAM(500063,'W_G1',table=2,code=86,leveltype=112,topLevel=0,bottomLevel=10,&
+      longname='Column-integrated Soil Moisture (1) 0 -10 cm')
+PARAM(500064,'W_G2',table=2,code=86,leveltype=112,topLevel=10,bottomLevel=100,&
+      longname='Column-integrated Soil Moisture (2) 10-100cm')
+PARAM(500065,'PLCOV',table=2,code=87,&
+      longname='Plant cover')
+PARAM(500066,'RUNOFF_G',table=2,code=90,topLevel=10,&
+      longname='Water Runoff')
+PARAM(500068,'RUNOFF_S',table=2,code=90,topLevel=0,&
+      longname='Water Runoff (s)')
+PARAM(500069,'FR_ICE',table=2,code=91,&
+      longname='Sea Ice Cover ( 0= free, 1=cover)')
+PARAM(500070,'H_ICE',table=2,code=92,&
+      longname='Sea Ice Thickness')
+PARAM(500071,'SWH',table=2,code=100,&
+      longname='Significant height of combined wind waves and swell')
+PARAM(500072,'MDWW',table=2,code=101,&
+      longname='Direction of wind waves')
+PARAM(500073,'SHWW',table=2,code=102,&
+      longname='Significant height of wind waves')
+PARAM(500074,'MPWW',table=2,code=103,&
+      longname='Mean period of wind waves')
+PARAM(500075,'MDTS',table=2,code=104,&
+      longname='Mean direction of total swell')
+PARAM(500076,'SHTS',table=2,code=105,&
+      longname='Significant height of total swell')
+PARAM(500077,'MPTS',table=2,code=106,&
+      longname='Mean period of total swell')
+PARAM(500078,'ASOB_S',table=2,code=111,leveltype=1,range=3,&
+      longname='Net short wave radiation flux (at the surface)')
+PARAM(500079,'SOBS_RAD',table=2,code=111,leveltype=1,&
+      longname='Net short wave radiation flux (at the surface)')
+PARAM(500080,'ATHB_S',table=2,code=112,leveltype=1,range=3,&
+      longname='Net long wave radiation flux (m) (at the surface)')
+PARAM(500081,'THBS_RAD',table=2,code=112,leveltype=1,&
+      longname='Net long wave radiation flux')
+PARAM(500082,'ASOB_T',table=2,code=113,leveltype=8,range=3,&
+      longname='Net short wave radiation flux (on the model top)')
+PARAM(500083,'SOBT_RAD',table=2,code=113,leveltype=8,&
+      longname='Net short wave radiation flux')
+PARAM(500084,'ATHB_T',table=2,code=114,leveltype=8,range=3,&
+      longname='Net long wave radiation flux (m) (on the model top)')
+PARAM(500085,'THBT_RAD',table=2,code=114,leveltype=8,&
+      longname='Net long wave radiation flux')
+PARAM(500086,'ALHFL_S',table=2,code=121,leveltype=1,range=3,&
+      longname='Latent Heat Net Flux (m)')
+PARAM(500087,'ASHFL_S',table=2,code=122,leveltype=1,range=3,&
+      longname='Sensible Heat Net Flux (m)')
+PARAM(500088,'AUMFL_S',table=2,code=124,leveltype=1,range=3,&
+      longname='Momentum Flux, U-Component (m)')
+PARAM(500089,'AVMFL_S',table=2,code=125,leveltype=1,range=3,&
+      longname='Momentum Flux, V-Component (m)')
+PARAM(500090,'APAB_S',table=201,code=5,leveltype=1,range=3,&
+      longname='Photosynthetically active radiation (m) (at the surface)')
+PARAM(500091,'PABS_RAD',table=201,code=5,leveltype=1,&
+      longname='Photosynthetically active radiation')
+PARAM(500092,'SOHR_RAD',table=201,code=13,&
+      longname='Solar radiation heating rate')
+PARAM(500093,'THHR_RAD',table=201,code=14,&
+      longname='Thermal radiation heating rate')
+PARAM(500094,'ALHFL_BS',table=201,code=18,range=3,&
+      longname='Latent heat flux from bare soil')
+PARAM(500095,'ALHFL_PL',table=201,code=19,leveltype=111,range=3,&
+      longname='Latent heat flux from plants')
+PARAM(500096,'SUNSHHRS',table=201,code=20,range=4,&
+      longname='Sunshine duration in h')
+PARAM(500097,'RSTOM',table=201,code=21,range=0,&
+      longname='Stomatal Resistance')
+PARAM(500098,'CLC',table=201,code=29,&
+      longname='Cloud cover')
+PARAM(500099,'CLC_SGS',table=201,code=30,&
+      longname='Non-Convective Cloud Cover, grid scale')
+PARAM(500100,'QC',table=201,code=31,&
+      longname='Cloud Mixing Ratio')
+PARAM(500101,'QI',table=201,code=33,&
+      longname='Cloud Ice Mixing Ratio')
+PARAM(500102,'QR',table=201,code=35,&
+      longname='Rain mixing ratio')
+PARAM(500103,'QS',table=201,code=36,&
+      longname='Snow mixing ratio')
+PARAM(500104,'TQR',table=201,code=37,&
+      longname='Total column integrated rain')
+PARAM(500105,'TQS',table=201,code=38,&
+      longname='Total column integrated snow')
+PARAM(500106,'QG',table=201,code=39,&
+      longname='Grauple')
+PARAM(500107,'TQG',table=201,code=40,&
+      longname='Total column integrated grauple')
+PARAM(500108,'TWATER',table=201,code=41,&
+      longname='Total Column integrated water (all components incl. precipitation)')
+PARAM(500109,'TDIV_HUM',table=201,code=42,&
+      longname='vertical integral of divergence of total water content (s)')
+PARAM(500110,'QC_RAD',table=201,code=43,&
+      longname='subgrid scale cloud water')
+PARAM(500111,'QI_RAD',table=201,code=44,&
+      longname='subgridscale cloud ice')
+PARAM(500112,'CLCH_8',table=201,code=51,&
+      longname='cloud cover CH (0..8)')
+PARAM(500113,'CLCM_8',table=201,code=52,&
+      longname='cloud cover CM (0..8)')
+PARAM(500114,'CLCL_8',table=201,code=53,&
+      longname='cloud cover CL (0..8)')
+PARAM(500115,'HBAS_SC',table=201,code=58,leveltype=2,&
+      longname='cloud base above msl, shallow convection')
+PARAM(500116,'HTOP_SC',table=201,code=59,leveltype=3,&
+      longname='Cloud top above msl, shallow convection')
+PARAM(500117,'CLW_CON',table=201,code=61,&
+      longname='specific cloud water content, convective cloud')
+PARAM(500118,'HBAS_CON',table=201,code=68,leveltype=2,&
+      longname='Height of Convective Cloud Base above msl')
+PARAM(500119,'HTOP_CON',table=201,code=69,leveltype=3,&
+      longname='Height of Convective Cloud Top above msl')
+PARAM(500120,'BAS_CON',table=201,code=72,leveltype=1,&
+      longname='base index (vertical level) of main convective cloud (i)')
+PARAM(500121,'TOP_CON',table=201,code=73,leveltype=1,&
+      longname='top index (vertical level) of main convective cloud (i)')
+PARAM(500122,'DT_CON',table=201,code=74,&
+      longname='Temperature tendency due to convection')
+PARAM(500123,'DQV_CON',table=201,code=75,&
+      longname='Specific humidity tendency due to convection')
+PARAM(500124,'DU_CON',table=201,code=78,&
+      longname='zonal wind tendency due to convection')
+PARAM(500125,'DV_CON',table=201,code=79,&
+      longname='meridional wind tendency due to convection')
+PARAM(500126,'HTOP_DC',table=201,code=82,leveltype=1,&
+      longname='Height of top of dry convection above MSL')
+PARAM(500127,'HZEROCL',table=201,code=84,leveltype=4,&
+      longname='Height of 0 degree Celsius isotherm above msl')
+PARAM(500128,'SNOWLMT',table=201,code=85,leveltype=4,&
+      longname='Height of snow fall limit above MSL')
+PARAM(500129,'DQC_CON',table=201,code=88,&
+      longname='Tendency of specific cloud liquid water content due to convection')
+PARAM(500130,'DQI_CON',table=201,code=89,&
+      longname='tendency of  specific cloud ice content due to convection')
+PARAM(500131,'Q_SEDIM',table=201,code=99,&
+      longname='Specific content of precipitation particles (needed for water loading)')
+PARAM(500132,'PRR_GSP',table=201,code=100,&
+      longname='Large scale rain rate')
+PARAM(500133,'PRS_GSP',table=201,code=101,&
+      longname='Large scale snowfall rate water equivalent')
+PARAM(500134,'RAIN_GSP',table=201,code=102,&
+      longname='Large scale rain (Accumulation)')
+PARAM(500135,'PRR_CON',table=201,code=111,&
+      longname='Convective rain rate')
+PARAM(500136,'PRS_CON',table=201,code=112,&
+      longname='Convective snowfall rate water equivalent')
+PARAM(500137,'RAIN_CON',table=201,code=113,&
+      longname='Convective rain')
+PARAM(500138,'TOT_RAIN',table=201,code=122,&
+      longname='rain amount, grid-scale plus convective')
+PARAM(500139,'TOT_SNOW',table=201,code=123,&
+      longname='snow amount, grid-scale plus convective')
+PARAM(500140,'DT_GSP',table=201,code=124,&
+      longname='Temperature tendency due to grid scale precipation')
+PARAM(500141,'DQV_GSP',table=201,code=125,&
+      longname='Specific humidity tendency due to grid scale precipitation')
+PARAM(500142,'DQC_GSP',table=201,code=127,&
+      longname='tendency of specific cloud liquid water content due to grid scale precipitation')
+PARAM(500143,'FRESHSNW',table=201,code=129,&
+      longname='Fresh snow factor (weighting function for albedo indicating freshness of snow)')
+PARAM(500144,'DQI_GSP',table=201,code=130,&
+      longname='tendency of specific cloud ice content due to grid scale precipitation')
+PARAM(500145,'PRG_GSP',table=201,code=131,&
+      longname='Graupel (snow pellets) precipitation rate')
+PARAM(500146,'GRAU_GSP',table=201,code=132,&
+      longname='Graupel (snow pellets) precipitation (Accumulation)')
+PARAM(500147,'RHO_SNOW',table=201,code=133,&
+      longname='Snow density')
+PARAM(500148,'PP',table=201,code=139,&
+      longname='Pressure perturbation')
+PARAM(500149,'SDI_1',table=201,code=141,&
+      longname='supercell detection index 1 (rot. up+down drafts)')
+PARAM(500150,'SDI_2',table=201,code=142,&
+      longname='supercell detection index 2 (only rot. up drafts)')
+PARAM(500151,'CAPE_MU',table=201,code=143,leveltype=1,&
+      longname='Convective Available Potential Energy, most unstable')
+PARAM(500152,'CIN_MU',table=201,code=144,leveltype=1,&
+      longname='Convective Inhibition, most unstable')
+PARAM(500153,'CAPE_ML',table=201,code=145,leveltype=1,&
+      longname='Convective Available Potential Energy, mean layer')
+PARAM(500154,'CIN_ML',table=201,code=146,leveltype=1,&
+      longname='Convective Inhibition, mean layer')
+PARAM(500155,'TKE_CON',table=201,code=147,&
+      longname='Convective turbulent kinetic enery')
+PARAM(500156,'TKETENS',table=201,code=148,&
+      longname='Tendency of turbulent kinetic energy')
+PARAM(500157,'KE',table=201,code=149,&
+      longname='Kinetic Energy')
+PARAM(500158,'TKE',table=201,code=152,&
+      longname='Turbulent Kinetic Energy')
+PARAM(500159,'TKVM',table=201,code=153,&
+      longname='Turbulent diffusioncoefficient for momentum')
+PARAM(500160,'TKVH',table=201,code=154,&
+      longname='Turbulent diffusion coefficient for heat (and moisture)')
+PARAM(500161,'TCM',table=201,code=170,&
+      longname='Turbulent transfer coefficient for impulse')
+PARAM(500162,'TCH',table=201,code=171,&
+      longname='Turbulent transfer coefficient for heat (and Moisture)')
+PARAM(500163,'MH',table=201,code=173,&
+      longname='mixed layer depth')
+PARAM(500164,'VMAX_10M',table=201,code=187,leveltype=105,level=10,&
+      longname='maximum Wind 10m')
+PARAM(500166,'T_SO',table=201,code=197,leveltype=111,&
+      longname='Soil Temperature (multilayer model)')
+PARAM(500167,'W_SO',table=201,code=198,leveltype=111,&
+      longname='Column-integrated Soil Moisture (multilayers)')
+PARAM(500168,'W_SO_ICE',table=201,code=199,leveltype=111,&
+      longname='soil ice content (multilayers)')
+PARAM(500169,'W_I',table=201,code=200,&
+      longname='Plant Canopy Surface Water')
+PARAM(500170,'T_SNOW',table=201,code=203,&
+      longname='Snow temperature (top of snow)')
+PARAM(500171,'RSMIN',table=201,code=212,&
+      longname='Minimal Stomatal Resistance')
+PARAM(500172,'T_ICE',table=201,code=215,&
+      longname='Sea Ice Temperature')
+PARAM(500173,'DBZ_850',table=201,code=230,leveltype=1,&
+      longname='Base reflectivity')
+PARAM(500174,'DBZ',table=201,code=230,leveltype=110,&
+      longname='Base reflectivity')
+PARAM(500175,'DBZ_CMAX',table=201,code=230,leveltype=200,&
+      longname='Base reflectivity (cmax)')
+PARAM(500176,'DTTDIV',table=201,code=232,&
+      longname='solution of 2-d Helmholtz equations - needed for restart')
+PARAM(500177,'SOTR_RAD',table=201,code=233,&
+      longname='Effective transmissivity of solar radiation')
+PARAM(500178,'EVATRA_SUM',table=201,code=236,&
+      longname='sum of contributions to evaporation')
+PARAM(500179,'TRA_SUM',table=201,code=237,&
+      longname='total transpiration from all soil layers')
+PARAM(500180,'TOTFORCE_S',table=201,code=238,&
+      longname='total forcing at soil surface')
+PARAM(500181,'RESID_WSO',table=201,code=239,&
+      longname='residuum of soil moisture')
+PARAM(500182,'MFLX_CON',table=201,code=240,leveltype=1,&
+      longname='Massflux at convective cloud base')
+PARAM(500183,'CAPE_CON',table=201,code=241,&
+      longname='Convective Available Potential Energy')
+PARAM(500184,'QCVG_CON',table=201,code=243,&
+      longname='moisture convergence for Kuo-type closure')
+PARAM(500185,'MWD',table=202,code=4,&
+      longname='Total Wave Direction')
+PARAM(500187,'PPTS',table=202,code=7,&
+      longname='Peak period of total swell')
+PARAM(500189,'PPWW',table=202,code=8,&
+      longname='Swell peak period')
+PARAM(500190,'PP1D',table=202,code=9,&
+      longname='Total wave peak period')
+PARAM(500191,'TM10',table=202,code=10,&
+      longname='Total wave mean period')
+PARAM(500192,'TM01',table=202,code=17,&
+      longname='Total Tm1 period')
+PARAM(500193,'TM02',table=202,code=18,&
+      longname='Total Tm2 period')
+PARAM(500194,'SPRD',table=202,code=19,&
+      longname='Total directional spread')
+PARAM(500195,'ANA_ERR_FI',table=202,code=40,&
+      longname='analysis error(standard deviation), geopotential(gpm)')
+PARAM(500196,'ANA_ERR_U',table=202,code=41,&
+      longname='analysis error(standard deviation), u-comp. of wind')
+PARAM(500197,'ANA_ERR_V',table=202,code=42,&
+      longname='analysis error(standard deviation), v-comp. of wind')
+PARAM(500198,'DU_SSO',table=202,code=44,&
+      longname='zonal wind tendency due to subgrid scale oro.')
+PARAM(500199,'DV_SSO',table=202,code=45,&
+      longname='meridional wind tendency due to subgrid scale oro.')
+PARAM(500200,'SSO_STDH',table=202,code=46,&
+      longname='Standard deviation of sub-grid scale orography')
+PARAM(500201,'SSO_GAMMA',table=202,code=47,&
+      longname='Anisotropy of sub-gridscale orography')
+PARAM(500202,'SSO_THETA',table=202,code=48,&
+      longname='Angle of sub-gridscale orography')
+PARAM(500203,'SSO_SIGMA',table=202,code=49,&
+      longname='Slope of sub-gridscale orography')
+PARAM(500204,'EMIS_RAD',table=202,code=56,&
+      longname='surface emissivity')
+PARAM(500205,'SOILTYP',table=202,code=57,&
+      longname='soil type of grid (1...9, local soilType.table)')
+PARAM(500206,'LAI',table=202,code=61,&
+      longname='Leaf area index')
+PARAM(500207,'ROOTDP',table=202,code=62,&
+      longname='root depth of vegetation')
+PARAM(500208,'HMO3',table=202,code=64,&
+      longname='height of ozone maximum (climatological)')
+PARAM(500209,'VIO3',table=202,code=65,&
+      longname='vertically integrated ozone content (climatological)')
+PARAM(500210,'PLCOV_MX',table=202,code=67,&
+      longname='Plant covering degree in the vegetation phase')
+PARAM(500211,'PLCOV_MN',table=202,code=68,&
+      longname='Plant covering degree in the quiescent phas')
+PARAM(500212,'LAI_MX',table=202,code=69,&
+      longname='Max Leaf area index')
+PARAM(500213,'LAI_MN',table=202,code=70,&
+      longname='Min Leaf area index')
+PARAM(500214,'ORO_MOD',table=202,code=71,&
+      longname='Orographie + Land-Meer-Verteilung')
+PARAM(500215,'WVAR1',table=202,code=74,localElementNumber=1,leveltype=112,topLevel=0,&
+      longname='variance of soil moisture content (0-10)')
+PARAM(500216,'WVAR2',table=202,code=74,localElementNumber=2,leveltype=112,&
+      longname='variance of soil moisture content (10-100)')
+PARAM(500217,'FOR_E',table=202,code=75,&
+      longname='evergreen forest')
+PARAM(500218,'FOR_D',table=202,code=76,&
+      longname='deciduous forest')
+PARAM(500219,'NDVI',table=202,code=77,range=3,&
+      longname='normalized differential vegetation index')
+PARAM(500220,'NDVI_MAX',table=202,code=78,range=0,&
+      longname='normalized differential vegetation index (NDVI)')
+PARAM(500221,'NDVI_MRAT',table=202,code=79,range=3,&
+      longname='ratio of monthly mean NDVI (normalized differential vegetation index) to annual maximum')
+PARAM(500222,'NDVIRATIO',table=202,code=79,range=0,&
+      longname='current ratio of monthly mean NDVI (normalized differential vegetation index) to annual maximum')
+PARAM(500223,'AER_SO4',table=202,code=84,&
+      longname='Total sulfate aerosol')
+PARAM(500224,'AER_SO412',table=202,code=84,range=3,&
+      longname='Total sulfate aerosol (12M)')
+PARAM(500225,'AER_DUST',table=202,code=86,&
+      longname='Total soil dust aerosol (climatology)')
+PARAM(500226,'AER_DUST12',table=202,code=86,range=3,&
+      longname='Total soil dust aerosol (climatology,12M)')
+PARAM(500227,'AER_ORG',table=202,code=91,&
+      longname='Organic aerosol')
+PARAM(500228,'AER_ORG12',table=202,code=91,range=3,&
+      longname='Organic aerosol (12M)')
+PARAM(500229,'AER_BC',table=202,code=92,&
+      longname='Black carbon aerosol')
+PARAM(500230,'AER_BC12',table=202,code=92,range=3,&
+      longname='Black carbon aerosol (12M)')
+PARAM(500231,'AER_SS',table=202,code=93,&
+      longname='Sea salt aerosol')
+PARAM(500232,'AER_SS12',table=202,code=93,range=3,&
+      longname='Sea salt aerosol (12M)')
+PARAM(500233,'DQVDT',table=202,code=104,&
+      longname='tendency of specific humidity')
+PARAM(500234,'QVSFLX',table=202,code=105,&
+      longname='water vapor flux')
+PARAM(500235,'FC',table=202,code=113,&
+      longname='Coriolis parameter')
+PARAM(500236,'RLAT',table=202,code=114,&
+      longname='geographical latitude')
+PARAM(500237,'RLON',table=202,code=115,&
+      longname='geographical longitude')
+PARAM(500239,'ZTD',table=202,code=121,&
+      longname='Delay of the GPS signal trough the (total) atm.')
+PARAM(500240,'ZWD',table=202,code=122,&
+      longname='Delay of the GPS signal trough wet atmos.')
+PARAM(500241,'ZHD',table=202,code=123,&
+      longname='Delay of the GPS signal trough dry atmos.')
+PARAM(500242,'O3',table=202,code=180,&
+      longname='Ozone Mixing Ratio')
+PARAM(500243,'Ru-103',table=202,code=194,&
+      longname='Air concentration of Ruthenium 103')
+PARAM(500244,'Ru-103d',table=202,code=195,&
+      longname='Ru103 - dry deposition')
+PARAM(500245,'Ru-103w',table=202,code=196,&
+      longname='Ru103 - wet deposition')
+PARAM(500246,'Sr-90',table=202,code=197,&
+      longname='Air concentration of Strontium 90')
+PARAM(500247,'Sr-90d',table=202,code=198,&
+      longname='Sr90 - dry deposition')
+PARAM(500248,'Sr-90w',table=202,code=199,&
+      longname='Sr90 - wet deposition')
+PARAM(500249,'I-131a',table=202,code=200,&
+      longname='Air concentration of Iodine 131 aerosol')
+PARAM(500250,'I-131ad',table=202,code=201,&
+      longname='I131 - dry deposition')
+PARAM(500251,'I-131aw',table=202,code=202,&
+      longname='I131 - wet deposition')
+PARAM(500252,'Cs-137',table=202,code=203,&
+      longname='Air concentration of Caesium 137')
+PARAM(500253,'Cs-137d',table=202,code=204,&
+      longname='Cs137 - dry deposition')
+PARAM(500255,'Te-132',table=202,code=206,&
+      longname='Air concentration of Tellurium 132')
+PARAM(500256,'Te-132d',table=202,code=207,&
+      longname='Te132 - dry deposition')
+PARAM(500257,'Te-132w',table=202,code=208,&
+      longname='Te132 - wet deposition')
+PARAM(500258,'Zr-95',table=202,code=209,&
+      longname='Air concentration of Zirconium 95')
+PARAM(500259,'Zr-95d',table=202,code=210,&
+      longname='Zr95 - dry deposition')
+PARAM(500260,'Zr-95w',table=202,code=211,&
+      longname='Zr95 - wet deposition')
+PARAM(500261,'Kr-85',table=202,code=212,&
+      longname='Air concentration of Krypton 85')
+PARAM(500262,'Kr-85d',table=202,code=213,&
+      longname='Kr85 - dry deposition')
+PARAM(500263,'Kr-85w',table=202,code=214,&
+      longname='Kr85 - wet deposition')
+PARAM(500264,'Tr-2',table=202,code=215,&
+      longname='TRACER - concentration')
+PARAM(500265,'Tr-2d',table=202,code=216,&
+      longname='TRACER - dry deposition')
+PARAM(500266,'Tr-2w',table=202,code=217,&
+      longname='TRACER - wet deposition')
+PARAM(500267,'Xe-133',table=202,code=218,&
+      longname='Air concentration of Xenon 133')
+PARAM(500268,'Xe-133d',table=202,code=219,&
+      longname='Xe133 - dry deposition')
+PARAM(500269,'Xe-133w',table=202,code=220,&
+      longname='Xe133 - wet deposition')
+PARAM(500270,'I-131g',table=202,code=221,&
+      longname='Air concentration of Iodine 131 elementary gaseous')
+PARAM(500271,'I-131gd',table=202,code=222,&
+      longname='I131g - dry deposition')
+PARAM(500272,'I-131gw',table=202,code=223,&
+      longname='I131g - wet deposition')
+PARAM(500273,'I-131o',table=202,code=224,&
+      longname='Air concentration of Iodine 131 organic bounded')
+PARAM(500274,'I-131od',table=202,code=225,&
+      longname='I131o - dry deposition')
+PARAM(500275,'I-131ow',table=202,code=226,&
+      longname='I131o - wet deposition')
+PARAM(500276,'Ba-140',table=202,code=227,&
+      longname='Air concentration of Barium 140')
+PARAM(500277,'Ba-140d',table=202,code=228,&
+      longname='Ba140 - dry deposition')
+PARAM(500278,'Ba-140w',table=202,code=229,&
+      longname='Ba140 - wet deposition')
+PARAM(500279,'AUSTR_SSO',table=202,code=231,range=3,&
+      longname='u-momentum flux due to SSO-effects')
+PARAM(500280,'USTR_SSO',table=202,code=231,&
+      longname='u-momentum flux due to SSO-effects')
+PARAM(500281,'AVSTR_SSO',table=202,code=232,range=3,&
+      longname='v-momentum flux due to SSO-effects (average)')
+PARAM(500282,'VSTR_SSO',table=202,code=232,&
+      longname='v-momentum flux due to SSO-effects')
+PARAM(500283,'AVDIS_SSO',table=202,code=233,range=1,&
+      longname='Gravity wave dissipation (initialisation)')
+PARAM(500284,'VDIS_SSO',table=202,code=233,&
+      longname='Gravity wave dissipation (vertical integral)')
+PARAM(500285,'UVI_MAX_CL',table=202,code=248,&
+      longname='UV Index, clouded sky, maximum')
+PARAM(500286,'W_SHAER',table=203,code=29,&
+      longname='Vertical speed shear')
+PARAM(500287,'SRH',table=203,code=30,&
+      longname='storm relative helicity')
+PARAM(500288,'VABS',table=203,code=33,&
+      longname='Absolute vorticity advection')
+PARAM(500289,'CL_TYP',table=203,code=90,&
+      longname='Kombination Niederschlag-Bewoelkung-Blauthermik (cl_typ,tab)')
+PARAM(500290,'CCL_GND',table=203,code=91,leveltype=1,&
+      longname='Hoehe der Konvektionsuntergrenze ueber Grund')
+PARAM(500291,'CCL_NN',table=203,code=94,leveltype=1,&
+      longname='Hoehe der Konvektionsuntergrenze ueber nn')
+PARAM(500292,'WW',table=203,code=99,&
+      longname='weather interpretation (WMO)')
+PARAM(500293,'ADVORG',table=203,code=101,&
+      longname='geostrophische Vorticityadvektion')
+PARAM(500294,'ADVOR',table=203,code=103,&
+      longname='geostrophische Schichtdickenadvektion')
+PARAM(500295,'ADRTG',table=203,code=107,&
+      longname='Schichtdickenadvektion')
+PARAM(500296,'WDIV',table=203,code=109,&
+      longname='Winddivergenz')
+PARAM(500297,'QVN',table=203,code=124,&
+      longname='Q-Vektor senkrecht zu den Isothermen')
+PARAM(500298,'IPV',table=203,code=130,leveltype=100,&
+      longname='Isentrope potentielle Vorticity')
+PARAM(500299,'UP',table=203,code=131,&
+      longname='Wind X-Komponente auf isentropen Flaechen')
+PARAM(500300,'VP',table=203,code=132,&
+      longname='Wind Y-Komponente auf isentropen Flaechen')
+PARAM(500301,'PTHETA',table=203,code=133,leveltype=100,&
+      longname='Druck einer isentropen Flaeche')
+PARAM(500302,'KO',table=203,code=140,&
+      longname='KO index')
+PARAM(500303,'THETAE',table=203,code=154,&
+      longname='Aequivalentpotentielle Temperatur')
+PARAM(500304,'CEILING',table=203,code=157,&
+      longname='Ceiling')
+PARAM(500305,'ICE_GRD',table=203,code=196,&
+      longname='Icing Grade (1=LGT,2=MOD,3=SEV)')
+PARAM(500306,'CLDEPTH',table=203,code=203,&
+      longname='modified cloud depth for media')
+PARAM(500307,'CLCT_MOD',table=203,code=204,&
+      longname='modified cloud cover for media')
+PARAM(500308,'EFA-PS',table=204,code=1,&
+      longname='Monthly Mean of RMS of difference FG-AN of pressure reduced to MSL')
+PARAM(500309,'EIA-PS',table=204,code=2,&
+      longname='Monthly Mean of RMS of difference IA-AN of pressure reduced to MSL')
+PARAM(500310,'EFA-U',table=204,code=3,&
+      longname='Monthly Mean of RMS of difference FG-AN of u-component of wind')
+PARAM(500311,'EIA-U',table=204,code=4,&
+      longname='Monthly Mean of RMS of difference IA-AN of u-component of wind')
+PARAM(500312,'EFA-V',table=204,code=5,&
+      longname='Monthly Mean of RMS of difference FG-AN of v-component of wind')
+PARAM(500313,'EIA-V',table=204,code=6,&
+      longname='Monthly Mean of RMS of difference IA-AN of v-component of wind')
+PARAM(500314,'EFA-FI',table=204,code=7,&
+      longname='Monthly Mean of RMS of difference FG-AN of geopotential')
+PARAM(500315,'EIA-FI',table=204,code=8,&
+      longname='Monthly Mean of RMS of difference IA-AN of geopotential')
+PARAM(500316,'EFA-RH',table=204,code=9,&
+      longname='Monthly Mean of RMS of difference FG-AN of relative humidity')
+PARAM(500317,'EIA-RH',table=204,code=10,&
+      longname='Monthly Mean of RMS of difference IA-AN of relative humidity')
+PARAM(500318,'EFA-T',table=204,code=11,&
+      longname='Monthly Mean of RMS of difference FG-AN of temperature')
+PARAM(500319,'EIA-T',table=204,code=12,&
+      longname='Monthly Mean of RMS of difference IA-AN of temperature')
+PARAM(500320,'EFA-OM',table=204,code=13,&
+      longname='Monthly Mean of RMS of difference FG-AN of vert.velocity (pressure)')
+PARAM(500321,'EIA-OM',table=204,code=14,&
+      longname='Monthly Mean of RMS of difference IA-AN of vert.velocity (pressure)')
+PARAM(500322,'EFA-KE',table=204,code=15,&
+      longname='Monthly Mean of RMS of difference FG-AN of kinetic energy')
+PARAM(500323,'EIA-KE',table=204,code=16,&
+      longname='Monthly Mean of RMS of difference IA-AN of kinetic energy')
+PARAM(500372,'T_2M_S',table=206,code=11,leveltype=105,level=2,&
+      longname='smoothed forecast, temperature')
+PARAM(500373,'TMAX_2M_S',table=206,code=15,leveltype=105,range=2,level=2,&
+      longname='smoothed forecast, maximum temp.')
+PARAM(500374,'TMIN_2M_S',table=206,code=16,leveltype=105,range=2,level=2,&
+      longname='smoothed forecast, minimum temp.')
+PARAM(500375,'TD_2M_S',table=206,code=17,leveltype=105,level=2,&
+      longname='smoothed forecast, dew point temp.')
+PARAM(500376,'U_10M_S',table=206,code=33,leveltype=105,level=10,&
+      longname='smoothed forecast, u comp. of wind')
+PARAM(500377,'V_10M_S',table=206,code=34,leveltype=105,level=10,&
+      longname='smoothed forecast, v comp. of wind')
+PARAM(500378,'TOT_PREC_S',table=206,code=61,&
+      longname='smoothed forecast, total precipitation (Accumulation)')
+PARAM(500379,'CLCT_S',table=206,code=71,&
+      longname='smoothed forecast, total cloud cover')
+PARAM(500380,'CLCL_S',table=206,code=73,leveltype=1,&
+      longname='smoothed forecast, cloud cover low')
+PARAM(500381,'CLCM_S',table=206,code=74,leveltype=1,&
+      longname='smoothed forecast, cloud cover medium')
+PARAM(500382,'CLCH_S',table=206,code=75,leveltype=1,&
+      longname='smoothed forecast, cloud cover high')
+PARAM(500383,'SNOW_GSP_S',table=206,code=79,&
+      longname='smoothed forecast, large-scale snowfall')
+PARAM(500384,'T_S_S',table=206,code=85,leveltype=111,level=0,&
+      longname='smoothed forecast, soil temperature')
+PARAM(500385,'VMAX_10M_S',table=206,code=187,leveltype=105,level=10,&
+      longname='smoothed forecast, wind speed (gust)')
+PARAM(500386,'TOT_PREC_C',table=207,code=61,&
+      longname='calibrated forecast, total precipitation  (Accumulation)')
+PARAM(500387,'SNOW_GSP_C',table=207,code=79,&
+      longname='calibrated forecast, large-scale snowfall')
+PARAM(500388,'VMAX_10M_C',table=207,code=187,leveltype=105,level=10,&
+      longname='calibrated forecast, wind speed (gust)')
+PARAM(500401,'TOT_PREC_D',table=2,code=61,range=5,&
+      longname='Total Precipitation Difference')
+PARAM(500402,'TMAX_2M_L',table=203,code=55,leveltype=105,range=2,level=2,&
+      longname='Max 2m Temperature long periods > h')
+PARAM(500403,'TMIN_2M_L',table=203,code=56,leveltype=105,range=2,level=2,&
+      longname='Min 2m Temperature long periods > h')
+PARAM(500404,'TOT_PREC',table=2,code=61,range=0,&
+      longname='Total Precipitation (Accumulation) Initialisation')
+PARAM(500408,'RAIN_GSP',table=201,code=102,range=0,&
+      longname='Large scale rain (Accumulation) Initialisation')
+PARAM(500409,'SNOW_GSP',table=2,code=79,range=0,&
+      longname='Large-Scale snowfall - water equivalent (Accumulation) Initialisation')
+PARAM(500410,'RAIN_CON',table=201,code=113,range=0,&
+      longname='Convective rain Initialisation')
+PARAM(500411,'SNOW_CON',table=2,code=78,range=0,&
+      longname='Convective Snowfall water equivalent (s) Initialisation')
+PARAM(500412,'VMAX_10M',table=201,code=187,leveltype=105,range=0,level=10,&
+      longname='maximum Wind 10m Initialisation')
+PARAM(500416,'AEVAP_S',table=2,code=57,leveltype=1,range=0,&
+      longname='Evaporation (s) Initialisation')
+PARAM(500417,'TMAX_2M',table=2,code=15,leveltype=105,range=0,level=2,&
+      longname='Max 2m Temperature (i) Initialisation')
+PARAM(500418,'TMIN_2M',table=2,code=16,leveltype=105,range=0,level=2,&
+      longname='Min 2m Temperature (i) Initialisation')
+PARAM(500419,'ASOB_T',table=2,code=113,leveltype=8,range=1,&
+      longname='Net short wave radiation flux')
+PARAM(500420,'ATHB_T',table=2,code=114,leveltype=8,range=1,&
+      longname='Net long wave radiation flux')
+PARAM(500421,'ASOB_S',table=2,code=111,leveltype=1,range=1,&
+      longname='Net short wave radiation flux (at the surface)')
+PARAM(500422,'ATHB_S',table=2,code=112,leveltype=1,range=1,&
+      longname='Net long wave radiation flux')
+PARAM(500423,'SNOW_GSP',table=2,code=79,range=1,&
+      longname='Large-Scale snowfall - water equivalent (Accumulation) Initialisation')
+PARAM(500424,'SNOW_CON',table=2,code=78,range=1,&
+      longname='Convective Snowfall water equivalent (s) Initialisation')
+PARAM(500425,'TOT_PREC',table=2,code=61,range=1,&
+      longname='Total Precipitation (Accumulation) Initialisation')
+PARAM(500428,'ALHFL_S',table=2,code=121,leveltype=1,range=1,&
+      longname='Latent Heat Net Flux (m) Initialisation')
+PARAM(500429,'ASHFL_S',table=2,code=122,leveltype=1,range=1,&
+      longname='Sensible Heat Net Flux (m) Initialisation')
+PARAM(500430,'AUMFL_S',table=2,code=124,leveltype=1,range=1,&
+      longname='Momentum Flux, U-Component (m) Initialisation')
+PARAM(500431,'AVMFL_S',table=2,code=125,leveltype=1,range=1,&
+      longname='Momentum Flux, V-Component (m) Initialisation')
+PARAM(500432,'APAB_S',table=201,code=5,leveltype=1,range=1,&
+      longname='Photosynthetically active radiation')
+PARAM(500433,'RAIN_GSP',table=201,code=102,range=1,&
+      longname='Large scale rain (Accumulation) Initialisation')
+PARAM(500434,'RAIN_CON',table=201,code=113,range=1,&
+      longname='Convective rain Initialisation')
+PARAM(500436,'GRAU_GSP',table=201,code=132,range=0,&
+      longname='Graupel (snow pellets) precipitation (Initialisation)')
+PARAM(500437,'W_SKRR_01',table=208,code=1,&
+      longname='Probability of 1h total precipitation >= 10mm')
+PARAM(500438,'U_SKRRH_01',table=208,code=3,&
+      longname='Probability of 1h total precipitation >= 25mm')
+PARAM(500439,'W_SKRR_06',table=208,code=14,&
+      longname='Probability of 6h total precipitation >= 20mm')
+PARAM(500440,'U_SKRRH_06',table=208,code=17,&
+      longname='Probability of 6h total precipitation >= 35mm')
+PARAM(500441,'W_DRR_12',table=208,code=26,&
+      longname='Probability of 12h total precipitation >= 25mm')
+PARAM(500442,'U_DRRER_12',table=208,code=29,&
+      longname='Probability of 12h total precipitation >= 40mm')
+PARAM(500443,'E_DR_12',table=208,code=32,&
+      longname='Probability of 12h total precipitation >= 70mm')
+PARAM(500444,'W_SFL_06',table=208,code=69,&
+      longname='Probability of 6h accumulated snow >=0.5cm')
+PARAM(500445,'W_SF_06',table=208,code=70,&
+      longname='Probability of 6h accumulated snow >= 5cm')
+PARAM(500446,'U_SFSK_06',table=208,code=71,&
+      longname='Probability of 6h accumulated snow >= 10cm')
+PARAM(500447,'W_SFL_12',table=208,code=72,&
+      longname='Probability of 12h accumulated snow >=0.5cm')
+PARAM(500448,'W_SF_12',table=208,code=74,&
+      longname='Probability of 12h accumulated snow >= 10cm')
+PARAM(500449,'U_SFSK_12',table=208,code=75,&
+      longname='Probability of 12h accumulated snow >= 15cm')
+PARAM(500450,'E_SF_12',table=208,code=77,&
+      longname='Probability of 12h accumulated snow >= 25cm')
+PARAM(500451,'W_WND_01',table=208,code=132,&
+      longname='Probability of 1h maximum wind gust speed >= 14m/s')
+PARAM(500452,'W_STM_01',table=208,code=134,&
+      longname='Probability of 1h maximum wind gust speed >= 18m/s')
+PARAM(500453,'W_STMSW_01',table=208,code=136,&
+      longname='Probability of 1h maximum wind gust speed >= 25m/s')
+PARAM(500454,'U_ORKAR_01',table=208,code=137,&
+      longname='Probability of 1h maximum wind gust speed >= 29m/s')
+PARAM(500455,'U_ORK_01',table=208,code=138,&
+      longname='Probability of 1h maximum wind gust speed >= 33m/s')
+PARAM(500456,'E_ORK_01',table=208,code=139,&
+      longname='Probability of 1h maximum wind gust speed >= 39m/s')
+PARAM(500457,'W_GLEIS_01',table=208,code=191,&
+      longname='Probability of black ice during 1h')
+PARAM(500458,'W_GEW_01',table=208,code=197,&
+      longname='Probability of thunderstorm during 1h')
+PARAM(500459,'W_GEWSK_01',table=208,code=198,&
+      longname='Probability of heavy thunderstorm during 1h')
+PARAM(500460,'U_GEWSW_01',table=208,code=199,&
+      longname='Probability of severe thunderstorm during 1h')
+PARAM(500461,'W_SVW_12',table=208,code=212,&
+      longname='Probability of snowdrift during 12h')
+PARAM(500462,'U_SVWSK_12',table=208,code=213,&
+      longname='Probability of strong snowdrift during 12h')
+PARAM(500463,'W_FR_01',table=208,code=232,&
+      longname='Probability of temperature < 0 deg C during 1h')
+PARAM(500464,'W_FRSTR_06',table=208,code=236,&
+      longname='Probability of temperature <= -10 deg C during 6h')
+PARAM(500465,'UVI_CS_COR',table=202,code=240,&
+      longname='UV Index, clear sky; corrected for albedo, aerosol and altitude')
+PARAM(500466,'UVI_B_CS',table=202,code=241,&
+      longname='Basic UV Index, clear sky; MSL, fixed albedo, fixed aerosol')
+PARAM(500467,'UVI_CL_COR',table=202,code=242,&
+      longname='UV Index, clouded sky; corrected for albedo, aerosol, altitude and clouds')
+PARAM(500468,'UVI_MAX_CS',table=202,code=243,&
+      longname='UV Index, clear sky, maximum')
+PARAM(500469,'TOT_O3',table=202,code=247,&
+      longname='Total ozone')
+PARAM(500471,'UVI_MAX_H',table=202,code=249,&
+      longname='Time of maximum of UV Index, clouded')
+PARAM(500472,'C_TYPE',table=203,code=93,&
+      longname='Konvektionsart (0..4)')
+PARAM(500473,'PT1M',table=203,code=60,&
+      longname='perceived temperature')
+PARAM(500475,'T_SEA',table=2,code=80,&
+      longname='Water temperature')
+PARAM(500476,'T_SEA_C',table=203,code=61,&
+      longname='Water temperature in C')
+PARAM(500477,'ABSV',table=2,code=41,&
+      longname='Absolute Vorticity')
+PARAM(500478,'SUL_PROB',table=203,code=57,&
+      longname='probability to perceive sultriness')
+PARAM(500479,'CLO',table=203,code=58,&
+      longname='value of isolation of clothes')
+PARAM(500480,'ASWDIR_S',table=201,code=22,leveltype=1,range=3,&
+      longname='Downward direct short wave radiation flux at surface (mean over forecast time)')
+PARAM(500481,'ASWDIFD_S',table=201,code=23,leveltype=1,range=3,&
+      longname='Downward diffusive short wave radiation flux')
+PARAM(500482,'ASWDIFU_S',table=201,code=24,leveltype=1,range=3,&
+      longname='Upward diffusive short wave radiation flux at surface ( mean over forecast time)')
+PARAM(500486,'TDIV_HUM',table=201,code=42,range=0,&
+      longname='vertical integral of divergence of total water content (s)')
+PARAM(500487,'ASWDIR_S',table=201,code=22,leveltype=1,range=1,&
+      longname='Downward direct short wave radiation flux at surface (mean over forecast time) Initialisation')
+PARAM(500488,'ASWDIFD_S',table=201,code=23,leveltype=1,range=1,&
+      longname='Downward diffusive short wave radiation flux at surface ( mean over forecast time) Initialisation')
+PARAM(500489,'ASWDIFU_S',table=201,code=24,leveltype=1,range=1,&
+      longname='Upward diffusive short wave radiation flux at surface ( mean over forecast time) Initialisation')
+PARAM(500490,'FR_LAKE',table=202,code=55,&
+      longname='Water Fraction')
+PARAM(500491,'DEPTH_LK',table=201,code=96,&
+      longname='Lake depth')
+PARAM(500492,'FETCH_LK',table=201,code=97,&
+      longname='Wind fetch')
+PARAM(500493,'GAMSO_LK',table=201,code=92,&
+      longname='Attenuation coefficient of water with respect to solar radiation')
+PARAM(500494,'DP_BS_LK',table=201,code=93,&
+      longname='Depth of thermally active layer of bottom sediment')
+PARAM(500495,'T_BS_LK',table=201,code=190,&
+      longname='Temperature at the lower boundary of the thermally active layer of bottom sediment')
+PARAM(500496,'T_MNW_LK',table=201,code=194,&
+      longname='Mean temperature of the water column')
+PARAM(500497,'T_WML_LK',table=201,code=193,&
+      longname='Mixed-layer temperature')
+PARAM(500498,'T_BOT_LK',table=201,code=191,&
+      longname='Bottom temperature (temperature at the water-bottom sediment interface)')
+PARAM(500499,'H_ML_LK',table=201,code=95,&
+      longname='Mixed-layer depth')
+PARAM(500500,'C_T_LK',table=201,code=91,&
+      longname='Shape factor with respect to the temperature profile in the thermocline')
+PARAM(500501,'T_B1_LK',table=201,code=192,&
+      longname='Temperature at the lower boundary of the upper layer of bottom sediment (penetrated by thermal wave)')
+PARAM(500502,'H_B1_LK',table=201,code=94,&
+      longname='Sediment thickness of the upper layer of bottom sediments')
+PARAM(500503,'PIDC_BASE_HFT',table=203,code=181,leveltype=202,level=1,&
+      longname='Icing Base (hft) - Prognose Icing Degree Composit')
+PARAM(500504,'PIDC_MAX_BASE_HFT',table=203,code=181,leveltype=202,level=2,&
+      longname='Icing Max Base (hft) - Prognose Icing Degree Composit')
+PARAM(500505,'PIDC_MAX_TOP_HFT',table=203,code=181,leveltype=202,level=3,&
+      longname='Icing Max Top (hft) - Prognose Icing Degree Composit')
+PARAM(500506,'PIDC_TOP_HFT',table=203,code=181,leveltype=202,level=4,&
+      longname='Icing Top (hft) - Prognose Icing Degree Composit')
+PARAM(500507,'PIDC_VERT_CODE',table=203,code=181,leveltype=202,level=5,&
+      longname='Icing Vertical Code (1=continuous,2=discontinuous) - Prognose Icing Degree Composit')
+PARAM(500508,'PIDC_MAX_CODE',table=203,code=181,leveltype=202,level=6,&
+      longname='Icing Max Code (1=light,2=moderate,3=severe) - Prognose Icing Degree Composit')
+PARAM(500509,'PISC_BASE_HFT',table=203,code=182,leveltype=202,level=1,&
+      longname='Icing Base (hft) - Prognose Icing Scenario Composit')
+PARAM(500510,'PISC_SIG_BASE_HFT',table=203,code=182,leveltype=202,level=2,&
+      longname='Icing Signifikant Base (hft) - Prognose Icing Scenario Composit')
+PARAM(500511,'PISC_SIG_TOP_HFT',table=203,code=182,leveltype=202,level=3,&
+      longname='Icing Signifikant Top (hft) - Prognose Icing Scenario Composit')
+PARAM(500512,'PISC_TOP_HFT',table=203,code=182,leveltype=202,level=4,&
+      longname='Icing Top (hft) - Prognose Icing Scenario Composit')
+PARAM(500513,'PISC_VERT_CODE',table=203,code=182,leveltype=202,level=5,&
+      longname='Icing Vertical Code (1=continuous,2=discontinuous) - Prognose Icing Scenario Composit')
+PARAM(500514,'PISC_SIG_CODE',table=203,code=182,leveltype=202,level=6,&
+      longname='Icing Signifikant Code (1=general,2=convective,3=stratiform,4=freezing) - Prognose Icing Scenario Co')
+PARAM(500515,'DIDC_BASE_HFT',table=203,code=183,leveltype=202,level=1,&
+      longname='Icing Base (hft) - Diagnose Icing Degree Composit')
+PARAM(500516,'DIDC_MAX_BASE_HFT',table=203,code=183,leveltype=202,level=2,&
+      longname='Icing Max Base (hft) - Diagnose Icing Degree Composit')
+PARAM(500517,'DIDC_MAX_TOP_HFT',table=203,code=183,leveltype=202,level=3,&
+      longname='Icing Max Top (hft) - Diagnose Icing Degree Composit')
+PARAM(500518,'DIDC_TOP_HFT',table=203,code=183,leveltype=202,level=4,&
+      longname='Icing Top (hft) - Diagnose Icing Degree Composit')
+PARAM(500519,'DIDC_VERT_CODE',table=203,code=183,leveltype=202,level=5,&
+      longname='Icing Vertical Code (1=continuous,2=discontinuous) - Diagnose Icing Degree Composit')
+PARAM(500520,'DIDC_MAX_CODE',table=203,code=183,leveltype=202,level=6,&
+      longname='Icing Max Code (1=light,2=moderate,3=severe) - Diagnose Icing Degree Composit')
+PARAM(500521,'DISC_BASE_HFT',table=203,code=184,leveltype=202,level=1,&
+      longname='Icing Base (hft) - Diagnose Icing Scenario Composit')
+PARAM(500522,'DISC_SIG_BASE_HFT',table=203,code=184,leveltype=202,level=2,&
+      longname='Icing Signifikant Base (hft) - Diagnose Icing Scenario Composit')
+PARAM(500523,'DISC_SIG_TOP_HFT',table=203,code=184,leveltype=202,level=3,&
+      longname='Icing Signifikant Top (hft) - Diagnose Icing Scenario Composit')
+PARAM(500524,'DISC_TOP_HFT',table=203,code=184,leveltype=202,level=4,&
+      longname='Icing Top (hft) - Diagnose Icing Scenario Composit')
+PARAM(500525,'DISC_VERT_CODE',table=203,code=184,leveltype=202,level=5,&
+      longname='Icing Vertical Code (1=continuous,2=discontinuous) - Diagnose Icing Scenario Composit')
+PARAM(500526,'DISC_SIG_CODE',table=203,code=184,leveltype=202,level=6,&
+      longname='Icing Signifikant Code (1=general,2=convective,3=stratiform,4=freezing) - Diagnose Icing Scenario Co')
+PARAM(500527,'PID_CODE',table=203,code=191,&
+      longname='Prognose Icing Degree Code (1=light,2=moderate,3=severe)')
+PARAM(500528,'PIS_CODE',table=203,code=192,&
+      longname='Prognose Icing Scenario Code (1=general,2=convective,3=stratiform,4=freezing)')
+PARAM(500529,'DID_CODE',table=203,code=193,&
+      longname='Diagnose Icing Degree Code (1=light,2=moderate,3=severe)')
+PARAM(500530,'DIS_CODE',table=203,code=194,&
+      longname='Diagnose Icing Scenario Code (1=general,2=convective,3=stratiform,4=freezing)')
+PARAM(500531,'WW_0-9',table=203,code=205,&
+      longname='current weather (symbol number: 0..9)')
+PARAM(500541,'VORTIC_U',table=202,code=133,&
+      longname='relative vorticity,U-component')
+PARAM(500542,'VORTIC_V',table=202,code=134,&
+      longname='relative vorticity,V-component')
+PARAM(500543,'VORTIC_W',table=2,code=43,&
+      longname='vertical vorticity')
+PARAM(500544,'POT_VORTIC',table=2,code=4,&
+      longname='Potential vorticity')
+PARAM(500545,'DEN',table=2,code=89,&
+      longname='Density')
+PARAM(500547,'PREC_CON_D',table=2,code=63,range=5,&
+      longname='Convective Precipitation (difference)')
+PARAM(500550,'PVP',table=203,code=119,&
+      longname='Potentielle Vorticity (auf Druckflaechen, nicht isentrop)')
+PARAM(500551,'VORG',table=203,code=100,&
+      longname='geostrophische Vorticity')
+PARAM(500552,'FORCOMEGA',table=203,code=105,&
+      longname='Forcing rechte Seite Omegagleichung')
+PARAM(500553,'QVX',table=203,code=111,&
+      longname='Q-Vektor X-Komponente (geostrophisch)')
+PARAM(500554,'QVY',table=203,code=112,&
+      longname='Q-Vektor Y-Komponente (geostrophisch)')
+PARAM(500555,'DIVGEO',table=203,code=113,&
+      longname='Divergenz Q (geostrophisch)')
+PARAM(500556,'QVNGEO',table=203,code=114,&
+      longname='Q-Vektor senkrecht zu d. Isothermen (geostrophisch)')
+PARAM(500557,'QVSGEO',table=203,code=115,&
+      longname='Q-Vektor parallel zu d. Isothermen (geostrophisch)')
+PARAM(500558,'DIVQNGEO',table=203,code=116,&
+      longname='Divergenz Qn geostrophisch')
+PARAM(500559,'DIVQSGEO',table=203,code=117,&
+      longname='Divergenz Qs geostrophisch')
+PARAM(500560,'FRONTO',table=203,code=118,&
+      longname='Frontogenesefunktion')
+PARAM(500562,'DIVQ',table=203,code=123,&
+      longname='Divergenz')
+PARAM(500563,'QVS',table=203,code=125,&
+      longname='Q-Vektor parallel zu den Isothermen')
+PARAM(500564,'DIVQN',table=203,code=126,&
+      longname='Divergenz Qn')
+PARAM(500565,'DIVQS',table=203,code=127,&
+      longname='Divergenz Qs')
+PARAM(500566,'FRONTOF',table=203,code=128,&
+      longname='Frontogenesis function')
+PARAM(500567,'CATIX',table=203,code=146,&
+      longname='Clear Air Turbulence Index')
+PARAM(500568,'GH',table=2,code=7,&
+      longname='Geopotential height')
+PARAM(500569,'RDIV',table=2,code=44,&
+      longname='Relative Divergenz')
+PARAM(500570,'TOP_DCON',table=201,code=83,&
+      longname='dry convection top index')
+PARAM(500571,'FE1',table=201,code=231,&
+      longname='- FE1 I128A[AMP]ROUTI von 199809 bis 199905')
+PARAM(500572,'TIDAL',table=202,code=101,&
+      longname='tidal tendencies')
+PARAM(500573,'SST_IC',table=202,code=117,&
+      longname='Sea surface temperature interpolated in time in C')
+PARAM(500574,'LNPS',table=202,code=119,&
+      longname='Logarithm of Pressure')
+PARAM(500575,'PPP',table=203,code=10,&
+      longname='3 hour pressure change')
+PARAM(500576,'WCOV1',table=202,code=74,localElementNumber=2,leveltype=112,topLevel=0,&
+      longname='covariance of soil moisture content (0-10)')
+PARAM(500579,'T_S_L',table=2,code=85,leveltype=112,&
+      longname='Soil Temperature (layer)')
+PARAM(500580,'W_G3',table=2,code=86,leveltype=112,topLevel=0,bottomLevel=7,&
+      longname='Soil Moisture Content (0-7 cm)')
+PARAM(500581,'W_G4',table=2,code=86,leveltype=112,topLevel=7,bottomLevel=50,&
+      longname='Soil Moisture Content (7-50 cm)')
+PARAM(500582,'TMAX_2M',table=2,code=15,leveltype=105,range=1,level=2,&
+      longname='Max 2m Temperature (i) Initialisation')
+PARAM(500583,'TMIN_2M',table=2,code=16,leveltype=105,range=1,level=2,&
+      longname='Min 2m Temperature (i) Initialisation')
+PARAM(500585,'EDP',table=204,code=70,&
+      longname='Eddy Dissipation Rate')
+PARAM(500586,'ELD',table=204,code=71,&
+      longname='Ellrod Index')
+PARAM(500590,'ICAHT',table=2,code=5,&
+      longname='ICAO Standard Atmosphere reference height')
+PARAM(500592,'GH_10GPM',table=203,code=2,&
+      longname='Geopotential height')
+PARAM(500593,'GRAD',table=2,code=117,&
+      longname='Global radiation flux')
+PARAM(500600,'FX25',table=210,code=1,&
+      longname='Prob Windboeen > 25 kn')
+PARAM(500601,'FX27',table=210,code=2,&
+      longname='Prob Windboeen > 27 kn')
+PARAM(500602,'FX33',table=210,code=3,&
+      longname='Prob Sturmboeen > 33 kn')
+PARAM(500603,'FX40',table=210,code=4,&
+      longname='Prob Sturmboeen > 40 kn')
+PARAM(500604,'FX47',table=210,code=5,&
+      longname='Prob Schwere Sturmboeen > 47 kn')
+PARAM(500605,'FX55',table=210,code=6,&
+      longname='Prob Orkanartige Boeen > 55 kn')
+PARAM(500606,'FX63',table=210,code=7,&
+      longname='Prob Orkanboeen > 63 kn')
+PARAM(500607,'FX75',table=210,code=8,&
+      longname='Prob Oberoertliche Orkanboeen > 75 kn')
+PARAM(500608,'SH10',table=210,code=9,&
+      longname='Prob Starkregen > 10 mm')
+PARAM(500609,'SH25',table=210,code=10,&
+      longname='Prob Heftiger Starkregen > 25 mm')
+PARAM(500610,'SH50',table=210,code=11,&
+      longname='Prob Extrem Heftiger Starkregen > 50 mm')
+PARAM(500611,'SN00',table=210,code=12,&
+      longname='Prob Leichter Schneefall > 0,1 mm')
+PARAM(500612,'SN001',table=210,code=13,&
+      longname='Prob Leichter Schneefall > 0,1 cm')
+PARAM(500613,'SN005',table=210,code=14,&
+      longname='Prob Leichter Schneefall > 0,5 cm')
+PARAM(500614,'SN01',table=210,code=15,&
+      longname='Prob Leichter Schneefall > 1 cm')
+PARAM(500615,'SN05',table=210,code=16,&
+      longname='Prob Schneefall > 5 cm')
+PARAM(500616,'SN10',table=210,code=17,&
+      longname='Prob Starker Schneefall > 10 cm')
+PARAM(500617,'SN25',table=210,code=18,&
+      longname='Prob Extrem starker Schneefall > 25 cm')
+PARAM(500618,'TN00',table=210,code=19,&
+      longname='Prob Frost')
+PARAM(500619,'TN10',table=210,code=20,&
+      longname='Prob Strenger Frost')
+PARAM(500620,'TS',table=210,code=21,&
+      longname='Prob Gewitter')
+PARAM(500621,'TSX',table=210,code=22,&
+      longname='Prob Starkes Gewitter')
+PARAM(500622,'TSXX',table=210,code=23,&
+      longname='Prob Schweres Gewitter')
+PARAM(500623,'RA25',table=210,code=24,&
+      longname='Prob Dauerregen')
+PARAM(500624,'RA40',table=210,code=25,&
+      longname='Prob Ergiebiger Dauerregen')
+PARAM(500625,'RA70',table=210,code=26,&
+      longname='Prob Extrem ergiebiger Dauerregen')
+PARAM(500626,'BLSN6',table=210,code=27,&
+      longname='Prob Schneeverwehung')
+PARAM(500627,'BLSN8',table=210,code=28,&
+      longname='Prob Starke Schneeverwehung')
+PARAM(500628,'FZ',table=210,code=29,&
+      longname='Prob Glaette')
+PARAM(500629,'FZRA',table=210,code=30,&
+      longname='Prob oertlich Glatteis')
+PARAM(500630,'FZRAX',table=210,code=31,&
+      longname='Prob Glatteis')
+PARAM(500631,'FG',table=210,code=32,&
+      longname='Prob Nebel (ueberoertl. Sichtweite < 150 m)')
+PARAM(500632,'TAU',table=210,code=33,&
+      longname='Prob Tauwetter')
+PARAM(500633,'TAUX',table=210,code=34,&
+      longname='Prob Starkes Tauwetter')
+PARAM(500634,'DTKE_SSO',table=201,code=155,&
+      longname='wake-production of TKE due to sub grid scale orography')
+PARAM(500635,'DTKE_HSH',table=201,code=156,&
+      longname='shear-production of TKE due to separated horizontal shear modes')
+PARAM(500636,'DTKE_CON',table=201,code=157,&
+      longname='buoyancy-production of TKE due to sub grid scale convection')
+PARAM(500638,'ATM_RSTC',table=201,code=211,&
+      longname='Atmospheric Resistance')
+PARAM(500639,'HTOP_THERM',table=201,code=90,&
+      longname='Height of thermals above MSL')
+PARAM(500640,'VSOILA',table=242,code=33,&
+      longname='mass concentration of dust (minimum mode)')
+PARAM(500642,'LAPSE_RATE',table=2,code=19,&
+      longname='Lapse rate')
+PARAM(500643,'VSOILB',table=242,code=34,&
+      longname='mass concentration of dust (medium mode)')
+PARAM(500644,'VSOILC',table=242,code=35,&
+      longname='mass concentration of dust (maximum mode)')
+PARAM(500645,'VSOILA0',table=242,code=72,&
+      longname='number concentration of dust (minimum mode)')
+PARAM(500646,'VSOILB0',table=242,code=73,&
+      longname='number concentration of dust (medium mode)')
+PARAM(500647,'VSOILC0',table=242,code=74,&
+      longname='number concentration of dust (maximum mode)')
+PARAM(500648,'VSOILS',table=242,code=251,&
+      longname='mass concentration of dust (sum of all modes)')
+PARAM(500649,'VSOILS0',table=242,code=252,&
+      longname='number concentration of dust (sum of all modes)')
+PARAM(500650,'DUMMY_1',table=254,code=1,&
+      longname='DUMMY_1')
+PARAM(500651,'DUMMY_2',table=254,code=2,&
+      longname='DUMMY_2')
+PARAM(500652,'DUMMY_3',table=254,code=3,&
+      longname='DUMMY_3')
+PARAM(500654,'DUMMY_4',table=254,code=4,&
+      longname='DUMMY_4')
+PARAM(500655,'DUMMY_5',table=254,code=5,&
+      longname='DUMMY_5')
+PARAM(500656,'DUMMY_6',table=254,code=6,&
+      longname='DUMMY_6')
+PARAM(500657,'DUMMY_7',table=254,code=7,&
+      longname='DUMMY_7')
+PARAM(500658,'DUMMY_8',table=254,code=8,&
+      longname='DUMMY_8')
+PARAM(500659,'DUMMY_9',table=254,code=9,&
+      longname='DUMMY_9')
+PARAM(500660,'DUMMY_10',table=254,code=10,&
+      longname='DUMMY_10')
+PARAM(500661,'DUMMY_11',table=254,code=11,&
+      longname='DUMMY_11')
+PARAM(500662,'DUMMY_12',table=254,code=12,&
+      longname='DUMMY_12')
+PARAM(500663,'DUMMY_13',table=254,code=13,&
+      longname='DUMMY_13')
+PARAM(500664,'DUMMY_14',table=254,code=14,&
+      longname='DUMMY_14')
+PARAM(500665,'DUMMY_15',table=254,code=15,&
+      longname='DUMMY_15')
+PARAM(500666,'DUMMY_16',table=254,code=16,&
+      longname='DUMMY_16')
+PARAM(500667,'DUMMY_17',table=254,code=17,&
+      longname='DUMMY_17')
+PARAM(500668,'DUMMY_18',table=254,code=18,&
+      longname='DUMMY_18')
+PARAM(500669,'DUMMY_19',table=254,code=19,&
+      longname='DUMMY_19')
+PARAM(500670,'DUMMY_20',table=254,code=20,&
+      longname='DUMMY_20')
+PARAM(500671,'DUMMY_21',table=254,code=21,&
+      longname='DUMMY_21')
+PARAM(500672,'DUMMY_22',table=254,code=22,&
+      longname='DUMMY_22')
+PARAM(500673,'DUMMY_23',table=254,code=23,&
+      longname='DUMMY_23')
+PARAM(500674,'DUMMY_24',table=254,code=24,&
+      longname='DUMMY_24')
+PARAM(500675,'DUMMY_25',table=254,code=25,&
+      longname='DUMMY_25')
+PARAM(500676,'DUMMY_26',table=254,code=26,&
+      longname='DUMMY_26')
+PARAM(500677,'DUMMY_27',table=254,code=27,&
+      longname='DUMMY_27')
+PARAM(500678,'DUMMY_28',table=254,code=28,&
+      longname='DUMMY_28')
+PARAM(500679,'DUMMY_29',table=254,code=29,&
+      longname='DUMMY_29')
+PARAM(500680,'DUMMY_30',table=254,code=30,&
+      longname='DUMMY_30')
+PARAM(500681,'DUMMY_31',table=254,code=31,&
+      longname='DUMMY_31')
+PARAM(500682,'DUMMY_32',table=254,code=32,&
+      longname='DUMMY_32')
+PARAM(500683,'DUMMY_33',table=254,code=33,&
+      longname='DUMMY_33')
+PARAM(500684,'DUMMY_34',table=254,code=34,&
+      longname='DUMMY_34')
+PARAM(500685,'DUMMY_35',table=254,code=35,&
+      longname='DUMMY_35')
+PARAM(500686,'DUMMY_36',table=254,code=36,&
+      longname='DUMMY_36')
+PARAM(500687,'DUMMY_37',table=254,code=37,&
+      longname='DUMMY_37')
+PARAM(500688,'DUMMY_38',table=254,code=38,&
+      longname='DUMMY_38')
+PARAM(500689,'DUMMY_39',table=254,code=39,&
+      longname='DUMMY_39')
+PARAM(500690,'DUMMY_40',table=254,code=40,&
+      longname='DUMMY_40')
+PARAM(500691,'DUMMY_41',table=254,code=41,&
+      longname='DUMMY_41')
+PARAM(500692,'DUMMY_42',table=254,code=42,&
+      longname='DUMMY_42')
+PARAM(500693,'DUMMY_43',table=254,code=43,&
+      longname='DUMMY_43')
+PARAM(500694,'DUMMY_44',table=254,code=44,&
+      longname='DUMMY_44')
+PARAM(500695,'DUMMY_45',table=254,code=45,&
+      longname='DUMMY_45')
+PARAM(500696,'DUMMY_46',table=254,code=46,&
+      longname='DUMMY_46')
+PARAM(500697,'DUMMY_47',table=254,code=47,&
+      longname='DUMMY_47')
+PARAM(500698,'DUMMY_48',table=254,code=48,&
+      longname='DUMMY_48')
+PARAM(500699,'DUMMY_49',table=254,code=49,&
+      longname='DUMMY_49')
+PARAM(500700,'DUMMY_50',table=254,code=50,&
+      longname='DUMMY_50')
+PARAM(500701,'DUMMY_51',table=254,code=51,&
+      longname='DUMMY_51')
+PARAM(500702,'DUMMY_52',table=254,code=52,&
+      longname='DUMMY_52')
+PARAM(500703,'DUMMY_53',table=254,code=53,&
+      longname='DUMMY_53')
+PARAM(500704,'DUMMY_54',table=254,code=54,&
+      longname='DUMMY_54')
+PARAM(500705,'DUMMY_55',table=254,code=55,&
+      longname='DUMMY_55')
+PARAM(500706,'DUMMY_56',table=254,code=56,&
+      longname='DUMMY_56')
+PARAM(500707,'DUMMY_57',table=254,code=57,&
+      longname='DUMMY_57')
+PARAM(500708,'DUMMY_58',table=254,code=58,&
+      longname='DUMMY_58')
+PARAM(500709,'DUMMY_59',table=254,code=59,&
+      longname='DUMMY_59')
+PARAM(500710,'DUMMY_60',table=254,code=60,&
+      longname='DUMMY_60')
+PARAM(500711,'DUMMY_61',table=254,code=61,&
+      longname='DUMMY_61')
+PARAM(500712,'DUMMY_62',table=254,code=62,&
+      longname='DUMMY_62')
+PARAM(500713,'DUMMY_63',table=254,code=63,&
+      longname='DUMMY_63')
+PARAM(500714,'DUMMY_64',table=254,code=64,&
+      longname='DUMMY_64')
+PARAM(500715,'DUMMY_65',table=254,code=65,&
+      longname='DUMMY_65')
+PARAM(500716,'DUMMY_66',table=254,code=66,&
+      longname='DUMMY_66')
+PARAM(500717,'DUMMY_67',table=254,code=67,&
+      longname='DUMMY_67')
+PARAM(500718,'DUMMY_68',table=254,code=68,&
+      longname='DUMMY_68')
+PARAM(500719,'DUMMY_69',table=254,code=69,&
+      longname='DUMMY_69')
+PARAM(500720,'DUMMY_70',table=254,code=70,&
+      longname='DUMMY_70')
+PARAM(500721,'DUMMY_71',table=254,code=71,&
+      longname='DUMMY_71')
+PARAM(500722,'DUMMY_72',table=254,code=72,&
+      longname='DUMMY_72')
+PARAM(500723,'DUMMY_73',table=254,code=73,&
+      longname='DUMMY_73')
+PARAM(500724,'DUMMY_74',table=254,code=74,&
+      longname='DUMMY_74')
+PARAM(500725,'DUMMY_75',table=254,code=75,&
+      longname='DUMMY_75')
+PARAM(500726,'DUMMY_76',table=254,code=76,&
+      longname='DUMMY_76')
+PARAM(500727,'DUMMY_77',table=254,code=77,&
+      longname='DUMMY_77')
+PARAM(500728,'DUMMY_78',table=254,code=78,&
+      longname='DUMMY_78')
+PARAM(500729,'DUMMY_79',table=254,code=79,&
+      longname='DUMMY_79')
+PARAM(500730,'DUMMY_80',table=254,code=80,&
+      longname='DUMMY_80')
+PARAM(500731,'DUMMY_81',table=254,code=81,&
+      longname='DUMMY_81')
+PARAM(500732,'DUMMY_82',table=254,code=82,&
+      longname='DUMMY_82')
+PARAM(500733,'DUMMY_83',table=254,code=83,&
+      longname='DUMMY_83')
+PARAM(500734,'DUMMY_84',table=254,code=84,&
+      longname='DUMMY_84')
+PARAM(500735,'DUMMY_85',table=254,code=85,&
+      longname='DUMMY_85')
+PARAM(500736,'DUMMY_86',table=254,code=86,&
+      longname='DUMMY_86')
+PARAM(500737,'DUMMY_87',table=254,code=87,&
+      longname='DUMMY_87')
+PARAM(500738,'DUMMY_88',table=254,code=88,&
+      longname='DUMMY_88')
+PARAM(500739,'DUMMY_89',table=254,code=89,&
+      longname='DUMMY_89')
+PARAM(500740,'DUMMY_90',table=254,code=90,&
+      longname='DUMMY_90')
+PARAM(500741,'DUMMY_91',table=254,code=91,&
+      longname='DUMMY_91')
+PARAM(500742,'DUMMY_92',table=254,code=92,&
+      longname='DUMMY_92')
+PARAM(500743,'DUMMY_93',table=254,code=93,&
+      longname='DUMMY_93')
+PARAM(500744,'DUMMY_94',table=254,code=94,&
+      longname='DUMMY_94')
+PARAM(500745,'DUMMY_95',table=254,code=95,&
+      longname='DUMMY_95')
+PARAM(500746,'DUMMY_96',table=254,code=96,&
+      longname='DUMMY_96')
+PARAM(500747,'DUMMY_97',table=254,code=97,&
+      longname='DUMMY_97')
+PARAM(500748,'DUMMY_98',table=254,code=98,&
+      longname='DUMMY_98')
+PARAM(500749,'DUMMY_99',table=254,code=99,&
+      longname='DUMMY_99')
+PARAM(500750,'DUMMY_100',table=254,code=100,&
+      longname='DUMMY_100')
+PARAM(500751,'DUMMY_101',table=254,code=101,&
+      longname='DUMMY_101')
+PARAM(500752,'DUMMY_102',table=254,code=102,&
+      longname='DUMMY_102')
+PARAM(500753,'DUMMY_103',table=254,code=103,&
+      longname='DUMMY_103')
+PARAM(500754,'DUMMY_104',table=254,code=104,&
+      longname='DUMMY_104')
+PARAM(500755,'DUMMY_105',table=254,code=105,&
+      longname='DUMMY_105')
+PARAM(500756,'DUMMY_106',table=254,code=106,&
+      longname='DUMMY_106')
+PARAM(500757,'DUMMY_107',table=254,code=107,&
+      longname='DUMMY_107')
+PARAM(500758,'DUMMY_108',table=254,code=108,&
+      longname='DUMMY_108')
+PARAM(500759,'DUMMY_109',table=254,code=109,&
+      longname='DUMMY_109')
+PARAM(500760,'DUMMY_110',table=254,code=110,&
+      longname='DUMMY_110')
+PARAM(500761,'DUMMY_111',table=254,code=111,&
+      longname='DUMMY_111')
+PARAM(500762,'DUMMY_112',table=254,code=112,&
+      longname='DUMMY_112')
+PARAM(500763,'DUMMY_113',table=254,code=113,&
+      longname='DUMMY_113')
+PARAM(500764,'DUMMY_114',table=254,code=114,&
+      longname='DUMMY_114')
+PARAM(500765,'DUMMY_115',table=254,code=115,&
+      longname='DUMMY_115')
+PARAM(500766,'DUMMY_116',table=254,code=116,&
+      longname='DUMMY_116')
+PARAM(500767,'DUMMY_117',table=254,code=117,&
+      longname='DUMMY_117')
+PARAM(500768,'DUMMY_118',table=254,code=118,&
+      longname='DUMMY_118')
+PARAM(500769,'DUMMY_119',table=254,code=119,&
+      longname='DUMMY_119')
+PARAM(500770,'DUMMY_120',table=254,code=120,&
+      longname='DUMMY_120')
+PARAM(500771,'DUMMY_121',table=254,code=121,&
+      longname='DUMMY_121')
+PARAM(500772,'DUMMY_122',table=254,code=122,&
+      longname='DUMMY_122')
+PARAM(500773,'DUMMY_123',table=254,code=123,&
+      longname='DUMMY_123')
+PARAM(500774,'DUMMY_124',table=254,code=124,&
+      longname='DUMMY_124')
+PARAM(500775,'DUMMY_125',table=254,code=125,&
+      longname='DUMMY_125')
+PARAM(500776,'DUMMY_126',table=254,code=126,&
+      longname='DUMMY_126')
+PARAM(500777,'DUMMY_127',table=254,code=127,&
+      longname='DUMMY_127')
+PARAM(500778,'DUMMY_128',table=254,code=128,&
+      longname='DUMMY_128')
+PARAM(500779,'DUMMY_129',table=254,code=129,&
+      longname='DUMMY_129')
+PARAM(500780,'DUMMY_130',table=254,code=130,&
+      longname='DUMMY_130')
+PARAM(500781,'DUMMY_131',table=254,code=131,&
+      longname='DUMMY_131')
+PARAM(500782,'DUMMY_132',table=254,code=132,&
+      longname='DUMMY_132')
+PARAM(500783,'DUMMY_133',table=254,code=133,&
+      longname='DUMMY_133')
+PARAM(500784,'DUMMY_134',table=254,code=134,&
+      longname='DUMMY_134')
+PARAM(500785,'DUMMY_135',table=254,code=135,&
+      longname='DUMMY_135')
+PARAM(500786,'DUMMY_136',table=254,code=136,&
+      longname='DUMMY_136')
+PARAM(500787,'DUMMY_137',table=254,code=137,&
+      longname='DUMMY_137')
+PARAM(500788,'DUMMY_138',table=254,code=138,&
+      longname='DUMMY_138')
+PARAM(500789,'DUMMY_139',table=254,code=139,&
+      longname='DUMMY_139')
+PARAM(500790,'DUMMY_140',table=254,code=140,&
+      longname='DUMMY_140')
+PARAM(500791,'DUMMY_141',table=254,code=141,&
+      longname='DUMMY_141')
+PARAM(500792,'DUMMY_142',table=254,code=142,&
+      longname='DUMMY_142')
+PARAM(500793,'DUMMY_143',table=254,code=143,&
+      longname='DUMMY_143')
+PARAM(500794,'DUMMY_144',table=254,code=144,&
+      longname='DUMMY_144')
+PARAM(500795,'DUMMY_145',table=254,code=145,&
+      longname='DUMMY_145')
+PARAM(500796,'DUMMY_146',table=254,code=146,&
+      longname='DUMMY_146')
+PARAM(500797,'DUMMY_147',table=254,code=147,&
+      longname='DUMMY_147')
+PARAM(500798,'DUMMY_148',table=254,code=148,&
+      longname='DUMMY_148')
+PARAM(500799,'DUMMY_149',table=254,code=149,&
+      longname='DUMMY_149')
+PARAM(500800,'DUMMY_150',table=254,code=150,&
+      longname='DUMMY_150')
+PARAM(500801,'DUMMY_151',table=254,code=151,&
+      longname='DUMMY_151')
+PARAM(500802,'DUMMY_152',table=254,code=152,&
+      longname='DUMMY_152')
+PARAM(500803,'DUMMY_153',table=254,code=153,&
+      longname='DUMMY_153')
+PARAM(500804,'DUMMY_154',table=254,code=154,&
+      longname='DUMMY_154')
+PARAM(500805,'DUMMY_155',table=254,code=155,&
+      longname='DUMMY_155')
+PARAM(500806,'DUMMY_156',table=254,code=156,&
+      longname='DUMMY_156')
+PARAM(500807,'DUMMY_157',table=254,code=157,&
+      longname='DUMMY_157')
+PARAM(500808,'DUMMY_158',table=254,code=158,&
+      longname='DUMMY_158')
+PARAM(500809,'DUMMY_159',table=254,code=159,&
+      longname='DUMMY_159')
+PARAM(500810,'DUMMY_160',table=254,code=160,&
+      longname='DUMMY_160')
+PARAM(500811,'DUMMY_161',table=254,code=161,&
+      longname='DUMMY_161')
+PARAM(500812,'DUMMY_162',table=254,code=162,&
+      longname='DUMMY_162')
+PARAM(500813,'DUMMY_163',table=254,code=163,&
+      longname='DUMMY_163')
+PARAM(500814,'DUMMY_164',table=254,code=164,&
+      longname='DUMMY_164')
+PARAM(500815,'DUMMY_165',table=254,code=165,&
+      longname='DUMMY_165')
+PARAM(500816,'DUMMY_166',table=254,code=166,&
+      longname='DUMMY_166')
+PARAM(500817,'DUMMY_167',table=254,code=167,&
+      longname='DUMMY_167')
+PARAM(500818,'DUMMY_168',table=254,code=168,&
+      longname='DUMMY_168')
+PARAM(500819,'DUMMY_169',table=254,code=169,&
+      longname='DUMMY_169')
+PARAM(500820,'DUMMY_170',table=254,code=170,&
+      longname='DUMMY_170')
+PARAM(500821,'DUMMY_171',table=254,code=171,&
+      longname='DUMMY_171')
+PARAM(500822,'DUMMY_172',table=254,code=172,&
+      longname='DUMMY_172')
+PARAM(500823,'DUMMY_173',table=254,code=173,&
+      longname='DUMMY_173')
+PARAM(500824,'DUMMY_174',table=254,code=174,&
+      longname='DUMMY_174')
+PARAM(500825,'DUMMY_175',table=254,code=175,&
+      longname='DUMMY_175')
+PARAM(500826,'DUMMY_176',table=254,code=176,&
+      longname='DUMMY_176')
+PARAM(500827,'DUMMY_177',table=254,code=177,&
+      longname='DUMMY_177')
+PARAM(500828,'DUMMY_178',table=254,code=178,&
+      longname='DUMMY_178')
+PARAM(500829,'DUMMY_179',table=254,code=179,&
+      longname='DUMMY_179')
+PARAM(500830,'DUMMY_180',table=254,code=180,&
+      longname='DUMMY_180')
+PARAM(500831,'DUMMY_181',table=254,code=181,&
+      longname='DUMMY_181')
+PARAM(500832,'DUMMY_182',table=254,code=182,&
+      longname='DUMMY_182')
+PARAM(500833,'DUMMY_183',table=254,code=183,&
+      longname='DUMMY_183')
+PARAM(500834,'DUMMY_184',table=254,code=184,&
+      longname='DUMMY_184')
+PARAM(500835,'DUMMY_185',table=254,code=185,&
+      longname='DUMMY_185')
+PARAM(500836,'DUMMY_186',table=254,code=186,&
+      longname='DUMMY_186')
+PARAM(500837,'DUMMY_187',table=254,code=187,&
+      longname='DUMMY_187')
+PARAM(500838,'DUMMY_188',table=254,code=188,&
+      longname='DUMMY_188')
+PARAM(500839,'DUMMY_189',table=254,code=189,&
+      longname='DUMMY_189')
+PARAM(500840,'DUMMY_190',table=254,code=190,&
+      longname='DUMMY_190')
+PARAM(500841,'DUMMY_191',table=254,code=191,&
+      longname='DUMMY_191')
+PARAM(500842,'DUMMY_192',table=254,code=192,&
+      longname='DUMMY_192')
+PARAM(500843,'DUMMY_193',table=254,code=193,&
+      longname='DUMMY_193')
+PARAM(500844,'DUMMY_194',table=254,code=194,&
+      longname='DUMMY_194')
+PARAM(500845,'DUMMY_195',table=254,code=195,&
+      longname='DUMMY_195')
+PARAM(500846,'DUMMY_196',table=254,code=196,&
+      longname='DUMMY_196')
+PARAM(500847,'DUMMY_197',table=254,code=197,&
+      longname='DUMMY_197')
+PARAM(500848,'DUMMY_198',table=254,code=198,&
+      longname='DUMMY_198')
+PARAM(500849,'DUMMY_199',table=254,code=199,&
+      longname='DUMMY_199')
+PARAM(500850,'DUMMY_200',table=254,code=200,&
+      longname='DUMMY_200')
+PARAM(500851,'DUMMY_201',table=254,code=201,&
+      longname='DUMMY_201')
+PARAM(500852,'DUMMY_202',table=254,code=202,&
+      longname='DUMMY_202')
+PARAM(500853,'DUMMY_203',table=254,code=203,&
+      longname='DUMMY_203')
+PARAM(500854,'DUMMY_204',table=254,code=204,&
+      longname='DUMMY_204')
+PARAM(500855,'DUMMY_205',table=254,code=205,&
+      longname='DUMMY_205')
+PARAM(500856,'DUMMY_206',table=254,code=206,&
+      longname='DUMMY_206')
+PARAM(500857,'DUMMY_207',table=254,code=207,&
+      longname='DUMMY_207')
+PARAM(500858,'DUMMY_208',table=254,code=208,&
+      longname='DUMMY_208')
+PARAM(500859,'DUMMY_209',table=254,code=209,&
+      longname='DUMMY_209')
+PARAM(500860,'DUMMY_210',table=254,code=210,&
+      longname='DUMMY_210')
+PARAM(500861,'DUMMY_211',table=254,code=211,&
+      longname='DUMMY_211')
+PARAM(500862,'DUMMY_212',table=254,code=212,&
+      longname='DUMMY_212')
+PARAM(500863,'DUMMY_213',table=254,code=213,&
+      longname='DUMMY_213')
+PARAM(500864,'DUMMY_214',table=254,code=214,&
+      longname='DUMMY_214')
+PARAM(500865,'DUMMY_215',table=254,code=215,&
+      longname='DUMMY_215')
+PARAM(500866,'DUMMY_216',table=254,code=216,&
+      longname='DUMMY_216')
+PARAM(500867,'DUMMY_217',table=254,code=217,&
+      longname='DUMMY_217')
+PARAM(500868,'DUMMY_218',table=254,code=218,&
+      longname='DUMMY_218')
+PARAM(500869,'DUMMY_219',table=254,code=219,&
+      longname='DUMMY_219')
+PARAM(500870,'DUMMY_220',table=254,code=220,&
+      longname='DUMMY_220')
+PARAM(500871,'DUMMY_221',table=254,code=221,&
+      longname='DUMMY_221')
+PARAM(500872,'DUMMY_222',table=254,code=222,&
+      longname='DUMMY_222')
+PARAM(500873,'DUMMY_223',table=254,code=223,&
+      longname='DUMMY_223')
+PARAM(500874,'DUMMY_224',table=254,code=224,&
+      longname='DUMMY_224')
+PARAM(500875,'DUMMY_225',table=254,code=225,&
+      longname='DUMMY_225')
+PARAM(500876,'DUMMY_226',table=254,code=226,&
+      longname='DUMMY_226')
+PARAM(500877,'DUMMY_227',table=254,code=227,&
+      longname='DUMMY_227')
+PARAM(500878,'DUMMY_228',table=254,code=228,&
+      longname='DUMMY_228')
+PARAM(500879,'DUMMY_229',table=254,code=229,&
+      longname='DUMMY_229')
+PARAM(500880,'DUMMY_230',table=254,code=230,&
+      longname='DUMMY_230')
+PARAM(500881,'DUMMY_231',table=254,code=231,&
+      longname='DUMMY_231')
+PARAM(500882,'DUMMY_232',table=254,code=232,&
+      longname='DUMMY_232')
+PARAM(500883,'DUMMY_233',table=254,code=233,&
+      longname='DUMMY_233')
+PARAM(500884,'DUMMY_234',table=254,code=234,&
+      longname='DUMMY_234')
+PARAM(500885,'DUMMY_235',table=254,code=235,&
+      longname='DUMMY_235')
+PARAM(500886,'DUMMY_236',table=254,code=236,&
+      longname='DUMMY_236')
+PARAM(500887,'DUMMY_237',table=254,code=237,&
+      longname='DUMMY_237')
+PARAM(500888,'DUMMY_238',table=254,code=238,&
+      longname='DUMMY_238')
+PARAM(500889,'DUMMY_239',table=254,code=239,&
+      longname='DUMMY_239')
+PARAM(500890,'DUMMY_240',table=254,code=240,&
+      longname='DUMMY_240')
+PARAM(500891,'DUMMY_241',table=254,code=241,&
+      longname='DUMMY_241')
+PARAM(500892,'DUMMY_242',table=254,code=242,&
+      longname='DUMMY_242')
+PARAM(500893,'DUMMY_243',table=254,code=243,&
+      longname='DUMMY_243')
+PARAM(500894,'DUMMY_244',table=254,code=244,&
+      longname='DUMMY_244')
+PARAM(500895,'DUMMY_245',table=254,code=245,&
+      longname='DUMMY_245')
+PARAM(500896,'DUMMY_246',table=254,code=246,&
+      longname='DUMMY_246')
+PARAM(500897,'DUMMY_247',table=254,code=247,&
+      longname='DUMMY_247')
+PARAM(500898,'DUMMY_248',table=254,code=248,&
+      longname='DUMMY_248')
+PARAM(500899,'DUMMY_249',table=254,code=249,&
+      longname='DUMMY_249')
+PARAM(500900,'DUMMY_250',table=254,code=250,&
+      longname='DUMMY_250')
+PARAM(500901,'DUMMY_251',table=254,code=251,&
+      longname='DUMMY_251')
+PARAM(500902,'DUMMY_252',table=254,code=252,&
+      longname='DUMMY_252')
+PARAM(500903,'DUMMY_253',table=254,code=253,&
+      longname='DUMMY_253')
+PARAM(500904,'DUMMY_254',table=254,code=254,&
+      longname='DUMMY_254')
+PARAM(500905,'QV_S',table=2,code=51,leveltype=1,&
+      longname='Specific Humidity (S)')
+PARAM(502307,'ALB_DIF12',table=202,code=129,range=3,&
+      longname='Albedo - diffusive solar - time average (0.3 - 5.0 m-6)')
+PARAM(502308,'ALB_DIF',table=202,code=129,&
+      longname='Albedo - diffusive solar (0.3 - 5.0 m-6)')
+PARAM(502317,'LHFL_S',table=2,code=121,leveltype=1,&
+      longname='Latent Heat Net Flux - instant - at surface')
+PARAM(502318,'SHFL_S',table=2,code=122,leveltype=1,&
+      longname='Sensible Heat Net Flux - instant - at surface')
+PARAM(502333,'SALT_LK',table=2,code=88,&
+      longname='salinity')
+PARAM(502334,'STRF',table=2,code=35,&
+      longname='Stream function')
+PARAM(502335,'VPOT',table=2,code=36,&
+      longname='Velocity potential')
+PARAM(502336,'SKT',table=202,code=38,&
+      longname='Skin temperature')
+PARAM(502339,'SWDIRS_RAD',table=201,code=22,leveltype=1,&
+      longname='Downward direct short wave radiation flux')
+PARAM(502397,'VTMP',table=2,code=12,&
+      longname='Virtual Temperature')
+PARAM(502424,'VUCSH',table=2,code=45,&
+      longname='Vertical u-component shear')
+PARAM(502425,'VVCSH',table=2,code=46,&
+      longname='Vertical v-component shear')
+PARAM(502486,'BLD',table=2,code=123,&
+      longname='Boundary Layer Dissipitation')
+PARAM(502487,'ASHFL_S',table=2,code=122,&
+      longname='Sensible Heat Net Flux (m)')
+PARAM(502488,'ALHFL_S',table=2,code=121,&
+      longname='Latent Heat Net Flux (m)')
+PARAM(502490,'AEVAP_S',table=2,code=57,&
+      longname='Evaporation (s)')
+PARAM(502491,'CLCL',table=2,code=73,&
+      longname='Cloud Cover (800 hPa - Soil)')
+PARAM(502492,'CLCM',table=2,code=74,&
+      longname='Cloud Cover (400 - 800 hPa)')
+PARAM(502493,'CLCH',table=2,code=75,&
+      longname='Cloud Cover (0 - 400 hPa)')
+PARAM(502494,'BTMP',table=2,code=118,&
+      longname='Brightness Temperature')
+PARAM(502495,'RUNOFF',table=2,code=90,&
+      longname='Water Runoff')
+PARAM(502496,'HSURF',table=2,code=8,&
+      longname='Geometric Height')
+PARAM(502497,'HSTDV',table=2,code=9,&
+      longname='Standard devation of height')
+PARAM(502499,'PAPT',table=2,code=14,&
+      longname='Pseudo-adiabatic potential Temperature')
+PARAM(502501,'TMAX',table=2,code=15,&
+      longname='Max Temperature')
+PARAM(502502,'TMIN',table=2,code=16,&
+      longname='Min Temperature')
+PARAM(502503,'TD',table=2,code=17,&
+      longname='Dew Point Temperature')
+PARAM(502504,'DEPR',table=2,code=18,&
+      longname='Dew point depression(or deficit)')
+PARAM(502506,'RDSP2',table=2,code=22,&
+      longname='Radar spectra (2)')
+PARAM(502507,'RDSP3',table=2,code=23,&
+      longname='Radar spectra (3)')
+PARAM(502508,'PLI',table=2,code=24,&
+      longname='Parcel lifted index (to 500 hPa)')
+PARAM(502509,'TA',table=2,code=25,&
+      longname='Temperature anomaly')
+PARAM(502510,'PRESA',table=2,code=26,&
+      longname='Pressure anomaly')
+PARAM(502511,'GPA',table=2,code=27,&
+      longname='Geopotential height anomaly')
+PARAM(502512,'MNTSF',table=2,code=37,&
+      longname='Montgomery stream Function')
+PARAM(502514,'SGCVV',table=2,code=38,&
+      longname='Sigma coordinate vertical velocity')
+PARAM(502515,'ABSD',table=2,code=42,&
+      longname='Absolute divergence')
+PARAM(502516,'VUCSH',table=2,code=45,&
+      longname='Vertical u-component shear')
+PARAM(502517,'VVCSH',table=2,code=46,&
+      longname='Vertical v-component shear')
+PARAM(502518,'DIRC',table=2,code=47,&
+      longname='Direction of current')
+PARAM(502519,'SPC',table=2,code=48,&
+      longname='Speed of current')
+PARAM(502520,'UCURR',table=2,code=49,&
+      longname='U-component of current')
+PARAM(502521,'VCURR',table=2,code=50,&
+      longname='V-component of current')
+PARAM(502522,'MIXR',table=2,code=53,&
+      longname='Humidity mixing ratio')
+PARAM(502523,'VP',table=2,code=55,&
+      longname='Vapour pressure')
+PARAM(502524,'SATD',table=2,code=56,&
+      longname='Saturation deficit')
+PARAM(502525,'PRATE',table=2,code=59,&
+      longname='Precipitation rate')
+PARAM(502526,'TSTM',table=2,code=60,&
+      longname='Thunderstorm probability')
+PARAM(502527,'ACPCP',table=2,code=63,&
+      longname='Convective precipitation (water)')
+PARAM(502528,'SRWEQ',table=2,code=64,&
+      longname='Snow fall rate water equivalent')
+PARAM(502529,'MLD',table=2,code=67,&
+      longname='Mixed layer depth')
+PARAM(502530,'TTHDP',table=2,code=68,&
+      longname='Transient thermocline depth')
+PARAM(502531,'MTHD',table=2,code=69,&
+      longname='Main thermocline depth')
+PARAM(502532,'MTHA',table=2,code=70,&
+      longname='Main thermocline depth')
+PARAM(502533,'BLI',table=2,code=77,&
+      longname='Best lifted index (to 500 hPa)')
+PARAM(502534,'DSLM',table=2,code=82,&
+      longname='Deviation of sea-elbel from mean')
+PARAM(502535,'W_CL',table=2,code=86,&
+      longname='Column-integrated Soil Moisture')
+PARAM(502536,'DICED',table=2,code=93,&
+      longname='Direction of ice drift')
+PARAM(502537,'SICED',table=2,code=94,&
+      longname='Speed of ice drift')
+PARAM(502538,'UICE',table=2,code=95,&
+      longname='U-component of ice drift')
+PARAM(502539,'VICED',table=2,code=96,&
+      longname='V-component of ice drift')
+PARAM(502540,'ICEG',table=2,code=97,&
+      longname='Ice growth rate')
+PARAM(502542,'SNOW',table=2,code=99,&
+      longname='Snow melt')
+PARAM(502545,'DIRSW',table=2,code=109,&
+      longname='Secondary wave direction')
+PARAM(502546,'SWP',table=2,code=110,&
+      longname='Secondary wave period')
+PARAM(502547,'ASOB_S',table=2,code=111,&
+      longname='Net short wave radiation flux (at the surface)')
+PARAM(502548,'ATHB_S',table=2,code=112,&
+      longname='Net long wave radiation flux (m) (at the surface)')
+PARAM(502549,'ASOB_T',table=2,code=113,&
+      longname='Net short wave radiation flux')
+PARAM(502550,'NLWRT',table=2,code=114,&
+      longname='Net long-wave radiation flux(atmosph.top)')
+PARAM(502551,'LWAVR',table=2,code=115,&
+      longname='Long wave radiation flux')
+PARAM(502552,'SWAVR',table=2,code=116,&
+      longname='Short wave radiation flux')
+PARAM(502553,'LWRAD',table=2,code=119,&
+      longname='Radiance (with respect to wave number)')
+PARAM(502554,'SWRAD',table=2,code=120,&
+      longname='Radiance (with respect to wave length)')
+PARAM(502555,'AUMFL_S',table=2,code=124,&
+      longname='Momentum Flux, U-Component (m)')
+PARAM(502556,'AVMFL_S',table=2,code=125,&
+      longname='Momentum Flux, V-Component (m)')
+PARAM(502557,'WMIXE',table=2,code=126,&
+      longname='Wind mixing energy')
+PARAM(502558,'IMGD',table=2,code=127,&
+      longname='Image data')
+PARAM(502559,'OROG',table=2,code=7,leveltype=1,&
+      longname='Geopotential height')
+PARAM(502560,'T_S',table=2,code=85,&
+      longname='Soil Temperature')
+PARAM(502693,'PT',table=2,code=13,&
+      longname='Potential temperature')
+PARAM(502694,'ICED',table=2,code=98,&
+      longname='Ice divergence')
+PARAM(502796,'PREC',table=203,code=71,&
+      longname='Precipitation')
+PARAM(502946,'VIS',table=2,code=20,&
+      longname='Visibility')
+PARAM(503049,'EDR',table=201,code=151,&
+      longname='Eddy dissipitation rate of TKE')
+PARAM(503061,'SWDIFDS_RAD',table=201,code=23,leveltype=1,&
+      longname='Downward diffusive short wave radiation flux at surface ( mean over forecast time)')
+PARAM(503062,'SWDIFUS_RAD',table=201,code=24,leveltype=1,&
+      longname='Upward diffusive short wave radiation flux at surface ( mean over forecast time)')
+PARAM(503063,'UMFL_S',table=2,code=124,leveltype=1,&
+      longname='Momentum Flux, U-Component (m)')
+PARAM(503064,'VMFL_S',table=2,code=125,leveltype=1,&
+      longname='Momentum Flux, V-Component (m)')
+PARAM(503065,'AUSTR_SSO',table=202,code=231,range=1,&
+      longname='u-momentum flux due to SSO-effects')
+PARAM(503066,'AVSTR_SSO',table=202,code=232,range=1,&
+      longname='v-momentum flux due to SSO-effects')
+PARAM(503068,'RADAR_RQ',table=203,code=72,&
+      longname='precipitation, qualified,BRD')
+PARAM(503069,'RADAR_RS',table=203,code=73,&
+      longname='precipitation,BRD')
+PARAM(503070,'RADAR_RE',table=203,code=75,&
+      longname='precipitation phase,BRD')
+PARAM(503071,'RADAR_RH',table=203,code=76,&
+      longname='hail flag,BRD')
+PARAM(503072,'RADAR_FS',table=203,code=77,&
+      longname='snow rate,BRD')
+PARAM(503073,'RADAR_FQ',table=204,code=46,&
+      longname='snow rate, qualified,BRD')
+PARAM(503076,'AVDIS_SSO',table=202,code=233,range=3,&
+      longname='Gravity wave dissipation')
+PARAM(503078,'RH_MIX_EC',table=250,code=20,&
+      longname='relative humidity over mixed phase')
+PARAM(503082,'USTR',table=202,code=120,&
+      longname='Friction Velocity')
+PARAM(503134,'THDS_RAD',table=201,code=25,&
+      longname='Downward long-wave radiation flux')
+PARAM(503135,'ATHD_S',table=201,code=25,range=3,&
+      longname='Downward long-wave radiation flux avg')
+PARAM(503136,'ACCTHD_S',table=201,code=25,range=4,&
+      longname='Downward long-wave radiation flux accum')
+PARAM(503142,'LPI',table=201,code=196,&
+      longname='Lightning Potential Index')
+PARAM(503286,'FR_PAVED',table=202,code=33,&
+      longname='Impervious (paved or sealed) surface fraction')
+PARAM(503287,'AHF',table=202,code=34,&
+      longname='Antropogenic heat flux (e.g. urban heating, traffic)')
+PARAM(503325,'LPI',table=201,code=196,&
+      longname='Lightning Potential Index')
+PARAM(503341,'UH_MAX',table=203,code=35,range=2,&
+      longname='Maximum amplitude (positive or negative) of updraft helicity  (over given time interval)')
+PARAM(503342,'VORW_CTMAX',table=203,code=36,range=2,&
+      longname='Maximum rotation amplitude (positive or negative)  (over given time interval and column)')
+PARAM(503343,'W_CTMAX',table=203,code=37,range=2,&
+      longname='Maximum updraft track (over given time interval and column)')
+PARAM(503344,'TCOND10_MX',table=201,code=49,range=2,&
+      longname='Maximum total-column integrated condensed water above -10 C isotherm (over given time interval)')
+PARAM(503345,'TCOND_MAX',table=201,code=48,leveltype=200,range=2,&
+      longname='Maximum total-column integrated condensed  water (over given time interval)')
+PARAM(503346,'DBZCMP_OBS',table=201,code=235,&
+      longname='Composite reflectivity - observation')
+PARAM(503347,'DBZCMP_SIM',table=201,code=234,&
+      longname='Composite reflectivity - forecast (simulation)')
+PARAM(503348,'LPI_MAX',table=201,code=196,range=2,&
+      longname='Maximum of Lightning Potential Index (over given time interval)')
+PARAM(503349,'DBZ_CTMAX',table=201,code=230,leveltype=200,range=2,&
+      longname='Maximum reflectivity track (over given time interval and entire atmosphere)')
+PARAM(503350,'RELV',table=2,code=43,&
+      longname='relative vorticity')
+PARAM(503421,'ECHOTOP',table=202,code=36,&
+      longname='Echotop-pressure: smallest pressure where radar reflectivity above a threshold is present')
+PARAM(503422,'ECHOTOPinM',table=202,code=37,&
+      longname='Echotop-height: largest height where radar reflectivity above a threshold is present')
+PARAM(503425,'SKC',table=202,code=39,&
+      longname='Skin conductivity (ratio ground heat flux to temperature difference soil-skin layer)')
+! END definitions
+#define TABSIZE 915

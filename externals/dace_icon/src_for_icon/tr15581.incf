@@ -1,0 +1,120 @@
+!
+!+ Compiler directives to enable derived type pointer component deallocation
+!
+! Description:
+!   As Fortran 95 does not support allocatable array components of derived
+!   types, pointer components must be used instead.  If a variable
+!   of derived type goes out of scope these components must be deallocated
+!   explicitly. Module mo_allocate  keeps track of the level in
+!   a function call hierarchy so that a function body is able to determine
+!   if arguments go out of scope so that their components may be
+!   deallocated properly.
+!
+!   The following Compiler directives switch between explicit deallocation of
+!   pointer components be the programmer and implicit deallocation of
+!   allocatable components by the compiler if the TR15581 extensions to
+!   Fortran95 are available.
+!
+!   If a compiler supports Fortran 2008's CONTIGUOUS attribute for pointers,
+!   this feature can be enabled for further optimization opportunities.
+!
+! Current Code Owner: DWD, Andreas Rhodin
+!    phone: +49 69 8062 2722
+!    fax:   +49 69 8062 3721
+!    email: andreas.rhodin@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_1         2008/11/05 Andreas Rhodin
+!  First operational 3D-Var release
+! V1_10        2010/04/20 Michael Gertz
+!  Adaptions for SVN
+! V1_13        2011/11/01 Andreas Rhodin
+!  changed 3dvar revision numbers (CVS->SVN)
+! V1_45        2015-12-15 Harald Anlauf
+!  Cleanup towards TR15581/F2003 compatibility
+! V1_50        2017-01-09 Harald Anlauf
+!  enable Fortran 2008's CONTIGUOUS attribute for supported compilers
+! V1_51        2017-02-24 Harald Anlauf
+!  use the 'contiguous' attribute with selected components
+!
+! Code Description:
+! Language: Fortran.
+! Software Standards:
+!
+! Authors:
+! Andreas Rhodin  MPIfM/DWD  1999-2001
+!------------------------------------------------------------------------------
+
+#if   defined (_CRAYFTN) \
+  || (defined (__GFORTRAN__) && ((__GNUC__ * 100 + __GNUC_MINOR__) >= 406)  \
+                             && ((__GNUC__ * 100 + __GNUC_MINOR__) <  800 || \
+                                 (__GNUC__ * 100 + __GNUC_MINOR__) >= 900)) \
+  || (defined (__INTEL_COMPILER) && (__INTEL_COMPILER >= 1500)) \
+  || (defined (__NEC__) && (__NEC_VERSION__ >= 50100)) \
+  || (defined (__PGI) && (__PGIC__ >= 15) && (__PGIC__ != 17))
+#  define HAVE_F2008_CONTIGUOUS 1
+#endif
+
+
+#ifdef HAVE_F2008_CONTIGUOUS
+#  define _CONTIGUOUS ,contiguous
+#  define _POINTER    ,pointer,contiguous
+#else
+#  define _CONTIGUOUS
+#  define _POINTER    ,pointer
+#endif
+
+
+#if defined (TR15581)
+#  define M3ELEMENTAL
+#else
+#  undef  M3ELEMENTAL
+#  undef  TR15581
+#endif
+
+
+#ifdef TR15581
+
+#  define ALLOCATABLE allocatable
+#  define ALLOCATED(X) allocated(X)
+#  define DEFAULTNULL
+#  define TARGET ,target
+#  define ENTERFUNCTION
+#  define LEAVEFUNCTION
+#  define DELETESTORAGE(X)
+#  define DELETE(X)
+#  define ALLOCATIONLEVEL(X)
+#  define NULLIFY(X)
+! The following requires Fortran 2003+
+#  define MOVE_ALLOC(X,Y) call move_alloc (X,Y)
+
+#else
+
+#  define ALLOCATABLE pointer _CONTIGUOUS
+#  define ALLOCATED(X) associated(X)
+#  define DEFAULTNULL => NULL()
+#  define TARGET
+#  define ENTERFUNCTION call_level = call_level + 1
+#  define LEAVEFUNCTION call_level = call_level - 1
+#  define DELETESTORAGE(X) if (X%allocation_level==call_level) call delete (X)
+#  define DELETE(X) if (X%tmp) call delete (X)
+#  define ALLOCATIONLEVEL(X) X% allocation_level = call_level
+#  define NULLIFY(X) nullify(X)
+#  define MOVE_ALLOC(X,Y) Y => X
+
+#endif
+
+#ifdef M3ELEMENTAL
+#  define ELEMENTAL elemental
+#else
+#  define ELEMENTAL
+#endif
+
+! Blacklist compilers without or with broken F2003 asynchronous I/O
+#if defined(NO_ASYNC_IO) || defined(__G95__) || defined (__PGI)
+#undef  HAVE_ASYNC_IO
+#else
+#define HAVE_ASYNC_IO 1
+#endif

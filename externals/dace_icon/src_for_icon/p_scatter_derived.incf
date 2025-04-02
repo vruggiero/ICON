@@ -1,0 +1,229 @@
+!
+!+ Template for derived type MPI_SCATTER routine
+!
+! Description:
+!   Template for derived type MPI_scatter(V) routine
+!   to be included in some module
+!   define before inclusion (example):
+!
+!     #define p_scatter_DERIVED p_scatter_int
+!     #define DERIVED  INTEGER
+!     #define MPI_TYPE p_int
+!     #include "p_scatter_derived.incf"
+!
+!   Use
+!     #undef  MPI_TYPE
+!   for derived data types
+!
+! Current Code Owners:
+!    For DWD 3DVAR:                        For COSMO:
+!    DWD, Andreas Rhodin                   DWD, Christoph Schraff
+!    phone: +49 69 8062 2722               phone: +49 69 8062 2725
+!    fax:   +49 69 8062 3721               fax:   +49 69 8062 3721
+!    email: andreas.rhodin@dwd.de          email: christoph.schraff@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_5         2009/05/25 Harald Anlauf
+!  p_scatter_DERIVED: initial version, derived mostly from p_gather_DERIVED
+! V1_10        2010/04/20 Michael Gertz
+!  Adaptions for SVN
+! V1_13        2011/11/01 Andreas Rhodin
+!  changed 3dvar revision numbers (CVS->SVN)
+! V1_19        2012-04-16 Harald Anlauf
+!  cleanup
+! V1_26        2013/06/27 Andreas Rhodin
+!  changes for exchange with COSMO
+!
+! CAUTION: This module is used commonly by the 3DVAR and COSMO main programs.!!!
+!!!        Therefore, anybody wanting to introduce a modification to this    !!!
+!!!        module in the context of either of these programs must consult    !!!
+!!!        the 'current code owner' of this module for the other program,    !!!
+!!!        in order to allow for checking that the modification will comply  !!!
+!!!        with both program packages. This must be done before the          !!!
+!!!        modification is put into the Version Control System (VCS).        !!!
+!
+! Code Description:
+! Language: Fortran 95.
+! Software Standards:
+!
+! Harald Anlauf   DWD  2009  original code
+!------------------------------------------------------------------------------
+
+  SUBROUTINE p_scatter_DERIVED (sendbuf, recvbuf, root, comm, sendcounts)
+
+  !-------------------------------------------------------------------
+  ! use entities from 3D-Var modules if not provided by including code
+  !-------------------------------------------------------------------
+#if defined (HAVE_MPI_MOD) && defined (__GFORTRAN__) && (__GNUC__ >= 10)
+  USE mpi,              ONLY: MPI_SCATTERV
+#endif
+#ifndef MO_MPI_SOURCE
+  USE mo_mpi_dace,      ONLY: MPI_BYTE,       &!
+                              MPI_INTEGER,    &!
+                              d_comm,         &!
+                              MPI_SUCCESS      !
+#ifdef DEBUG
+  USE mo_mpi_dace,      ONLY: mype             ! PE number of this task
+#endif
+#endif
+  IMPLICIT NONE
+
+#if !defined (HAVE_MPI_MOD) && (defined (__GFORTRAN__) && (__GNUC__ >= 10))
+  !-------------------------------------------------------
+  ! workaround for missing interfaces in deprecated mpif.h
+  !-------------------------------------------------------
+  interface
+     subroutine MPI_SCATTERV (sendbuf, sendcnts, displs, sendtype, &
+                              recvbuf, recvcnt,          recvtype, &
+                              root, comm, ierror                   )
+       type(*) ,intent(in)        :: sendbuf (*)   ! send buffer
+       integer ,intent(in)        :: sendcnts(*)   ! send counts
+       integer ,intent(in)        :: displs  (*)   ! displacements
+       integer ,intent(in)        :: sendtype      ! MPI datatype
+       type(*) ,intent(inout)     :: recvbuf (*)   ! recv buffer
+       integer ,intent(in)        :: recvcnt       ! recv count
+       integer ,intent(in)        :: recvtype      ! MPI datatype
+       integer ,intent(in)        :: root          ! source processor index
+       integer ,intent(in)        :: comm          ! communicator
+       integer ,intent(out)       :: ierror        ! return value
+     end subroutine MPI_SCATTERV
+  end interface
+#endif /* (defined (__GFORTRAN__) && (__GNUC__ >= 10)) */
+
+  !---------------------
+  ! subroutine arguments
+  !---------------------
+  DERIVED           ,INTENT(in)  :: sendbuf (:)
+  DERIVED           ,INTENT(out) :: recvbuf (:)
+  INTEGER           ,INTENT(in)  :: root
+  INTEGER ,OPTIONAL ,INTENT(in)  :: comm
+  INTEGER ,OPTIONAL ,INTENT(in)  :: sendcounts (:)
+
+    !----------------
+    ! local variables
+    !----------------
+    INTEGER          :: p_comm, sbuflen, rbuflen, groupsize
+    INTEGER          :: p_recvcount
+    INTEGER ,POINTER :: p_sendcounts(:), p_sdispls(:)
+    INTEGER          :: p_error
+    INTEGER          :: bufsize = 0
+    INTEGER          :: i
+#ifndef MPI_TYPE
+    DERIVED          :: template
+#endif
+
+#ifndef NOMPI
+
+    !-----------------
+    ! set buffer sizes
+    !-----------------
+    sbuflen  = SIZE (sendbuf)
+    rbuflen  = SIZE (recvbuf)
+#ifdef MPI_TYPE
+    bufsize = 1
+#else
+#define MPI_TYPE MPI_BYTE
+    IF (bufsize == 0) bufsize = SIZE (TRANSFER (template,(/'*'/)))
+#endif
+
+    !-----------------------------------
+    ! derive communicator and group size
+    !-----------------------------------
+    IF (PRESENT(comm)) THEN
+       p_comm = comm
+    ELSE
+       p_comm = d_comm
+    ENDIF
+    CALL MPI_COMM_SIZE(p_comm, groupsize, p_error)
+
+    IF (groupsize==1) THEN
+      IF (rbuflen /= sbuflen) THEN
+        WRITE (0,'(a)') &
+        ' p_scatter_DERIVED: groupsize==1 .and. size(sendbuf)/=size(recvbuf)'
+        CALL MPI_ABORT (p_comm, 1, p_error)
+        IF (p_error /= MPI_SUCCESS) THEN
+          WRITE (0,'(a)') ' MPI_ABORT failed.'
+          WRITE (0,'(a,i4)') ' Error =  ', p_error
+          STOP
+        END IF
+      ENDIF
+      recvbuf = sendbuf
+      RETURN
+    ENDIF
+
+    !----------------------
+    ! allocate local arrays
+    !----------------------
+    ALLOCATE (p_sendcounts (groupsize))
+    ALLOCATE (p_sdispls    (groupsize))
+
+    !---------------------------------------------------------------
+    ! derive sendcounts from destination buffer sizes if not present
+    !---------------------------------------------------------------
+    IF (PRESENT (sendcounts)) THEN
+      p_sendcounts = sendcounts
+    ELSE
+      p_sendcounts = 0
+      CALL MPI_GATHER (rbuflen,      1, MPI_INTEGER, &
+                       p_sendcounts, 1, MPI_INTEGER, &
+                       root, p_comm, p_error)
+    ENDIF
+
+#ifdef DEBUG
+    !-----------------
+    ! check for errors
+    !-----------------
+    IF (mype == root) THEN
+       IF (SUM (p_sendcounts) /= sbuflen) THEN
+          WRITE (0,'(a)') ' p_scatter_DERIVED: sum (sendcounts) /= sbuflen'
+          CALL MPI_ABORT (p_comm, 1, p_error)
+          IF (p_error /= MPI_SUCCESS) THEN
+            WRITE (0,'(a)') ' MPI_ABORT failed.'
+            WRITE (0,'(a,i4)') ' Error =  ', p_error
+            STOP
+          END IF
+       ENDIF
+    END IF
+#endif
+
+    !--------------------------------------------
+    ! calculate send/recvcounts and displacements
+    !--------------------------------------------
+    p_sendcounts = bufsize * p_sendcounts
+    p_recvcount  = bufsize * rbuflen
+    p_sdispls (1) = 0
+    DO i = 2, groupsize
+      p_sdispls (i) = p_sdispls (i-1) + p_sendcounts (i-1)
+    END DO
+
+    !----------------------------------
+    ! finally call MPI scatterV routine
+    !----------------------------------
+    CALL MPI_scatterV (sendbuf, p_sendcounts, p_sdispls, MPI_TYPE, &
+                       recvbuf, p_recvcount,             MPI_TYPE, &
+                       root, p_comm, p_error)
+
+    DEALLOCATE (p_sendcounts, p_sdispls)
+
+#ifdef DEBUG
+    !-----------------
+    ! check for errors
+    !-----------------
+    IF (p_error /= MPI_SUCCESS) THEN
+       WRITE (0,'(a,i4,a)') ' MPI_scatterV from ', mype, ' failed.'
+       WRITE (0,'(a,i4)') ' Error = ', p_error
+        CALL MPI_ABORT (p_comm, 1, p_error)
+        IF (p_error /= MPI_SUCCESS) THEN
+          WRITE (0,'(a)') ' MPI_ABORT failed.'
+          WRITE (0,'(a,i4)') ' Error =  ', p_error
+          STOP
+        END IF
+    END IF
+#endif
+#else   /* !NOMPI */
+    recvbuf = sendbuf
+#endif  /* !NOMPI */
+
+  END SUBROUTINE p_scatter_DERIVED

@@ -1,0 +1,173 @@
+!
+!+ Template for derived type MPI_ALLGATHER routine
+!
+! Description:
+!   Template for derived type MPI_allgather(V) routine.
+!   To be included in modules to define MPI routines for derived types.
+!   Define before inclusion (example):
+!     define DERIVED INTEGER
+!     define p_allgather_DERIVED p_allgather_int
+!     define MPI_TYPE p_int
+!     include 'p_allgather.inc'
+!   undef MPI_TYPE for derived data types
+!
+! Current Code Owner: DWD, Andreas Rhodin
+!    phone: +49 69 8062 2722
+!    fax:   +49 69 8062 3721
+!    email: andreas.rhodin@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_1         2008/11/05 Andreas Rhodin
+!  First operational 3D-Var release
+! V1_10        2010/04/20 Michael Gertz
+!  Adaptions for SVN
+! V1_13        2011/11/01 Andreas Rhodin
+!  changed 3dvar revision numbers (CVS->SVN)
+! V1_28        2014/02/26 Harald Anlauf
+!  p_allgather.incf: fix bad declaration of p_sendcount
+! V1_48        2016-10-06 Andreas Rhodin
+!  precautions for zero buffer length (nothing to send/receive)
+!
+! Code Description:
+! Language: Fortran 95.
+! Software Standards:
+!
+! Authors:
+! Andreas Rhodin  DWD  2005       original code
+! Harald Anlauf   DWD  2007-2008  fixes and cleanups
+!------------------------------------------------------------------------------
+
+  SUBROUTINE p_allgather_DERIVED (sendbuf, recvbuf, comm, recvcounts)
+
+  USE mo_fortran_units, only: nerr             ! standard error fortran unit
+#ifndef MO_MPI_SOURCE
+  USE mo_mpi_dace,      only: MPI_BYTE,       &!
+                              d_comm,         &!
+                              p_abort,        &! parallel abort routine
+                              allgatherv_args  ! prepare arguments
+#ifdef DEBUG
+  USE mo_mpi_dace,      ONLY: MPI_SUCCESS,    &!
+                              mype             ! PE number of this task
+#endif
+#endif
+  implicit none
+
+#if !defined (HAVE_MPI_MOD) && (defined (__GFORTRAN__) && (__GNUC__ >= 10))
+  !-------------------------------------------------------
+  ! workaround for missing interfaces in deprecated mpif.h
+  !-------------------------------------------------------
+  interface
+     subroutine MPI_ALLGATHERV (sendbuf, sendcount,          sendtype, &
+                                recvbuf, recvcounts, displs, recvtype, &
+                                comm, ierror                           )
+       type(*) ,intent(in)        :: sendbuf   (*) ! send buffer
+       integer ,intent(in)        :: sendcount     ! no.elements in sendbuf
+       integer ,intent(in)        :: sendtype      ! MPI datatype
+       type(*) ,intent(inout)     :: recvbuf   (*) ! recv buffer
+       integer ,intent(in)        :: recvcounts(*) ! recv counts
+       integer ,intent(in)        :: displs    (*) ! displacements
+       integer ,intent(in)        :: recvtype      ! MPI datatype
+       integer ,intent(in)        :: comm          ! communicator
+       integer ,intent(out)       :: ierror        ! return value
+     end subroutine MPI_ALLGATHERV
+  end interface
+#endif /* (defined (__GFORTRAN__) && (__GNUC__ >= 10)) */
+
+  DERIVED           ,INTENT(in)  :: sendbuf (:)
+  DERIVED           ,INTENT(out) :: recvbuf (:)
+  INTEGER ,OPTIONAL ,INTENT(in)  :: comm
+  INTEGER ,OPTIONAL ,INTENT(in)  :: recvcounts (:)
+
+    INTEGER          :: p_comm, sbuflen, rbuflen, groupsize
+!   INTEGER          :: count                   ! Needed only for allgather
+    INTEGER          :: p_sendcount
+    INTEGER ,pointer :: p_recvcounts(:), p_rdispls(:)
+    INTEGER          :: p_error
+    INTEGER          :: bufsize = 0
+
+#ifndef NOMPI
+
+    !-----------------------
+    ! check for buffer sizes
+    !-----------------------
+    sbuflen  = size (sendbuf)
+    rbuflen  = size (recvbuf)
+    if (rbuflen == 0) return
+#ifdef MPI_TYPE
+    bufsize = 1
+#else
+#define MPI_TYPE MPI_BYTE
+#if defined(__NEC__) || \
+    defined(NAGFOR)     /* Workaround compiler issues with allocatable components */
+    if (bufsize == 0) bufsize = (storage_size(recvbuf(1))+storage_size(' ')/2)/storage_size(' ')
+#else
+    if (bufsize == 0) bufsize = size(transfer(recvbuf(1),(/' '/)))
+#endif
+#endif
+
+    !-----------------------------------
+    ! derive communicator and group size
+    !-----------------------------------
+    IF (PRESENT(comm)) THEN
+       p_comm = comm
+    ELSE
+       p_comm = d_comm
+    ENDIF
+    call MPI_COMM_SIZE(p_comm, groupsize, p_error)
+
+    if (groupsize==1) then
+      if (rbuflen /= sbuflen) then
+        WRITE (nerr,'(a)') &
+        ' p_allgather_DERIVED: groupsize==1 .and. size(sendbuf)/=size(recvbuf)'
+        CALL p_abort
+      endif
+      recvbuf = sendbuf
+      return
+    endif
+
+    !----------------------
+    ! call MPI_allgatherV ..
+    !----------------------
+!   if (present (sendcounts)) then
+      call allgatherv_args (bufsize, sbuflen, rbuflen, groupsize, p_comm,   &
+                           recvcounts,                                      &
+                           p_sendcount, p_recvcounts, p_rdispls)
+      CALL MPI_allgatherV (sendbuf, p_sendcount,             MPI_TYPE, &
+                           recvbuf, p_recvcounts, p_rdispls, MPI_TYPE, &
+                           p_comm, p_error)
+      deallocate (p_recvcounts, p_rdispls)
+    !-------------------
+    ! .. or MPI_allgather
+    !-------------------
+!   else
+!     if (rbuflen /= sbuflen) then
+!       WRITE (nerr,'(a)') &
+!         ' p_allgather_DERIVED: size (sendbuf) /= size (recvbuf)'
+!       CALL p_abort
+!     endif
+!     if (sbuflen == 0) return
+!     if (mod (sbuflen,groupsize) /= 0) then
+!       WRITE (nerr,'(a)') ' p_allgather_DERIVED: mod (sbuflen,groupsize) /= 0'
+!       CALL p_abort
+!     endif
+!     count = bufsize * sbuflen / groupsize
+!     CALL MPI_allgather (sendbuf, count, MPI_TYPE, &
+!                         recvbuf, count, MPI_TYPE, p_comm, p_error)
+!   endif
+    !-----------------
+    ! check for errors
+    !-----------------
+#ifdef DEBUG
+    IF (p_error /= MPI_SUCCESS) THEN
+       WRITE (nerr,'(a,i4,a)') ' MPI_allgather from ', mype, ' failed.'
+       WRITE (nerr,'(a,i4)') ' Error = ', p_error
+       CALL p_abort
+    END IF
+#endif
+#else
+    recvbuf = sendbuf
+#endif
+
+  END SUBROUTINE p_allgather_DERIVED

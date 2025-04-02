@@ -1,0 +1,107 @@
+!
+!+ Template for derived type MPI_RECV routine
+!
+! Description:
+!   Template for derived type MPI_RECV routine.
+!   To be included in modules to define MPI routines for derived types.
+!   Define before inclusion (example):
+!
+!     #define VECTOR
+!     #define p_recv_DERIVED p_recv_real_1d
+!     #define DERIVED  REAL(WP),DIMENSION(:)
+!     #define MPI_TYPE p_real_wp
+!     #include "p_recv.incf"
+!
+!   Use
+!     #undef MPI_TYPE
+!   for derived data types
+!
+! Current Code Owner: DWD, Andreas Rhodin
+!    phone: +49 69 8062 2722
+!    fax:   +49 69 8062 3721
+!    email: andreas.rhodin@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_13        2011/11/01 Andreas Rhodin
+!  include files for derived type send/recv
+! V1_28        2014/02/26 Andreas Rhodin
+!  optional argument 'tag' in derived type send/recv include files
+!
+! Code Description:
+! Language: Fortran 95.
+! Software Standards:
+!
+!------------------------------------------------------------------------------
+
+  SUBROUTINE p_recv_DERIVED (buffer, source, comm, tag)
+
+    USE mo_mpi_dace,      ONLY: MPI_BYTE,      &!
+                                d_comm,        &! default communicator
+                                MPI_STATUS_SIZE !
+#if defined (DEBUG)
+    USE mo_fortran_units, ONLY: nerr            ! Standard error fortran unit
+    USE mo_mpi_dace,      ONLY: MPI_SUCCESS,   &!
+                                p_pe,          &! PE number of this task
+                                p_abort         ! parallel abort routine
+#endif
+    IMPLICIT NONE
+
+    DERIVED,           INTENT(out)   :: buffer
+    INTEGER,           INTENT(in)    :: source
+    INTEGER, OPTIONAL, INTENT(in)    :: comm
+    INTEGER, OPTIONAL, INTENT(in)    :: tag
+
+#ifndef NOMPI
+    INTEGER :: p_comm, blen, bsize, p_tag, p_error
+    INTEGER :: p_status(MPI_STATUS_SIZE)   ! standard information of MPI_RECV
+
+    p_tag = 1; IF (PRESENT(tag)) p_tag = tag
+
+    IF (PRESENT(comm)) THEN
+       p_comm = comm
+    ELSE
+       p_comm = d_comm
+    ENDIF
+
+#ifdef VECTOR
+    blen = size(buffer)
+    if (blen==0) return
+#ifndef MPI_TYPE
+#define MPI_TYPE MPI_BYTE
+#ifdef RANK
+#if   RANK == 3
+    bsize = size(transfer(buffer(1,1,1),(/' '/)))
+#elif RANK == 2
+    bsize = size(transfer(buffer(1,1),(/' '/)))
+#elif RANK == 1
+    bsize = size(transfer(buffer(1),(/' '/)))
+#else
+    bsize = size(transfer(buffer(1),(/' '/)))
+#endif
+#else
+    bsize = size(transfer(buffer(1),(/' '/)))
+#endif
+#endif
+#else /* !VECTOR */
+#ifndef MPI_TYPE
+#define MPI_TYPE MPI_BYTE
+    bsize = size(transfer(buffer,(/' '/)))
+#endif
+#endif
+
+    CALL MPI_RECV (buffer, bsize*blen, MPI_TYPE, source, p_tag, p_comm, &
+                   p_status, p_error)
+
+#ifdef DEBUG
+    IF (p_error /= MPI_SUCCESS) THEN
+       WRITE (nerr,'(a,i4,a,i4,a)') ' MPI_RECV from ', p_pe, &
+            ' to ', source, ' failed.'
+       WRITE (nerr,'(a,i4)') ' Error = ', p_error
+       CALL p_abort
+    END IF
+#endif
+#endif
+
+  END SUBROUTINE p_recv_DERIVED

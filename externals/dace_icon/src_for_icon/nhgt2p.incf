@@ -1,0 +1,86 @@
+
+  subroutine nhgt2p(nhgt,p,p_min,p_max,pl,lback)
+    use mo_kind,  only: wp
+    use mo_rad,   only: lev2p
+    real(wp), intent(inout)          :: nhgt ! normalized height
+    real(wp), intent(inout)          :: p    ! pressure
+    real(wp), intent(in)             :: p_min
+    real(wp), intent(in)             :: p_max
+    real(wp), intent(in),   optional :: pl  (:)  ! pressure profile (pres.<->lev.)
+    logical,  intent(in),   optional :: lback 
+    target :: pl
+    
+    real(wp), target :: pl_ecmwf(137) = (/&
+      2.00_wp,      3.10_wp,      4.67_wp,      6.83_wp,      9.75_wp,     13.61_wp,     18.61_wp,     24.99_wp, &
+     32.99_wp,     42.88_wp,     54.96_wp,     69.52_wp,     86.90_wp,    107.42_wp,    131.43_wp,    159.28_wp, &
+    191.34_wp,    227.97_wp,    269.54_wp,    316.42_wp,    368.98_wp,    427.59_wp,    492.62_wp,    564.41_wp, &
+    643.34_wp,    729.74_wp,    823.97_wp,    926.34_wp,   1037.20_wp,   1156.85_wp,   1285.61_wp,   1423.77_wp, &
+   1571.62_wp,   1729.45_wp,   1897.52_wp,   2076.10_wp,   2265.43_wp,   2465.77_wp,   2677.35_wp,   2900.39_wp, &
+   3135.12_wp,   3381.74_wp,   3640.47_wp,   3911.49_wp,   4194.93_wp,   4490.82_wp,   4799.15_wp,   5119.90_wp, &
+   5452.99_wp,   5798.34_wp,   6156.07_wp,   6526.95_wp,   6911.87_wp,   7311.87_wp,   7728.10_wp,   8161.82_wp, &
+   8614.50_wp,   9087.74_wp,   9582.80_wp,  10100.47_wp,  10641.53_wp,  11206.81_wp,  11797.14_wp,  12413.37_wp, &
+  13056.37_wp,  13727.03_wp,  14426.24_wp,  15154.93_wp,  15914.03_wp,  16704.50_wp,  17527.31_wp,  18383.44_wp, &
+  19273.89_wp,  20199.69_wp,  21161.86_wp,  22161.46_wp,  23199.54_wp,  24277.19_wp,  25395.49_wp,  26555.56_wp, &
+  27758.52_wp,  29005.48_wp,  30297.62_wp,  31636.07_wp,  33022.02_wp,  34456.63_wp,  35941.11_wp,  37476.66_wp, &
+  39064.50_wp,  40705.83_wp,  42401.90_wp,  44153.95_wp,  45963.21_wp,  47830.96_wp,  49758.45_wp,  51741.98_wp, &
+  53771.95_wp,  55834.30_wp,  57919.26_wp,  60016.68_wp,  62116.24_wp,  64207.64_wp,  66280.84_wp,  68326.20_wp, &
+  70334.67_wp,  72297.95_wp,  74208.55_wp,  76059.96_wp,  77846.61_wp,  79563.96_wp,  81208.47_wp,  82777.56_wp, &
+  84269.59_wp,  85683.76_wp,  87020.04_wp,  88279.10_wp,  89462.22_wp,  90571.16_wp,  91608.15_wp,  92575.71_wp, &
+  93476.66_wp,  94313.99_wp,  95090.82_wp,  95810.37_wp,  96475.84_wp,  97090.46_wp,  97657.37_wp,  98179.68_wp, &
+  98660.36_wp,  99102.30_wp,  99508.24_wp,  99880.81_wp, 100222.50_wp, 100535.62_wp, 100822.39_wp, 101084.87_wp, &
+ 101325.00_wp /)
+    real(wp), pointer :: p_p(:) => null()
+    real(wp)          :: lev_max, lev_min, lp(1)
+    logical           :: lb     =  .false.
+    integer           :: nl
+    
+
+    ! nhgt = (lev(p) - lev(p_min)) / (lev(p_max) - lev(p_min))
+
+    if (present(lback)) then
+      lb = lback
+    else
+      lb = .false.
+    end if
+
+    if (present(pl)) then
+      p_p => pl
+    else
+      p_p => pl_ecmwf
+    end if
+
+    nl = size(p_p)
+
+    lev_max = p2l(p_max)
+    lev_min = p2l(p_min)
+
+    if (.not.lb) then
+      lp(1) = min(max(nhgt, 0._wp), 1._wp) * (lev_max - lev_min) + lev_min
+      call lev2p(p_p, lp)
+      p = lp(1)
+    else
+      lp(1) = p2l(p)
+      nhgt  = (lp(1) - lev_min) / (lev_max - lev_min)
+    end if
+
+  contains
+
+    elemental function p2l(p)
+      real(wp) :: p2l
+      real(wp), intent(in) :: p
+      integer :: i
+      
+      do i = 0, nl-1
+        if (p_p(i+1) > p) then
+          if (i == 0) then
+            p2l = 1._wp
+          else
+            p2l = i + (log(p) - log(p_p(i)))/(log(p_p(i+1)) - log(p_p(i)))
+          end if
+          return
+        end if
+      end do
+      p2l = real(nl, kind=wp)
+    end function p2l
+
+  end subroutine nhgt2p

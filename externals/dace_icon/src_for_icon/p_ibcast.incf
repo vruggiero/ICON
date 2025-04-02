@@ -1,0 +1,173 @@
+!
+!+ Template for derived type MPI_IBCAST routine
+!
+! Description:
+!   Template for derived type MPI_IBCAST routine.
+!   To be included in modules to define MPI routines for derived types.
+!   Define before inclusion (example):
+!
+!     #define VECTOR
+!     #define p_ibcast_DERIVED p_ibcast_real_1d
+!     #define DERIVED  REAL(WP),DIMENSION(:)
+!     #define MPI_TYPE p_real_wp
+!     #include "p_ibcast.incf"
+!
+!   Use
+!     #undef MPI_TYPE
+!   for derived data types
+!
+! Non-blocking collectives (NBC) were introduced in MPI 3.0.
+! To disable NBC, define the preprocessor macro "NO_MPI3".
+!
+! Current Code Owners:
+!    For DWD 3DVAR:                        For COSMO:
+!    DWD, Andreas Rhodin                   DWD, Christoph Schraff
+!    phone: +49 69 8062 2722               phone: +49 69 8062 2725
+!    fax:   +49 69 8062 3721               fax:   +49 69 8062 3721
+!    email: andreas.rhodin@dwd.de          email: christoph.schraff@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_45        2015-12-15 Harald Anlauf
+!  Template for derived type MPI_IBCAST routine
+!
+! CAUTION: This module is used commonly by the 3DVAR and COSMO main programs.!!!
+!!!        Therefore, anybody wanting to introduce a modification to this    !!!
+!!!        module in the context of either of these programs must consult    !!!
+!!!        the 'current code owner' of this module for the other program,    !!!
+!!!        in order to allow for checking that the modification will comply  !!!
+!!!        with both program packages. This must be done before the          !!!
+!!!        modification is put into the Version Control System (VCS).        !!!
+!
+! Code Description:
+! Language: Fortran.
+! Software Standards:
+!
+! Andreas Rhodin  DWD  2005       original code (p_bcast.incf)
+! Harald Anlauf   DWD  2015       template for non-blocking variant
+!------------------------------------------------------------------------------
+
+  SUBROUTINE p_ibcast_DERIVED (buffer, p_source, comm)
+
+  !-------------------------------------------------------------------
+  ! use entities from 3D-Var modules if not provided by including code
+  !-------------------------------------------------------------------
+#ifndef MO_MPI_SOURCE
+  USE mo_mpi_dace,      ONLY: MPI_BYTE,      &!
+                              d_comm,        &!
+                              d_npe,         &! no of available PEs
+                              MPI_SUCCESS,   &!
+                              p_request,     &!
+                              p_irequest,    &!
+                              p_abort         ! parallel abort routine
+#ifdef DEBUG
+  USE mo_mpi_dace,      ONLY: nbcast          ! counter for broadcasts
+#endif
+  USE mo_fortran_units, ONLY: nerr            ! Standard error fortran unit
+#endif /* !MO_MPI_SOURCE */
+  IMPLICIT NONE
+
+#if !defined (HAVE_MPI_MOD) && (defined (__GFORTRAN__) && (__GNUC__ >= 10))
+  !-------------------------------------------------------
+  ! workaround for missing interfaces in deprecated mpif.h
+  !-------------------------------------------------------
+  interface
+     subroutine MPI_IBCAST (buffer, count, datatype, root, comm, request, ierror)
+#ifdef  VECTOR
+       type(*) ,intent(inout)     :: buffer(*)    ! variable to bcast
+#else
+       type(*) ,intent(inout)     :: buffer       ! variable to bcast
+#endif
+       integer ,intent(in)        :: count        ! len(byte) of variable
+       integer ,intent(in)        :: datatype     ! MPI datatype
+       integer ,intent(in)        :: root         ! source processor index
+       integer ,intent(in)        :: comm         ! communicator
+       integer ,intent(inout)     :: request      ! request handle
+       integer ,intent(out)       :: ierror       ! return value
+     end subroutine MPI_IBCAST
+  end interface
+#endif /* (defined (__GFORTRAN__) && (__GNUC__ >= 10)) */
+
+  !---------------------
+  ! subroutine arguments
+  !---------------------
+  DERIVED,           INTENT(inout) :: buffer
+  INTEGER,           INTENT(in)    :: p_source
+  INTEGER, OPTIONAL, INTENT(in)    :: comm
+
+    !----------------
+    ! local variables
+    !----------------
+#ifndef NOMPI
+#ifndef NO_MPI3 /* we do have MPI >=3.0 */
+    INTEGER :: p_error
+    INTEGER :: p_comm
+    INTEGER :: blen = 1
+#ifdef MPI_TYPE
+    INTEGER :: bsize = 1
+#else
+    INTEGER :: bsize = 0
+#endif
+
+    IF (PRESENT(comm)) THEN
+      p_comm = comm
+    ELSE
+      p_comm = d_comm
+    ENDIF
+
+#ifdef DEBUG
+    nbcast = nbcast+1
+#endif
+
+    IF (d_npe == 1) RETURN
+
+#ifdef  VECTOR
+    blen = SIZE(buffer)
+    IF (blen==0) RETURN
+#ifndef MPI_TYPE
+#define MPI_TYPE MPI_BYTE
+#ifdef  RANK
+#if   RANK == 3
+    bsize = SIZE(TRANSFER(buffer(1,1,1),["*"]))
+#elif RANK == 2
+    bsize = SIZE(TRANSFER(buffer(1,1),["*"]))
+#elif RANK == 1
+    bsize = SIZE(TRANSFER(buffer(1),["*"]))
+#else
+    bsize = SIZE(TRANSFER(buffer(1),["*"]))
+#endif            /* RANK = .. */
+#else             /* !RANK: assume default(1) */
+    bsize = SIZE(TRANSFER(buffer(1),["*"]))
+#endif            /* RANK */
+#endif            /* MPI_TYPE */
+#else             /* !VECTOR */
+#ifndef MPI_TYPE
+#define MPI_TYPE MPI_BYTE
+    bsize = SIZE(TRANSFER(buffer,["*"]))
+#endif            /* !MPI_TYPE */
+#endif            /* !VECTOR */
+
+    CALL MPI_IBCAST (buffer, bsize*blen, MPI_TYPE, p_source, &
+                     p_comm, p_request(p_irequest), p_error)
+    p_irequest = p_irequest + 1
+
+    IF (p_error /= MPI_SUCCESS) THEN
+       WRITE (nerr,'(a,i4,a)') ' MPI_IBCAST from ', p_source, &
+            ' failed.'
+       WRITE (nerr,'(a,i4)') ' Error = ', p_error
+       CALL p_abort
+    END IF
+
+#ifdef DEBUG
+    WRITE (nerr,'(a,i4,a,i4,a)') ' MPI_IBCAST from ', p_source, &
+            ' with broadcast number ', nbcast, ' successful.'
+#endif
+
+#else  /* we do not have MPI3 */
+    WRITE (nerr,'(a)') ' p_ibcast_DERIVED requires MPI >= 3.0'
+    CALL p_abort
+#endif /* NO_MPI3 */
+#endif /* NOMPI */
+
+  END SUBROUTINE p_ibcast_DERIVED

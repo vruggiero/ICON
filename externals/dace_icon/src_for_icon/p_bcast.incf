@@ -1,0 +1,306 @@
+!
+!+ Template for derived type MPI_BCAST routine
+!
+! Description:
+!   Template for derived type MPI_BCAST routine.
+!   To be included in modules to define MPI routines for derived types.
+!   Define before inclusion (example):
+!
+!     #define VECTOR
+!     #define p_bcast_DERIVED p_bcast_real_1d
+!     #define DERIVED  REAL(WP),DIMENSION(:)
+!     #define MPI_TYPE p_real_wp
+!     #include "p_bcast.incf"
+!
+!   Use
+!     #undef MPI_TYPE
+!   for derived data types
+!
+! Current Code Owners:
+!    For DWD 3DVAR:                        For COSMO:
+!    DWD, Harald Anlauf                    DWD, Christoph Schraff
+!    phone: +49 69 8062 4941               phone: +49 69 8062 2725
+!    fax:   +49 69 8062 3721               fax:   +49 69 8062 3721
+!    email: harald.anlauf@dwd.de           email: christoph.schraff@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_1         2008/11/05 Andreas Rhodin
+!  First operational 3D-Var release
+! V1_4         2009/03/26 Harald Anlauf
+!  Instrumentation for checksumming
+! V1_5         2009/05/25 Harald Anlauf
+!  Improve MPI checksumming for bcasts with odd sizes
+! V1_6         2009/06/10 Harald Anlauf
+!  Improve MPI checksum diagnostics
+! V1_10        2010/04/20 Michael Gertz
+!  Adaptions for SVN
+! V1_13        2011/11/01 Andreas Rhodin
+!  allow arrays of rank 1 to 3
+! V1_26        2013/06/27 Christoph Schraff
+!  add comments for exchange with COSMO
+!
+! CAUTION: This module is used commonly by the 3DVAR and COSMO main programs.!!!
+!!!        Therefore, anybody wanting to introduce a modification to this    !!!
+!!!        module in the context of either of these programs must consult    !!!
+!!!        the 'current code owner' of this module for the other program,    !!!
+!!!        in order to allow for checking that the modification will comply  !!!
+!!!        with both program packages. This must be done before the          !!!
+!!!        modification is put into the Version Control System (VCS).        !!!
+!
+! Code Description:
+! Language: Fortran 95.
+! Software Standards:
+!
+! Andreas Rhodin  DWD  2005       original code
+! Harald Anlauf   DWD  2007-2008  fixes and cleanups
+!------------------------------------------------------------------------------
+
+  SUBROUTINE p_bcast_DERIVED (buffer, p_source, comm)
+
+  !-------------------------------------------------------------------
+  ! use entities from 3D-Var modules if not provided by including code
+  !-------------------------------------------------------------------
+#if defined (HAVE_MPI_MOD) && defined (__GFORTRAN__) && (__GNUC__ >= 10)
+  USE mpi,              ONLY: MPI_BCAST
+#endif
+#ifndef MO_MPI_SOURCE
+  USE mo_mpi_dace,      ONLY: MPI_BYTE,      &!
+                              d_comm        ,&!
+                              d_npe           ! no of available PEs
+#ifdef DEBUG
+  USE mo_mpi_dace,      ONLY: MPI_SUCCESS,   &!
+                              nbcast          ! counter for broadcasts
+#endif
+#if defined (MPI_CHECKSUM) || defined (DEBUG)
+  USE mo_fortran_units, ONLY: nerr            ! Standard error fortran unit
+  USE mo_mpi_dace,      ONLY: p_abort         ! parallel abort routine
+#endif
+#ifdef MPI_CHECKSUM
+  USE mo_mpi_dace,      ONLY: dace,          &! MPI group info
+                              p_bcast,       &! overloaded MPI bcast routine
+                              p_gather,      &! overloaded MPI gather routine
+                              p_barrier,     &! MPI barrier routine
+                              crc,           &! checksum
+                              MPI_INTEGER2,  &!
+                              MPI_DOUBLE_PRECISION
+  USE mo_kind,          ONLY: i2
+#endif
+#endif /* !MO_MPI_SOURCE */
+  IMPLICIT NONE
+
+#if !defined (HAVE_MPI_MOD) && (defined (__GFORTRAN__) && (__GNUC__ >= 10))
+  !-------------------------------------------------------
+  ! workaround for missing interfaces in deprecated mpif.h
+  !-------------------------------------------------------
+  interface
+     subroutine MPI_BCAST (buffer, count, datatype, root, comm, ierror)
+#ifdef VECTOR
+       type(*) ,intent(inout)     :: buffer(*)    ! variable to bcast
+#else
+       type(*) ,intent(inout)     :: buffer       ! variable to bcast
+#endif
+       integer ,intent(in)        :: count        ! len(byte) of variable
+       integer ,intent(in)        :: datatype     ! MPI datatype
+       integer ,intent(in)        :: root         ! source processor index
+       integer ,intent(in)        :: comm         ! communicator
+       integer ,intent(out)       :: ierror       ! return value
+     end subroutine MPI_BCAST
+  end interface
+#endif /* (defined (__GFORTRAN__) && (__GNUC__ >= 10)) */
+
+  !---------------------
+  ! subroutine arguments
+  !---------------------
+  DERIVED,           INTENT(inout) :: buffer
+  INTEGER,           INTENT(in)    :: p_source
+  INTEGER, OPTIONAL, INTENT(in)    :: comm
+
+    !----------------
+    ! local variables
+    !----------------
+#ifndef NOMPI
+    INTEGER :: p_error
+    INTEGER :: p_comm
+    INTEGER :: blen = 1
+#ifdef MPI_TYPE
+    INTEGER :: bsize = 1
+#else
+    INTEGER :: bsize = 0
+#endif
+#ifdef MPI_CHECKSUM
+    INTEGER :: chk, checksum
+    INTEGER :: p_pe
+    LOGICAL :: lenok
+    LOGICAL :: ok, bad(0:d_npe-1)
+#ifdef VECTOR
+    INTEGER :: count
+    CHARACTER, ALLOCATABLE :: charbuf(:)    ! Workaround for sxf90 rev.381 bug
+
+#endif
+#endif
+
+    IF (PRESENT(comm)) THEN
+      p_comm = comm
+    ELSE
+      p_comm = d_comm
+    ENDIF
+
+#ifdef DEBUG
+    nbcast = nbcast+1
+#endif
+
+    IF (d_npe == 1) RETURN
+
+#ifdef VECTOR
+    blen = SIZE(buffer)
+    IF (blen==0) RETURN
+#ifndef MPI_TYPE
+#define MPI_TYPE MPI_BYTE
+#ifdef RANK
+#if   RANK >  4
+#error "RANK > 4 not implemented!"
+#elif RANK == 4
+    bsize = SIZE(TRANSFER(buffer(1,1,1,1),(/' '/)))
+#elif RANK == 3
+    bsize = SIZE(TRANSFER(buffer(1,1,1),(/' '/)))
+#elif RANK == 2
+    bsize = SIZE(TRANSFER(buffer(1,1),(/' '/)))
+#elif RANK == 1
+    bsize = SIZE(TRANSFER(buffer(1),(/' '/)))
+#else
+    bsize = SIZE(TRANSFER(buffer(1),(/' '/)))
+#endif            /* RANK = .. */
+#else
+    bsize = SIZE(TRANSFER(buffer(1),(/' '/)))
+#endif            /* RANK */
+#endif            /* MPI_TYPE */
+#else             /* !VECTOR */
+#ifndef MPI_TYPE
+#define MPI_TYPE MPI_BYTE
+    bsize = SIZE(TRANSFER(buffer,(/' '/)))
+#endif            /* !MPI_TYPE */
+#endif            /* !VECTOR */
+
+    CALL MPI_BCAST (buffer, bsize*blen, MPI_TYPE, p_source, p_comm, p_error)
+
+#ifdef DEBUG
+    WRITE (nerr,'(a,i4,a,i4,a)') ' MPI_BCAST from ', p_source, &
+            ' with broadcast number ', nbcast, ' successful.'
+
+    IF (p_error /= MPI_SUCCESS) THEN
+       WRITE (nerr,'(a,i4,a)') ' MPI_BCAST from ', p_source, &
+            ' failed.'
+       WRITE (nerr,'(a,i4)') ' Error = ', p_error
+       CALL p_abort
+    END IF
+#endif
+
+#ifdef MPI_CHECKSUM
+#ifdef VECTOR   /* Only for vector version to avoid recursion with p_bcast */
+    ! Do not check double precision transfers for now!
+!   if (MPI_TYPE == MPI_DOUBLE_PRECISION) return
+
+    p_pe  = dace% pe
+    count = bsize*blen
+    lenok = .TRUE.
+    IF (MPI_TYPE == MPI_BYTE) THEN
+       IF (MOD (count, 4) /= 0) THEN
+          lenok = .FALSE.
+          IF (p_pe == p_source) THEN
+             WRITE (nerr,'(a,i8)') "&
+                  &p_bcast_DERIVED&
+                  &:WARNING: count not multiple of 4:", bsize*blen
+          END IF
+#ifndef HAVE_I1
+          CALL p_abort
+#endif
+       END IF
+    END IF
+
+    SELECT CASE (MPI_TYPE)
+    CASE (MPI_BYTE)
+       SELECT CASE (MOD (count,4))
+       CASE (0)
+          checksum = crc (TRANSFER (buffer, (/  0 /), size=count/4))
+       CASE (2)
+          checksum = crc (TRANSFER (buffer, (/0_i2/), size=count/2))
+       CASE default
+          ! The following line produces a segfault with sxf90 rev.381:
+!!!       checksum = crc (transfer (buffer, (/ "*" /), size=count))
+          ! Workaround for sxf90 rev.381 bug:
+          ALLOCATE (charbuf(count))
+          charbuf  = TRANSFER (buffer, (/ "*" /), size=count)
+          checksum = crc (charbuf)
+          DEALLOCATE (charbuf)
+       END SELECT
+    CASE (MPI_INTEGER2)
+       checksum = crc (TRANSFER (buffer, (/ 0_i2 /)))
+    CASE default
+       checksum = crc (TRANSFER (buffer, (/ 0 /)))
+    END SELECT
+    chk = checksum
+    CALL p_bcast (checksum, p_source)
+    ok = (checksum == chk)      ! Compare checksums of sender and receiver
+    bad = .FALSE.
+    CALL p_gather (.NOT. ok, bad, root=p_source)
+    IF (p_pe == p_source) THEN
+       ok = ALL (.NOT. bad)     ! Dump sender when bad data on any receiver
+    END IF
+    IF (.NOT. ok) THEN
+       WRITE (0,'()')
+       WRITE (0,'(a,i12,i5,a,i12,i5,a,7(1x,i0))') "&
+               &p_bcast_DERIVED&
+               &:BAD CHECKSUM:", chk, p_pe, &
+               "  source:", checksum, p_source, "  shape:", SHAPE (buffer)
+       WRITE (0,*) "MPI_TYPE =", MPI_TYPE
+       WRITE (0,'(a,i5)') "Dumping buffer to fortran unit", 1000+p_pe
+       WRITE (0,'()')
+       CALL dump_buffer (TRANSFER (buffer, (/ 0 /)), unit=1000+p_pe)
+       IF (lenok) THEN
+!         CALL p_abort
+       ELSE
+          WRITE (0,'(i5,A)') p_pe, ": checksum ignored due to odd transfer length"
+       END IF
+       WRITE (0,'()')
+    END IF
+    IF (.NOT. lenok) RETURN
+    CALL p_barrier ()           ! Synchronize before crashing
+    CALL p_bcast (ok, p_source)
+    IF (.NOT. ok) CALL p_abort ()
+  CONTAINS
+    SUBROUTINE dump_buffer (v, unit)
+      INTEGER, INTENT(in)           :: v(:)
+      INTEGER, INTENT(in), OPTIONAL :: unit
+      INTEGER :: n, i, j, lu
+      n = SIZE (v)
+      lu = 0; IF (PRESENT (unit)) lu = unit
+      IF (lu>0) THEN
+         IF (p_pe == p_source) THEN
+            WRITE (lu,*) "&
+                 &p_bcast_DERIVED&
+                 &: source data"
+         ELSE
+            WRITE (lu,*) "&
+                 &p_bcast_DERIVED&
+                 &: receiver data"
+         END IF
+      END IF
+      WRITE (lu,*) "pe=", p_pe, ": Buffer size (words):", n
+      WRITE (lu,'()')
+      WRITE (lu,*) "pe=", p_pe, ": Data:", v(:MIN(n,4)), "...", v(MAX(5,n-3):)
+      WRITE (lu,'()')
+      IF (lu == 0) RETURN       ! Do not flood stderr...
+      WRITE (lu,'(A)') "Nontrivial contents:"
+      DO i = 1, n, 8
+         j = MIN (i+7,n)
+         IF (ANY (v(i:j) /= 0)) WRITE (lu,*) i,"..",j,":", v(i:j)
+      END DO
+    END SUBROUTINE dump_buffer
+#endif /* VECTOR       */
+#endif /* MPI_CHECKSUM */
+
+#endif /* NOMPI */
+
+  END SUBROUTINE p_bcast_DERIVED

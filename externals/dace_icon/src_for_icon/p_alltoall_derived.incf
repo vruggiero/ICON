@@ -1,0 +1,311 @@
+!
+!+ Template for derived type MPI_ALLTOALL(V) routine
+!
+! Description:
+!   Template for derived type MPI_ALLTOALL(V) routine.
+!   To be included in modules to define MPI routines for derived types.
+!   Define before inclusion (example):
+!     define DERIVED INTEGER
+!     define p_alltoall_DERIVED p_alltoall_int
+!     define MPI_TYPE p_int
+!     include 'p_alltoall_derived.inc'
+!   undef MPI_TYPE for derived data types
+!
+! Current Code Owners:
+!    For DWD 3DVAR:                        For COSMO:
+!    DWD, Harald Anlauf                    DWD, Christoph Schraff
+!    phone: +49 69 8062 4941               phone: +49 69 8062 2725
+!    fax:   +49 69 8062 3721               fax:   +49 69 8062 3721
+!    email: harald.anlauf@dwd.de           email: christoph.schraff@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_1         2008/11/05 Andreas Rhodin
+!  First operational 3D-Var release
+! V1_10        2010/04/20 Michael Gertz
+!  Adaptions for SVN
+! V1_13        2011/11/01 Andreas Rhodin
+!  changed 3dvar revision numbers (CVS->SVN)
+! V1_19        2012-04-16 Harald Anlauf
+!  cleanup
+! V1_28        2014/02/26 Robin Faulwetter
+!  Fix p_alltoall_derived, such that >2147483648 bytes can be sent by a PE
+! V1_49        2016-10-25 Michael Bender
+!  adjustments for sharing with COSMO
+!
+! CAUTION: This module is used commonly by the 3DVAR and COSMO main programs.!!!
+!!!        Therefore, anybody wanting to introduce a modification to this    !!!
+!!!        module in the context of either of these programs must consult    !!!
+!!!        the 'current code owner' of this module for the other program,    !!!
+!!!        in order to allow for checking that the modification will comply  !!!
+!!!        with both program packages. This must be done before the          !!!
+!!!        modification is put into the Version Control System (VCS).        !!!
+!
+! Code Description:
+! Language: Fortran 2003.
+! Software Standards:
+!
+! Andreas Rhodin  DWD  2005       original code
+! Harald Anlauf   DWD  2007-2008  fixes and cleanups
+!------------------------------------------------------------------------------
+
+
+  SUBROUTINE p_alltoall_DERIVED (sendbuf, recvbuf, comm, sendcounts,recvcounts)
+
+  !-------------------------------------------------------------------
+  ! use entities from 3D-Var modules if not provided by including code
+  !-------------------------------------------------------------------
+#ifndef MO_MPI_SOURCE
+#if defined (HAVE_MPI_MOD) && defined (__GFORTRAN__) && (__GNUC__ >= 10)
+  USE mpi,              only: MPI_ALLTOALL,   &!
+                              MPI_ALLTOALLV    !
+#endif
+  USE mo_mpi_dace,      only: MPI_BYTE,       &!
+                              d_comm,         &!
+                              p_abort,        &! parallel abort routine
+                              alltoallv_args   ! prepare arguments
+  USE mo_fortran_units, only: nerr             ! standard error fortran unit
+#ifdef MPI_CHECKSUM
+  USE mo_mpi_dace,      only: crc,            &!
+                              MPI_INTEGER,    &!
+                              MPI_INTEGER2,   &!
+                              MPI_DOUBLE_PRECISION
+#endif
+#ifdef DEBUG
+  USE mo_mpi_dace,      only: MPI_SUCCESS
+#endif
+#if defined(DEBUG) || defined(MPI_CHECKSUM)
+  USE mo_mpi_dace,      only: d_pe
+#endif
+#endif
+
+#ifdef MPI_CHECKSUM
+  USE mo_kind,          only: i8
+#endif
+
+#ifdef DEBUG
+#define ERR_CHECK(text) call err_chk(text)
+#else
+#define ERR_CHECK(text)
+#endif
+
+  implicit none
+
+#if !defined (HAVE_MPI_MOD) && (defined (__GFORTRAN__) && (__GNUC__ >= 10))
+  !-------------------------------------------------------
+  ! workaround for missing interfaces in deprecated mpif.h
+  !-------------------------------------------------------
+  interface
+     subroutine MPI_ALLTOALL  (sendbuf, sendcount, sendtype,             &
+                               recvbuf, recvcount, recvtype, comm, ierror)
+       type(*) ,intent(in)        :: sendbuf (*)   ! send buffer
+       integer ,intent(in)        :: sendcount     ! no.elements in sendbuf
+       integer ,intent(in)        :: sendtype      ! MPI datatype
+       type(*) ,intent(inout)     :: recvbuf (*)   ! recv buffer
+       integer ,intent(in)        :: recvcount     ! no.elements in recvbuf
+       integer ,intent(in)        :: recvtype      ! MPI datatype
+       integer ,intent(in)        :: comm          ! communicator
+       integer ,intent(out)       :: ierror        ! return value
+     end subroutine MPI_ALLTOALL
+  end interface
+  interface
+     subroutine MPI_ALLTOALLV (sendbuf, sendcnts, sdispls, sendtype, &
+                               recvbuf, recvcnts, rdispls, recvtype, &
+                               comm, ierror                          )
+       type(*) ,intent(in)        :: sendbuf (*)   ! send buffer
+       integer ,intent(in)        :: sendcnts(*)   ! send counts
+       integer ,intent(in)        :: sdispls (*)   ! displacements
+       integer ,intent(in)        :: sendtype      ! MPI datatype
+       type(*) ,intent(inout)     :: recvbuf (*)   ! recv buffer
+       integer ,intent(in)        :: recvcnts(*)   ! recv counts
+       integer ,intent(in)        :: rdispls (*)   ! displacements
+       integer ,intent(in)        :: recvtype      ! MPI datatype
+       integer ,intent(in)        :: comm          ! communicator
+       integer ,intent(out)       :: ierror        ! return value
+     end subroutine MPI_ALLTOALLV
+  end interface
+#endif /* (defined (__GFORTRAN__) && (__GNUC__ >= 10)) */
+
+  !---------------------
+  ! subroutine arguments
+  !---------------------
+  DERIVED           ,INTENT(in)  :: sendbuf (:)
+  DERIVED           ,INTENT(out) :: recvbuf (:)
+  INTEGER ,OPTIONAL ,INTENT(in)  :: comm
+  INTEGER ,OPTIONAL ,INTENT(in)  :: sendcounts (:)
+  INTEGER ,OPTIONAL ,INTENT(in)  :: recvcounts (:)
+
+    !----------------
+    ! local variables
+    !----------------
+    INTEGER          :: count, p_comm, sbuflen, rbuflen, groupsize
+    INTEGER ,pointer :: p_sendcounts(:), p_sdispls(:)
+    INTEGER ,pointer :: p_recvcounts(:), p_rdispls(:)
+    INTEGER          :: p_error
+#ifndef NOMPI
+    INTEGER          :: bufsize = 0
+#endif
+#ifndef MPI_TYPE
+    integer          :: send_type
+    DERIVED          :: template
+#endif
+#ifdef MO_MPI_SOURCE
+    INTEGER, PARAMETER     :: nerr = 0      ! standard error fortran unit
+#endif
+
+#ifdef MPI_CHECKSUM
+    integer                :: i
+    integer(kind=i8)       :: nsize
+    character, pointer     :: c_buf(:)        => null()
+    integer,   pointer     :: checksum(:)     => null()
+    integer,   pointer     :: checksum_snd(:) => null()
+#endif
+
+#ifndef NOMPI
+
+    !-----------------------
+    ! check for buffer sizes
+    !-----------------------
+    sbuflen  = size (sendbuf)
+    rbuflen  = size (recvbuf)
+#ifdef MPI_TYPE
+    bufsize = 1
+#define MPI_TYPE_AUX MPI_TYPE
+#else
+    if (bufsize == 0) bufsize = size(transfer(template,(/' '/)))
+    call MPI_TYPE_CONTIGUOUS(bufsize, MPI_BYTE, send_type, p_error)
+    ERR_CHECK('MPI_TYPE_CONTIGUOUS')
+    call MPI_TYPE_COMMIT(send_type, p_error)
+    ERR_CHECK('MPI_TYPE_COMMIT')
+#define MPI_TYPE_AUX send_type
+#endif
+
+    !-----------------------------------
+    ! derive communicator and group size
+    !-----------------------------------
+    IF (PRESENT(comm)) THEN
+       p_comm = comm
+    ELSE
+       p_comm = d_comm
+    ENDIF
+    call MPI_COMM_SIZE(p_comm, groupsize, p_error)
+    ERR_CHECK('MPI_COMM_SIZE')
+
+    if (groupsize==1) then
+      if (rbuflen /= sbuflen) then
+        WRITE (nerr,'(a)') &
+        ' p_alltoall_DERIVED: groupsize==1 .and. size(sendbuf)/=size(recvbuf)'
+        CALL p_abort
+      endif
+      recvbuf = sendbuf
+      return
+    endif
+
+    !----------------------
+    ! call MPI_alltoallV ..
+    !----------------------
+    if (present (sendcounts)) then
+      call alltoallv_args (1, sbuflen, rbuflen, groupsize, p_comm,         &
+                           sendcounts, recvcounts,                         &
+                           p_sendcounts, p_sdispls, p_recvcounts, p_rdispls)
+#ifdef MPI_CHECKSUM
+      allocate(checksum(groupsize), checksum_snd(groupsize))
+#ifdef MPI_TYPE
+      select case (MPI_TYPE)
+      case (MPI_BYTE)
+         bufsize = 1
+      case (MPI_INTEGER2)
+         bufsize = 2
+      case (MPI_DOUBLE_PRECISION)
+         bufsize = 8
+      case default
+         bufsize = 4
+      end select
+#endif
+      do i = 1, groupsize
+        nsize  = p_sendcounts(i) * bufsize
+        if (nsize <= huge(1)) then
+          allocate(c_buf(nsize))
+          c_buf = transfer(sendbuf(p_sdispls(i)+1:p_sdispls(i)+p_sendcounts(i)), (/' '/))
+          checksum(i) = crc(c_buf)
+          deallocate(c_buf)
+        else
+          ! the transfer command would fail.
+          write (nerr,'()')
+          write (nerr,'("p_alltoall_datum: checksum can not be computed &
+               &(source=",i4.4,", dest=",i4.4,")")') d_pe, i-1
+        end if
+      end do
+      CALL MPI_ALLTOALL (checksum, 1, MPI_INTEGER, &
+                         checksum_snd, 1, MPI_INTEGER, p_comm, p_error)
+      ERR_CHECK('MPI_ALLTOALL (checksums)')
+#endif
+      CALL MPI_ALLTOALLV (sendbuf, p_sendcounts, p_sdispls, MPI_TYPE_AUX, &
+                          recvbuf, p_recvcounts, p_rdispls, MPI_TYPE_AUX, &
+                          p_comm, p_error)
+      ERR_CHECK('MPI_ALLTOALLV')
+
+#ifdef MPI_CHECKSUM
+      do i = 1, groupsize
+        nsize = p_recvcounts(i) * bufsize
+        if (nsize <= huge(1)) then
+          allocate(c_buf(nsize))
+          c_buf = transfer(recvbuf(p_rdispls(i)+1:p_rdispls(i)+p_recvcounts(i)), (/' '/))
+          checksum(i) = crc(c_buf)
+          if (checksum(i) /= checksum_snd(i)) then
+            write (nerr,'()')
+            write (nerr,'("p_alltoall_datum: BAD CHECKSUM:")')
+            write (nerr,'(3x,"source     :",i4.4,2x,I12)') i-1, checksum_snd(i)
+            write (nerr,'(3x,"destination:",i4.4,2x,I12)') d_pe, checksum(i)
+            call p_abort
+          end if
+          deallocate(c_buf)
+        end if
+      end do
+      deallocate(checksum, checksum_snd)
+#endif
+      deallocate (p_sendcounts, p_sdispls, p_recvcounts, p_rdispls)
+    !-------------------
+    ! .. or MPI_alltoall
+    !-------------------
+    else
+      if (rbuflen /= sbuflen) then
+        WRITE (nerr,'(a)') &
+          ' p_alltoall_DERIVED: size (sendbuf) /= size (recvbuf)'
+        CALL p_abort
+      endif
+      if (sbuflen == 0) return
+      if (mod (sbuflen,groupsize) /= 0) then
+        WRITE (nerr,'(a)') ' p_alltoall_DERIVED: mod (sbuflen,groupsize) /= 0'
+        CALL p_abort
+      endif
+      count = sbuflen / groupsize
+      CALL MPI_ALLTOALL (sendbuf, count, MPI_TYPE_AUX, &
+                         recvbuf, count, MPI_TYPE_AUX, p_comm, p_error)
+      ERR_CHECK('MPI_ALLTOALL')
+    endif
+#ifndef MPI_TYPE
+    call MPI_TYPE_FREE(send_type, p_error)
+    ERR_CHECK('MPI_TYPE_FREE')
+#endif
+
+#else
+    recvbuf = sendbuf
+#endif
+
+#ifdef DEBUG
+  contains
+
+  ! TODO: replace all code of this type in mo_mpi_dace by a routine like this.
+    subroutine err_chk(str)
+      character(len=*), intent(in) :: str
+      if (p_error /= MPI_SUCCESS) then
+        write(nerr, '(A," (p_alltoall_DERIVED) failed on pe ",I4.4,", error=",I4)') &
+                    trim(str), d_pe, p_error
+        call p_abort
+      end if
+    end subroutine err_chk
+#endif
+
+  END SUBROUTINE p_alltoall_DERIVED

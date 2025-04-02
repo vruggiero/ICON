@@ -1,0 +1,136 @@
+!
+!+ Includes for optimised RTTOVP diagnostics output
+!
+! Description:
+!   Includes for optimised RTTOVP diagnostics output
+!
+! Current Code Owner: DWD, Robin Faulwetter
+!    phone: +49 69 8062 2746
+!    fax:   +49 69 8062 3721
+!    email:  robin.faulwetter@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_31        2014-08-21 Robin Faulwetter
+!  Includes for optimised RTTOVP diagnostics output
+! V1_42        2015-06-08 Andreas Rhodin
+!  minor cleanup
+!
+! Code Description:
+! Language: Fortran 2003.
+! Software Standards:
+!==============================================================================
+    subroutine write_var_TYPE_chan(var)
+      type(t_nc_var), intent(in) :: var
+      integer :: i, j, k, n, m, iset, nch
+      integer :: i_j, m2
+      logical :: lwrite
+      integer :: nchan
+      integer, allocatable :: id_ch(:)
+!====================================
+#if defined(DIMS3)
+!====================================
+      integer :: n2
+      n2 = size(TYPEdat,2)
+!------------------------------
+#if defined(DIMCH)
+!------------------------------
+#define ADD_DIMA 1:m2,
+#define ADD_DIMB id_ch(1:m2),
+!------------------------------
+#else
+!------------------------------
+#define ADD_DIMA :,
+#define ADD_DIMB :,
+!------------------------------
+#endif
+!------------------------------
+#define ADD_DIMS :,
+#define ADD_START 1,
+#define ADD_CNT n2,
+!====================================
+#else
+!====================================
+#define ADD_DIMS
+#define ADD_DIMA
+#define ADD_DIMB
+#define ADD_START
+#define ADD_CNT
+!====================================
+#endif
+!====================================
+! if the add. dimension is channels
+!#if defined(DIMCH)
+!#undef  ADD_DIMA
+!#undef  ADD_DIMB
+!#define ADD_DIMA 1:m2,
+!#define ADD_DIMB id_ch(1:m2),
+!#endif
+
+      lwrite = .false.
+      do iset = 1, nset
+        if (associated(TYPE(iset)%d)) lwrite = .true.
+      end do
+      if (.not.lwrite) return
+
+      nchan = size(TYPEdat,1)
+
+      i = 0
+      do iset = 1, nset
+        n = r_arr(iset)% n_rec
+        if (associated(TYPE(iset)%d)) then
+          nch = size(TYPE(iset)%d, 1)
+          allocate(id_ch(nch))
+          do j = 1, n
+            i_j=i+j ;if (lsorted) i_j=ipos(i+j)
+            m2=nchan ;TYPEdat(1:m2 , ADD_DIMA i_j) = TYPE(iset)% fill
+            m = 0
+            !------------------------------------
+            ! determine index array "id_ch"
+            !------------------------------------
+            do k = 1, nch
+              if (r_arr(iset)% valid(k,j)) then
+                m = m + 1
+                id_ch(m)=k
+              endif
+            enddo
+            if(m>0) then
+              m2 = m  ! needed for ADD_DIMA/B if DIMCH is defined
+              TYPEdat(1:m , ADD_DIMA i_j) = TYPE(iset)%d(id_ch(1:m), ADD_DIMB j)
+            endif
+          enddo
+          deallocate(id_ch)
+          if (TYPE(iset)%alloc) then
+            deallocate(TYPE(iset)% d)
+          else
+            nullify(TYPE(iset)% d)
+          end if
+        else
+          if (lsorted) then
+            TYPEdat(:, ADD_DIMS ipos(i+1:i+n)) = TYPE(iset)% fill
+          else
+            TYPEdat(:, ADD_DIMS i+1:i+n) = TYPE(iset)% fill
+          end if
+        end if
+        i = i + n
+      end do
+
+      if (lwrite) then
+        if (var%lpar) then
+          stat = nf90_put_var(nc%id, var%id, TYPEdat(:, ADD_DIMS 1:nprof), &
+                              start=(/1, ADD_START ipar,istart/), count=(/nchan, ADD_CNT 1,nprof/))
+          NF_ERR('nf90_put_var',trim(var%name))
+        else
+          stat = nf90_put_var(nc%id, var%id, TYPEdat(:, ADD_DIMS 1:nprof), &
+                              start=(/1, ADD_START istart/), count=(/nchan, ADD_CNT nprof/))
+          NF_ERR('nf90_put_var',trim(var%name))
+        end if
+      end if
+
+#undef ADD_DIMS
+#undef ADD_DIMA
+#undef ADD_DIMB
+#undef ADD_START
+#undef ADD_CNT
+    end subroutine write_var_TYPE_chan

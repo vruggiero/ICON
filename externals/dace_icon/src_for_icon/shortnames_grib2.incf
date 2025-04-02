@@ -1,0 +1,3423 @@
+!
+!+ Shortname definitions automatically extracted from shortName.def
+!
+! Description:
+! Shortname definitions automatically extracted from:
+! /hpc/sw/eccodes/definitions/release/2.36.0/definitions.edzw/grib2/localConcepts/edzw/shortName.def
+!
+! Synopsis:
+! PARAM(paramID,shortName,GRIB_API parameter list)
+! PDESC(paramID,longName)
+!
+! Usage: define before inclusion
+!   #define PARAM call addpar
+!   #define PDESC call adddes
+! where addpar(), adddes() are suitable generic subroutines.
+! Note: Fortran preprocessors do not handle variadic macros.
+!
+! Remarks:
+! LongNames are truncated to 100 characters.
+! GRIB_API parameter names have been shortened.
+! The number of definitions (TABSIZE) is defined at the end.
+!
+! Current Code Owner: DWD, Harald Anlauf
+!    phone: +49 69 8062 4941
+!    fax:   +49 69 8062 3721
+!    email: harald.anlauf@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_23        2013-03-26 Harald Anlauf
+!  Shortname definitions automatically extracted from shortName.def
+! V1_26        2013/06/27 Harald Anlauf
+!  Extend for ECMWF GRIB1/GRIB2 handling, properly read/set grib2 metadata
+! V1_27        2013-11-08 Harald Anlauf
+!  Update parameter shortname tables from GRIB_API 1.11.0 release
+! V1_43        2015-08-19 Harald Anlauf
+!  Update parameter shortname tables from GRIB_API 1.13.1 release
+! V1_47        2016-06-06 Harald Anlauf
+!  Split localdefs1 from shortnames_grib1.incf
+!  Split localdefs2 from shortnames_grib2.incf
+! V1_48        2016-10-06 Harald Anlauf
+!  restore DUMMY_* for diagnostic purposes
+!
+! BEGIN definitions
+PARAM(500000,'PS',dis=0,cat=3,num=0,T_FFS=1,&
+      longname='Pressure (S) (not reduced)')
+PARAM(500001,'P',dis=0,cat=3,num=0,&
+      longname='Pressure')
+PARAM(500002,'PMSL',dis=0,cat=3,num=1,&
+      longname='Pressure Reduced to MSL')
+PARAM(500003,'DPSDT',dis=0,cat=3,num=2,T_FFS=1,&
+      longname='Pressure Tendency (S)')
+PARAM(500004,'FIS',dis=0,cat=3,num=4,T_FFS=1,&
+      longname='Geopotential (S)')
+PARAM(500005,'FIF',dis=0,cat=3,num=4,T_SFS=105,T_FFS=105,&
+      longname='Geopotential (full lev)')
+PARAM(500006,'FI',dis=0,cat=3,num=4,&
+      longname='Geopotential')
+PARAM(500007,'HSURF',dis=0,cat=3,num=6,T_SFS=101,T_FFS=1,&
+      longname='Geometric Height of the earths surface above sea level')
+PARAM(500008,'HHL',dis=0,cat=3,num=6,T_SFS=101,&
+      longname='Geometric Height of the layer limits above sea level(NN)')
+PARAM(500009,'TO3',dis=0,cat=14,num=2,&
+      longname='Total Column Integrated Ozone')
+PARAM(500010,'T_G',dis=0,cat=0,num=0,T_FFS=1,&
+      longname='Temperature (G)')
+PARAM(500011,'T_2M',dis=0,cat=0,num=0,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m Temperature')
+PARAM(500012,'T_2M_AV',dis=0,cat=0,num=0,T_StatP=0,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m Temperature (AV)')
+PARAM(500013,'T_2M_CL',dis=0,cat=0,num=0,T_StatP=0,T_FFS=103,SF_FFS=0,SV_FFS=2,T_GenP=9,&
+      longname='Climat. temperature, 2m Temperature')
+PARAM(500014,'T',dis=0,cat=0,num=0,&
+      longname='Temperature')
+PARAM(500015,'TMAX_2M',dis=0,cat=0,num=0,T_StatP=2,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='Max 2m Temperature (i)')
+PARAM(500016,'TMIN_2M',dis=0,cat=0,num=0,T_StatP=3,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='Min 2m Temperature (i)')
+PARAM(500017,'TD_2M',dis=0,cat=0,num=6,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m Dew Point Temperature')
+PARAM(500018,'TD_2M_AV',dis=0,cat=0,num=6,T_StatP=0,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m Dew Point Temperature (AV)')
+PARAM(500019,'DBZ_MAX',dis=0,cat=15,num=6,T_StatP=2,T_SFS=8,T_FFS=1,&
+      longname='Radar spectra (1)')
+PARAM(500020,'WVSP1',dis=10,cat=0,num=0,&
+      longname='Wave spectra (1)')
+PARAM(500021,'WVSP2',dis=10,cat=0,num=1,&
+      longname='Wave spectra (2)')
+PARAM(500022,'WVSP3',dis=10,cat=0,num=2,&
+      longname='Wave spectra (3)')
+PARAM(500023,'DD_10M',dis=0,cat=2,num=0,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='Wind Direction (DD_10M)')
+PARAM(500024,'DD',dis=0,cat=2,num=0,&
+      longname='Wind Direction (DD)')
+PARAM(500025,'SP_10M',dis=0,cat=2,num=1,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='Wind speed (SP_10M)')
+PARAM(500026,'SP',dis=0,cat=2,num=1,&
+      longname='Wind speed (SP)')
+PARAM(500027,'U_10M',dis=0,cat=2,num=2,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='U-Component of Wind')
+PARAM(500028,'U',dis=0,cat=2,num=2,&
+      longname='U-Component of Wind')
+PARAM(500029,'V_10M',dis=0,cat=2,num=3,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='V-Component of Wind')
+PARAM(500030,'V',dis=0,cat=2,num=3,&
+      longname='V-Component of Wind')
+PARAM(500031,'OMEGA',dis=0,cat=2,num=8,&
+      longname='Vertical Velocity (Pressure) ( omega=dp/dt )')
+PARAM(500032,'W',dis=0,cat=2,num=9,&
+      longname='Vertical Velocity (Geometric) (w)')
+PARAM(500034,'QV_2M',dis=0,cat=1,num=0,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='Specific Humidity (2m)')
+PARAM(500035,'QV',dis=0,cat=1,num=0,&
+      longname='Specific Humidity')
+PARAM(500036,'RELHUM_2M',dis=0,cat=1,num=1,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m Relative Humidity')
+PARAM(500037,'RELHUM',dis=0,cat=1,num=1,&
+      longname='Relative Humidity')
+PARAM(500038,'TQV',dis=0,cat=1,num=64,&
+      longname='Total column integrated water vapour')
+PARAM(500039,'AEVAP_S',dis=0,cat=1,num=79,T_StatP=1,T_FFS=1,&
+      longname='Evaporation (s)')
+PARAM(500040,'TQI',dis=0,cat=1,num=70,&
+      longname='Total Column-Integrated Cloud Ice')
+PARAM(500041,'TOT_PREC',dis=0,cat=1,num=52,T_StatP=1,&
+      longname='Total Precipitation (Accumulation)')
+PARAM(500042,'PREC_GSP',dis=0,cat=1,num=54,T_StatP=1,&
+      longname='Large-Scale Precipitation (Accumulation)')
+PARAM(500043,'PREC_CON',dis=0,cat=1,num=37,T_StatP=1,&
+      longname='Convective Precipitation (Accumulation)')
+PARAM(500044,'W_SNOW',dis=0,cat=1,num=60,&
+      longname='Snow depth water equivalent')
+PARAM(500045,'H_SNOW',dis=0,cat=1,num=11,&
+      longname='Snow Depth')
+PARAM(500046,'CLCT',dis=0,cat=6,num=1,&
+      longname='Total Cloud Cover')
+PARAM(500047,'CLC_CON',dis=0,cat=6,num=2,&
+      longname='Convective Cloud Cover')
+PARAM(500048,'CLCL',dis=0,cat=6,num=22,T_SFS=1,T_FFS=100,SF_FFS=-2,SV_FFS=800,&
+      longname='Cloud Cover (800 hPa - Soil)')
+PARAM(500049,'CLCM',dis=0,cat=6,num=22,T_SFS=100,SF_SFS=-2,SV_SFS=800,T_FFS=100,SF_FFS=-2,SV_FFS=400,&
+      longname='Cloud Cover (400 - 800 hPa)')
+PARAM(500050,'CLCH',dis=0,cat=6,num=22,T_SFS=100,SF_SFS=-2,SV_SFS=400,T_FFS=100,SF_FFS=-2,SV_FFS=0,&
+      longname='Cloud Cover (0 - 400 hPa)')
+PARAM(500051,'TQC',dis=0,cat=1,num=69,&
+      longname='Total Column-Integrated Cloud Water')
+PARAM(500052,'SNOW_CON',dis=0,cat=1,num=55,T_StatP=1,&
+      longname='Convective Snowfall water equivalent (s)')
+PARAM(500053,'SNOW_GSP',dis=0,cat=1,num=56,T_StatP=1,&
+      longname='Large-Scale snowfall - water equivalent (Accumulation)')
+PARAM(500054,'FR_LAND',dis=2,cat=0,num=0,&
+      longname='Land Cover (1=land, 0=sea)')
+PARAM(500055,'Z0',dis=2,cat=0,num=1,&
+      longname='Surface Roughness length Surface Roughness')
+PARAM(500056,'ALB_RAD',dis=0,cat=19,num=1,&
+      longname='Albedo (in short-wave)')
+PARAM(500057,'ALBEDO_B',dis=0,cat=19,num=1,T_StatP=0,&
+      longname='Albedo (in short-wave, average)')
+PARAM(500058,'T_CL',dis=2,cat=3,num=18,T_FFS=106,SF_FFS=2,SV_FFS=36,&
+      longname='Soil Temperature  ( 36 cm depth, vv=0h)')
+PARAM(500059,'T_CL_LM',dis=2,cat=3,num=18,T_FFS=106,SF_FFS=2,SV_FFS=41,&
+      longname='Soil Temperature (41 cm depth)')
+PARAM(500060,'T_M',dis=2,cat=3,num=18,T_FFS=106,SF_FFS=2,SV_FFS=9,&
+      longname='Soil Temperature')
+PARAM(500061,'T_S',dis=2,cat=3,num=18,T_FFS=1,&
+      longname='Soil Temperature')
+PARAM(500062,'W_CL',dis=2,cat=3,num=20,T_SFS=106,SF_SFS=2,SV_SFS=190,T_FFS=106,SF_FFS=2,SV_FFS=100,&
+      longname='Column-integrated Soil Moisture')
+PARAM(500063,'W_G1',dis=2,cat=3,num=20,T_SFS=106,SF_SFS=2,SV_SFS=10,T_FFS=106,SF_FFS=2,SV_FFS=0,&
+      longname='Column-integrated Soil Moisture (1) 0 -10 cm')
+PARAM(500064,'W_G2',dis=2,cat=3,num=20,T_SFS=106,SF_SFS=2,SV_SFS=100,T_FFS=106,SF_FFS=2,SV_FFS=10,&
+      longname='Column-integrated Soil Moisture (2) 10-100cm')
+PARAM(500065,'PLCOV',dis=2,cat=0,num=4,&
+      longname='Plant cover')
+PARAM(500066,'RUNOFF_G',dis=2,cat=0,num=5,T_StatP=1,T_FFS=106,SF_FFS=2,SV_FFS=10,&
+      longname='Water Runoff')
+PARAM(500068,'RUNOFF_S',dis=2,cat=0,num=5,T_StatP=1,T_FFS=106,SF_FFS=2,SV_FFS=0,&
+      longname='Water Runoff (s)')
+PARAM(500069,'FR_ICE',dis=10,cat=2,num=0,&
+      longname='Sea Ice Cover ( 0= free, 1=cover)')
+PARAM(500070,'H_ICE',dis=10,cat=2,num=1,&
+      longname='Sea Ice Thickness')
+PARAM(500071,'SWH',dis=10,cat=0,num=3,&
+      longname='Significant height of combined wind waves and swell')
+PARAM(500072,'MDWW',dis=10,cat=0,num=4,&
+      longname='Direction of wind waves')
+PARAM(500073,'SHWW',dis=10,cat=0,num=5,&
+      longname='Significant height of wind waves')
+PARAM(500074,'MPWW',dis=10,cat=0,num=6,&
+      longname='Mean period of wind waves')
+PARAM(500075,'MDTS',dis=10,cat=0,num=7,&
+      longname='Direction of swell waves')
+PARAM(500076,'SHTS',dis=10,cat=0,num=8,&
+      longname='Significant height of swell waves')
+PARAM(500077,'MPTS',dis=10,cat=0,num=9,&
+      longname='Mean period of swell waves')
+PARAM(500078,'ASOB_S',dis=0,cat=4,num=9,T_StatP=0,T_FFS=1,&
+      longname='Net short wave radiation flux (at the surface)')
+PARAM(500079,'SOBS_RAD',dis=0,cat=4,num=9,T_FFS=1,&
+      longname='Net short wave radiation flux (at the surface)')
+PARAM(500080,'ATHB_S',dis=0,cat=5,num=5,T_StatP=0,T_FFS=1,&
+      longname='Net long wave radiation flux (m) (at the surface)')
+PARAM(500081,'THBS_RAD',dis=0,cat=5,num=5,T_FFS=1,&
+      longname='Net long wave radiation flux')
+PARAM(500082,'ASOB_T',dis=0,cat=4,num=9,T_StatP=0,T_FFS=8,&
+      longname='Net short wave radiation flux (on the model top)')
+PARAM(500083,'SOBT_RAD',dis=0,cat=4,num=9,T_FFS=8,&
+      longname='Net short wave radiation flux')
+PARAM(500084,'ATHB_T',dis=0,cat=5,num=5,T_StatP=0,T_FFS=8,&
+      longname='Net long wave radiation flux (m) (on the model top)')
+PARAM(500085,'THBT_RAD',dis=0,cat=5,num=5,T_FFS=8,&
+      longname='Net long wave radiation flux')
+PARAM(500086,'ALHFL_S',dis=0,cat=0,num=10,T_StatP=0,T_FFS=1,&
+      longname='Latent Heat Net Flux (m)')
+PARAM(500087,'ASHFL_S',dis=0,cat=0,num=11,T_StatP=0,T_FFS=1,&
+      longname='Sensible Heat Net Flux (m)')
+PARAM(500088,'AUMFL_S',dis=0,cat=2,num=17,T_StatP=0,T_FFS=1,&
+      longname='Momentum Flux, U-Component (m)')
+PARAM(500089,'AVMFL_S',dis=0,cat=2,num=18,T_StatP=0,T_FFS=1,&
+      longname='Momentum Flux, V-Component (m)')
+PARAM(500090,'APAB_S',dis=0,cat=4,num=10,T_StatP=0,T_FFS=1,&
+      longname='Photosynthetically active radiation (m) (at the surface)')
+PARAM(500091,'PABS_RAD',dis=0,cat=4,num=10,T_FFS=1,&
+      longname='Photosynthetically active radiation')
+PARAM(500092,'SOHR_RAD',dis=0,cat=4,num=192,&
+      longname='Solar radiation heating rate')
+PARAM(500093,'THHR_RAD',dis=0,cat=5,num=192,&
+      longname='Thermal radiation heating rate')
+PARAM(500094,'ALHFL_BS',dis=2,cat=0,num=193,T_StatP=0,&
+      longname='Latent heat flux from bare soil')
+PARAM(500095,'ALHFL_PL',dis=2,cat=0,num=194,T_StatP=0,T_FFS=106,&
+      longname='Latent heat flux from plants')
+PARAM(500097,'RSTOM',dis=2,cat=0,num=195,&
+      longname='Stomatal resistance')
+PARAM(500098,'CLC',dis=0,cat=6,num=22,&
+      longname='Cloud cover')
+PARAM(500099,'CLC_SGS',dis=0,cat=6,num=14,&
+      longname='Non-Convective Cloud Cover, grid scale')
+PARAM(500100,'QC',dis=0,cat=1,num=22,&
+      longname='Cloud Mixing Ratio')
+PARAM(500101,'QI',dis=0,cat=1,num=82,&
+      longname='Cloud Ice Mixing Ratio')
+PARAM(500102,'QR',dis=0,cat=1,num=24,&
+      longname='Rain mixing ratio')
+PARAM(500103,'QS',dis=0,cat=1,num=25,&
+      longname='Snow mixing ratio')
+PARAM(500104,'TQR',dis=0,cat=1,num=45,&
+      longname='Total column integrated rain')
+PARAM(500105,'TQS',dis=0,cat=1,num=46,&
+      longname='Total column integrated snow')
+PARAM(500106,'QG',dis=0,cat=1,num=32,&
+      longname='Grauple')
+PARAM(500107,'TQG',dis=0,cat=1,num=74,&
+      longname='Total column integrated grauple')
+PARAM(500108,'TWATER',dis=0,cat=1,num=78,&
+      longname='Total Column integrated water (all components incl. precipitation)')
+PARAM(500109,'TDIV_HUM',dis=0,cat=1,num=192,T_StatP=1,&
+      longname='Vertical integral of divergence of total water content - accumulation')
+PARAM(500110,'QC_RAD',dis=0,cat=1,num=193,&
+      longname='Sub-grid scale cloud water')
+PARAM(500111,'QI_RAD',dis=0,cat=1,num=194,&
+      longname='Sub-grid scale cloud ice')
+PARAM(500115,'HBAS_SC',dis=0,cat=6,num=192,T_SFS=101,T_FFS=2,&
+      longname='Cloud base above MSL, shallow convection')
+PARAM(500116,'HTOP_SC',dis=0,cat=6,num=193,T_SFS=101,T_FFS=3,&
+      longname='Cloud top above MSL, shallow convection')
+PARAM(500117,'CLW_CON',dis=0,cat=1,num=195,&
+      longname='Specific cloud liquid water content, convective cloud')
+PARAM(500118,'HBAS_CON',dis=0,cat=6,num=26,T_SFS=101,T_FFS=2,&
+      longname='Height of Convective Cloud Base above msl')
+PARAM(500119,'HTOP_CON',dis=0,cat=6,num=27,T_SFS=101,T_FFS=3,&
+      longname='Height of Convective Cloud Top above msl')
+PARAM(500120,'BAS_CON',dis=0,cat=6,num=194,T_FFS=1,&
+      longname='Base index (vertical level) of main convective cloud')
+PARAM(500121,'TOP_CON',dis=0,cat=6,num=195,T_FFS=1,&
+      longname='Top index (vertical level) of main convective cloud')
+PARAM(500122,'DT_CON',dis=0,cat=0,num=192,&
+      longname='Temperature tendency due to convection')
+PARAM(500123,'DQV_CON',dis=0,cat=1,num=197,&
+      longname='Specific humidity tendency due to convection')
+PARAM(500124,'DU_CON',dis=0,cat=2,num=192,&
+      longname='Zonal wind tendency due to convection')
+PARAM(500125,'DV_CON',dis=0,cat=2,num=193,&
+      longname='Meridional wind tendency due to convection')
+PARAM(500126,'HTOP_DC',dis=0,cat=6,num=196,T_SFS=101,T_FFS=3,&
+      longname='Height of top of dry convection above MSL')
+PARAM(500127,'HZEROCL',dis=0,cat=3,num=6,T_SFS=101,T_FFS=4,&
+      longname='Height of 0 degree Celsius isotherm above msl')
+PARAM(500128,'SNOWLMT',dis=0,cat=1,num=204,T_SFS=101,T_FFS=4,&
+      longname='Height of snow fall limit above MSL')
+PARAM(500129,'DQC_CON',dis=0,cat=1,num=198,&
+      longname='Tendency of specific cloud liquid water content due to convection')
+PARAM(500130,'DQI_CON',dis=0,cat=1,num=199,&
+      longname='Tendency of specific cloud ice content due to convection')
+PARAM(500131,'Q_SEDIM',dis=0,cat=1,num=196,&
+      longname='Specific content of precipitation particles (needed for water loading)')
+PARAM(500132,'PRR_GSP',dis=0,cat=1,num=77,&
+      longname='Large scale rain rate')
+PARAM(500133,'PRS_GSP',dis=0,cat=1,num=56,&
+      longname='Large scale snowfall rate water equivalent')
+PARAM(500134,'RAIN_GSP',dis=0,cat=1,num=77,T_StatP=1,&
+      longname='Large scale rain (Accumulation)')
+PARAM(500135,'PRR_CON',dis=0,cat=1,num=76,&
+      longname='Convective rain rate')
+PARAM(500136,'PRS_CON',dis=0,cat=1,num=55,&
+      longname='Convective snowfall rate water equivalent')
+PARAM(500137,'RAIN_CON',dis=0,cat=1,num=76,T_StatP=1,&
+      longname='Convective rain')
+PARAM(500138,'TOT_RAIN',dis=0,cat=1,num=65,T_StatP=1,&
+      longname='rain amount, grid-scale plus convective')
+PARAM(500139,'TOT_SNOW',dis=0,cat=1,num=66,T_StatP=1,&
+      longname='snow amount, grid-scale plus convective')
+PARAM(500140,'DT_GSP',dis=0,cat=0,num=193,&
+      longname='Temperature tendency due to grid scale precipitation')
+PARAM(500141,'DQV_GSP',dis=0,cat=1,num=200,&
+      longname='Specific humidity tendency due to grid scale precipitation')
+PARAM(500142,'DQC_GSP',dis=0,cat=1,num=201,&
+      longname='Tendency of specific cloud liquid water content due to grid scale precipitation')
+PARAM(500143,'FRESHSNW',dis=0,cat=1,num=203,&
+      longname='Fresh snow factor (weighting function for albedo indicating freshness of snow)')
+PARAM(500144,'DQI_GSP',dis=0,cat=1,num=202,&
+      longname='Tendency of specific cloud ice content due to grid scale precipitation')
+PARAM(500145,'PRG_GSP',dis=0,cat=1,num=75,&
+      longname='Graupel (snow pellets) precipitation rate')
+PARAM(500146,'GRAU_GSP',dis=0,cat=1,num=75,T_StatP=1,&
+      longname='Graupel (snow pellets) precipitation (Accumulation)')
+PARAM(500147,'RHO_SNOW',dis=0,cat=1,num=61,&
+      longname='Snow density')
+PARAM(500148,'PP',dis=0,cat=3,num=192,&
+      longname='Pressure perturbation')
+PARAM(500149,'SDI_1',dis=0,cat=7,num=192,&
+      longname='Supercell detection index 1 (rot. up- and downdrafts)')
+PARAM(500150,'SDI_2',dis=0,cat=7,num=193,&
+      longname='Supercell detection index 2 (only rot. updrafts)')
+PARAM(500151,'CAPE_MU',dis=0,cat=7,num=6,T_FFS=193,&
+      longname='Convective Available Potential Energy, most unstable')
+PARAM(500152,'CIN_MU',dis=0,cat=7,num=7,T_FFS=193,&
+      longname='Convective Inhibition, most unstable')
+PARAM(500153,'CAPE_ML',dis=0,cat=7,num=6,T_FFS=192,&
+      longname='Convective Available Potential Energy, mean layer')
+PARAM(500154,'CIN_ML',dis=0,cat=7,num=7,T_FFS=192,&
+      longname='Convective Inhibition, mean layer')
+PARAM(500155,'TKE_CON',dis=0,cat=19,num=24,&
+      longname='Convective turbulent kinetic enery')
+PARAM(500156,'TKETENS',dis=0,cat=19,num=192,&
+      longname='Tendency of turbulent kinetic energy')
+PARAM(500157,'KE',dis=0,cat=2,num=196,&
+      longname='Kinetic energy')
+PARAM(500158,'TKE',dis=0,cat=19,num=11,&
+      longname='Turbulent Kinetic Energy')
+PARAM(500159,'TKVM',dis=0,cat=2,num=31,&
+      longname='Turbulent diffusioncoefficient for momentum')
+PARAM(500160,'TKVH',dis=0,cat=0,num=20,&
+      longname='Turbulent diffusion coefficient for heat (and moisture)')
+PARAM(500161,'TCM',dis=0,cat=2,num=29,&
+      longname='Turbulent transfer coefficient for impulse')
+PARAM(500162,'TCH',dis=0,cat=0,num=19,&
+      longname='Turbulent transfer coefficient for heat (and Moisture)')
+PARAM(500163,'MH',dis=0,cat=19,num=3,&
+      longname='mixed layer depth')
+PARAM(500164,'VMAX_10M',dis=0,cat=2,num=22,T_StatP=2,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='maximum Wind 10m')
+PARAM(500166,'T_SO',dis=2,cat=3,num=18,T_FFS=106,&
+      longname='Soil Temperature (multilayer model)')
+PARAM(500167,'W_SO',dis=2,cat=3,num=20,T_SFS=106,T_FFS=106,&
+      longname='Column-integrated Soil Moisture (multilayers)')
+PARAM(500168,'W_SO_ICE',dis=2,cat=3,num=22,T_SFS=106,T_FFS=106,&
+      longname='soil ice content (multilayers)')
+PARAM(500169,'W_I',dis=2,cat=0,num=13,&
+      longname='Plant Canopy Surface Water')
+PARAM(500170,'T_SNOW',dis=0,cat=0,num=18,&
+      longname='Snow temperature (top of snow)')
+PARAM(500171,'RSMIN',dis=2,cat=0,num=16,&
+      longname='Minimal Stomatal Resistance')
+PARAM(500172,'T_ICE',dis=10,cat=2,num=8,&
+      longname='Sea Ice Temperature')
+PARAM(500173,'DBZ_850',dis=0,cat=15,num=1,T_FFS=1,&
+      longname='Base reflectivity')
+PARAM(500174,'DBZ',dis=0,cat=15,num=1,&
+      longname='Base reflectivity')
+PARAM(500175,'DBZ_CMAX',dis=0,cat=15,num=1,T_SFS=8,T_FFS=1,&
+      longname='Base reflectivity (cmax)')
+PARAM(500176,'DTTDIV',dis=0,cat=191,num=192,&
+      longname='Solution of 2-d Helmholtz equations - needed for restart')
+PARAM(500177,'SOTR_RAD',dis=0,cat=4,num=193,&
+      longname='Effective transmissivity of solar radiation')
+PARAM(500178,'EVATRA_SUM',dis=2,cat=3,num=192,&
+      longname='Sum of contributions to evaporation')
+PARAM(500179,'TRA_SUM',dis=2,cat=3,num=193,&
+      longname='Total transpiration from all soil layers')
+PARAM(500180,'TOTFORCE_S',dis=2,cat=3,num=194,&
+      longname='Total forcing at soil surface')
+PARAM(500181,'RESID_WSO',dis=2,cat=3,num=195,&
+      longname='Residuum of soil moisture')
+PARAM(500182,'MFLX_CON',dis=0,cat=1,num=205,T_FFS=2,&
+      longname='Mass flux at convective cloud base')
+PARAM(500183,'CAPE_CON',dis=0,cat=7,num=6,&
+      longname='Convective Available Potential Energy')
+PARAM(500184,'QCVG_CON',dis=0,cat=1,num=206,&
+      longname='Moisture convergence for Kuo-type closure')
+PARAM(500185,'MWD',dis=10,cat=0,num=14,&
+      longname='Direction of combined wind waves and swell')
+PARAM(500187,'PPTS',dis=10,cat=0,num=36,&
+      longname='Peak period of total swell')
+PARAM(500189,'PPWW',dis=10,cat=0,num=35,&
+      longname='Peak period of wind waves')
+PARAM(500190,'PP1D',dis=10,cat=0,num=34,&
+      longname='Peak wave period')
+PARAM(500191,'TM10',dis=10,cat=0,num=15,&
+      longname='Mean period of combined wind waves and swell')
+PARAM(500192,'TM01',dis=10,cat=0,num=25,&
+      longname='Inverse mean wave frequency')
+PARAM(500193,'TM02',dis=10,cat=0,num=28,&
+      longname='Mean zero-crossing wave period')
+PARAM(500194,'SPRD',dis=10,cat=0,num=31,&
+      longname='Wave directional width')
+PARAM(500195,'ANA_ERR_FI',dis=0,cat=194,num=5,T_GenP=7,&
+      longname='Analysis error (standard deviation), geopotential (gpm)')
+PARAM(500196,'ANA_ERR_U',dis=0,cat=194,num=2,T_GenP=7,&
+      longname='Analysis error (standard deviation), u-comp. of wind')
+PARAM(500197,'ANA_ERR_V',dis=0,cat=194,num=3,T_GenP=7,&
+      longname='Analysis error (standard deviation), v-comp. of wind')
+PARAM(500198,'DU_SSO',dis=0,cat=2,num=194,&
+      longname='Zonal wind tendency due to sub-grid scale oro.')
+PARAM(500199,'DV_SSO',dis=0,cat=2,num=195,&
+      longname='Meridional wind tendency due to sub-grid scale oro.')
+PARAM(500200,'SSO_STDH',dis=0,cat=3,num=20,&
+      longname='Standard deviation of sub-grid scale orography')
+PARAM(500201,'SSO_GAMMA',dis=0,cat=3,num=24,&
+      longname='Anisotropy of sub-gridscale orography')
+PARAM(500202,'SSO_THETA',dis=0,cat=3,num=21,&
+      longname='Angle of sub-gridscale orography')
+PARAM(500203,'SSO_SIGMA',dis=0,cat=3,num=22,&
+      longname='Slope of sub-gridscale orography')
+PARAM(500204,'EMIS_RAD',dis=2,cat=3,num=199,&
+      longname='Surface emissivity')
+PARAM(500205,'SOILTYP',dis=2,cat=3,num=196,&
+      longname='Soil type (1...9, local soilType.table)')
+PARAM(500206,'LAI',dis=2,cat=0,num=28,&
+      longname='Leaf area index')
+PARAM(500207,'ROOTDP',dis=2,cat=0,num=32,&
+      longname='root depth of vegetation')
+PARAM(500208,'HMO3',dis=0,cat=14,num=192,&
+      longname='Height of ozone maximum (climatological)')
+PARAM(500209,'VIO3',dis=0,cat=14,num=193,&
+      longname='Vertically integrated ozone content (climatological)')
+PARAM(500210,'PLCOV_MX',dis=2,cat=0,num=4,T_StatP=2,&
+      longname='Plant covering degree in the vegetation phase')
+PARAM(500211,'PLCOV_MN',dis=2,cat=0,num=4,T_StatP=3,&
+      longname='Plant covering degree in the quiescent phas')
+PARAM(500212,'LAI_MX',dis=2,cat=0,num=28,T_StatP=2,&
+      longname='Max Leaf area index')
+PARAM(500213,'LAI_MN',dis=2,cat=0,num=28,T_StatP=3,&
+      longname='Min Leaf area index')
+PARAM(500214,'ORO_MOD',dis=2,cat=0,num=7,&
+      longname='Orographie + Land-Meer-Verteilung')
+PARAM(500217,'FOR_E',dis=2,cat=0,num=29,&
+      longname='evergreen forest')
+PARAM(500218,'FOR_D',dis=2,cat=0,num=30,&
+      longname='deciduous forest')
+PARAM(500219,'NDVI',dis=2,cat=0,num=31,T_StatP=0,&
+      longname='normalized differential vegetation index')
+PARAM(500220,'NDVI_MAX',dis=2,cat=0,num=31,T_StatP=2,&
+      longname='normalized differential vegetation index (NDVI)')
+PARAM(500221,'NDVI_MRAT',dis=2,cat=0,num=192,T_StatP=0,&
+      longname='Ratio of monthly mean NDVI (normalized differential vegetation index) to annual maximum')
+PARAM(500222,'NDVIRATIO',dis=2,cat=0,num=192,&
+      longname='Ratio of NDVI (normalized differential vegetation index) to annual maximum')
+PARAM(500223,'AER_SO4',dis=0,cat=20,num=102,cTyp=62006,&
+      longname='Total sulfate aerosol')
+PARAM(500224,'AER_SO412',dis=0,cat=20,num=102,T_StatP=0,cTyp=62006,&
+      longname='Total sulfate aerosol (12M)')
+PARAM(500225,'AER_DUST',dis=0,cat=20,num=102,cTyp=62001,&
+      longname='Total soil dust aerosol (climatology)')
+PARAM(500226,'AER_DUST12',dis=0,cat=20,num=102,T_StatP=0,cTyp=62001,&
+      longname='Total soil dust aerosol (climatology,12M)')
+PARAM(500227,'AER_ORG',dis=0,cat=20,num=102,cTyp=62010,&
+      longname='Organic aerosol')
+PARAM(500228,'AER_ORG12',dis=0,cat=20,num=102,T_StatP=0,cTyp=62010,&
+      longname='Organic aerosol (12M)')
+PARAM(500229,'AER_BC',dis=0,cat=20,num=102,cTyp=62009,&
+      longname='Black carbon aerosol')
+PARAM(500230,'AER_BC12',dis=0,cat=20,num=102,T_StatP=0,cTyp=62009,&
+      longname='Black carbon aerosol (12M)')
+PARAM(500231,'AER_SS',dis=0,cat=20,num=102,cTyp=62008,&
+      longname='Sea salt aerosol')
+PARAM(500232,'AER_SS12',dis=0,cat=20,num=102,T_StatP=0,cTyp=62008,&
+      longname='Sea salt aerosol (12M)')
+PARAM(500233,'DQVDT',dis=0,cat=1,num=207,&
+      longname='Tendency of specific humidity')
+PARAM(500234,'QVSFLX',dis=0,cat=1,num=208,&
+      longname='Water vapor flux')
+PARAM(500235,'FC',dis=0,cat=19,num=193,&
+      longname='Coriolis parameter')
+PARAM(500236,'RLAT',dis=0,cat=191,num=1,&
+      longname='geographical latitude')
+PARAM(500237,'RLON',dis=0,cat=191,num=2,&
+      longname='geographical longitude')
+PARAM(500238,'USTAR',dis=0,cat=2,num=30,&
+      longname='Friction velocity')
+PARAM(500239,'ZTD',dis=0,cat=15,num=192,&
+      longname='Delay of the GPS signal through the (total) atmos.')
+PARAM(500240,'ZWD',dis=0,cat=15,num=193,&
+      longname='Delay of the GPS signal through wet atmos.')
+PARAM(500241,'ZHD',dis=0,cat=15,num=194,&
+      longname='Delay of the GPS signal through dry atmos.')
+PARAM(500242,'O3',dis=0,cat=14,num=1,&
+      longname='Ozone Mixing Ratio')
+PARAM(500243,'Ru-103',dis=0,cat=18,num=10,cTyp=30102,&
+      longname='Air concentration of Ruthenium 103')
+PARAM(500244,'Ru-103d',dis=0,cat=18,num=12,cTyp=30102,&
+      longname='Ru103 - dry deposition')
+PARAM(500245,'Ru-103w',dis=0,cat=18,num=11,cTyp=30102,&
+      longname='Ru103 - wet deposition')
+PARAM(500246,'Sr-90',dis=0,cat=18,num=10,cTyp=30067,&
+      longname='Air concentration of Strontium 90')
+PARAM(500247,'Sr-90d',dis=0,cat=18,num=12,cTyp=30067,&
+      longname='Sr90 - dry deposition')
+PARAM(500248,'Sr-90w',dis=0,cat=18,num=11,cTyp=30067,&
+      longname='Sr90 - wet deposition')
+PARAM(500249,'I-131a',dis=0,cat=18,num=10,cTyp=30141,&
+      longname='Air concentration of Iodine 131 aerosol')
+PARAM(500250,'I-131ad',dis=0,cat=18,num=12,cTyp=30141,&
+      longname='I131a - dry deposition')
+PARAM(500251,'I-131aw',dis=0,cat=18,num=11,cTyp=30141,&
+      longname='I131a - wet deposition')
+PARAM(500252,'Cs-137',dis=0,cat=18,num=10,cTyp=30172,&
+      longname='Air concentration of Caesium 137')
+PARAM(500253,'Cs-137d',dis=0,cat=18,num=12,cTyp=30172,&
+      longname='Cs137 - dry deposition')
+PARAM(500255,'Te-132',dis=0,cat=18,num=10,cTyp=30129,&
+      longname='Air concentration of Tellurium 132')
+PARAM(500256,'Te-132d',dis=0,cat=18,num=12,cTyp=30129,&
+      longname='Te132 - dry deposition')
+PARAM(500257,'Te-132w',dis=0,cat=18,num=11,cTyp=30129,&
+      longname='Te132 - wet deposition')
+PARAM(500258,'Zr-95',dis=0,cat=18,num=10,cTyp=30079,&
+      longname='Air concentration of Zirconium 95')
+PARAM(500259,'Zr-95d',dis=0,cat=18,num=12,cTyp=30079,&
+      longname='Zr95 - dry deposition')
+PARAM(500260,'Zr-95w',dis=0,cat=18,num=11,cTyp=30079,&
+      longname='Zr95 - wet deposition')
+PARAM(500261,'Kr-85',dis=0,cat=18,num=10,cTyp=30059,&
+      longname='Air concentration of Krypton 85')
+PARAM(500262,'Kr-85d',dis=0,cat=18,num=12,cTyp=30059,&
+      longname='Kr85 - dry deposition')
+PARAM(500263,'Kr-85w',dis=0,cat=18,num=11,cTyp=30059,&
+      longname='Kr85 - wet deposition')
+PARAM(500264,'Tr-2',dis=0,cat=18,num=10,cTyp=30000,&
+      longname='TRACER - concentration')
+PARAM(500265,'Tr-2d',dis=0,cat=18,num=12,cTyp=30000,&
+      longname='TRACER - dry deposition')
+PARAM(500266,'Tr-2w',dis=0,cat=18,num=11,cTyp=30000,&
+      longname='TRACER - wet deposition')
+PARAM(500267,'Xe-133',dis=0,cat=18,num=10,cTyp=30161,&
+      longname='Air concentration of Xenon 133')
+PARAM(500268,'Xe-133d',dis=0,cat=18,num=12,cTyp=30161,&
+      longname='Xe133 - dry deposition')
+PARAM(500269,'Xe-133w',dis=0,cat=18,num=11,cTyp=30161,&
+      longname='Xe133 - wet deposition')
+PARAM(500270,'I-131g',dis=0,cat=18,num=10,cTyp=30138,&
+      longname='Air concentration of Iodine 131 elementary gaseous')
+PARAM(500271,'I-131gd',dis=0,cat=18,num=12,cTyp=30138,&
+      longname='I131g - dry deposition')
+PARAM(500272,'I-131gw',dis=0,cat=18,num=11,cTyp=30138,&
+      longname='I131g - wet deposition')
+PARAM(500273,'I-131o',dis=0,cat=18,num=10,cTyp=30139,&
+      longname='Air concentration of Iodine 131 organic bounded')
+PARAM(500274,'I-131od',dis=0,cat=18,num=12,cTyp=30139,&
+      longname='I131o - dry deposition')
+PARAM(500275,'I-131ow',dis=0,cat=18,num=11,cTyp=30139,&
+      longname='I131o - wet deposition')
+PARAM(500276,'Ba-140',dis=0,cat=18,num=10,cTyp=30175,&
+      longname='Air concentration of Barium 140')
+PARAM(500277,'Ba-140d',dis=0,cat=18,num=12,cTyp=30175,&
+      longname='Ba140 - dry deposition')
+PARAM(500278,'Ba-140w',dis=0,cat=18,num=11,cTyp=30175,&
+      longname='Ba140 - wet deposition')
+PARAM(500279,'AUSTR_SSO',dis=0,cat=3,num=193,T_StatP=0,&
+      longname='U-momentum flux due to SSO-effects (mean over forecast time)')
+PARAM(500280,'USTR_SSO',dis=0,cat=3,num=193,&
+      longname='U-momentum flux due to SSO-effects')
+PARAM(500281,'AVSTR_SSO',dis=0,cat=3,num=194,T_StatP=0,&
+      longname='V-momentum flux due to SSO-effects (mean over forecast time)')
+PARAM(500282,'VSTR_SSO',dis=0,cat=3,num=194,&
+      longname='V-momentum flux due to SSO-effects')
+PARAM(500284,'VDIS_SSO',dis=0,cat=3,num=23,&
+      longname='Gravity wave dissipation (vertical integral)')
+PARAM(500285,'UVI_MAX_CL',dis=0,cat=4,num=51,T_StatP=2,&
+      longname='UV Index, clouded sky, maximum')
+PARAM(500286,'W_SHAER',dis=0,cat=2,num=25,&
+      longname='Vertical speed shear')
+PARAM(500287,'SRH',dis=0,cat=7,num=8,&
+      longname='storm relative helicity')
+PARAM(500288,'VABS',dis=0,cat=2,num=197,&
+      longname='Absolute vorticity advection')
+PARAM(500289,'CL_TYP',dis=0,cat=19,num=194,&
+      longname='Kombination Niederschlag-Bewoelkung-Blauthermik (cl_typ.tab)')
+PARAM(500290,'CCL_GND',dis=0,cat=6,num=26,T_SFS=1,T_FFS=2,&
+      longname='Hoehe der Konvektionsuntergrenze ueber Grund')
+PARAM(500291,'CCL_NN',dis=0,cat=193,num=24,T_SFS=101,T_FFS=2,&
+      longname='Hoehe der Konvektionsuntergrenze ueber nn')
+PARAM(500292,'WW',dis=0,cat=19,num=25,&
+      longname='weather interpretation (WMO)')
+PARAM(500293,'ADVORG',dis=0,cat=193,num=0,&
+      longname='geostrophische Vorticityadvektion')
+PARAM(500294,'ADVOR',dis=0,cat=193,num=1,&
+      longname='Geostrophic thickness advection')
+PARAM(500295,'ADRTG',dis=0,cat=193,num=2,&
+      longname='Schichtdickenadvektion')
+PARAM(500296,'WDIV',dis=0,cat=193,num=3,&
+      longname='Winddivergenz')
+PARAM(500297,'QVN',dis=0,cat=193,num=4,&
+      longname='Q-Vektor senkrecht zu den Isothermen')
+PARAM(500298,'IPV',dis=0,cat=193,num=25,T_FFS=107,&
+      longname='Isentrope potentielle Vorticity')
+PARAM(500299,'UP',dis=0,cat=193,num=5,&
+      longname='Wind X-Komponente auf isentropen Flaechen')
+PARAM(500300,'VP',dis=0,cat=193,num=6,&
+      longname='Wind Y-Komponente auf isentropen Flaechen')
+PARAM(500301,'PTHETA',dis=0,cat=3,num=0,T_FFS=107,&
+      longname='Druck einer isentropen Flaeche')
+PARAM(500302,'KO',dis=0,cat=7,num=3,&
+      longname='KO index')
+PARAM(500303,'THETAE',dis=0,cat=0,num=3,&
+      longname='Aequivalentpotentielle Temperatur')
+PARAM(500304,'CEILING',dis=0,cat=6,num=13,&
+      longname='Ceiling')
+PARAM(500305,'ICE_GRD',dis=0,cat=19,num=7,&
+      longname='Icing Grade (1=LGT,2=MOD,3=SEV)')
+PARAM(500306,'CLDEPTH',dis=0,cat=6,num=198,&
+      longname='Modified cloud depth for media')
+PARAM(500307,'CLCT_MOD',dis=0,cat=6,num=199,&
+      longname='Modified cloud cover for media')
+PARAM(500308,'EFA-PS',dis=0,cat=3,num=1,T_StatP=5,T_GenP=201,&
+      longname='Monthly Mean of RMS of difference FG-AN of pressure reduced to MSL')
+PARAM(500309,'EIA-PS',dis=0,cat=3,num=1,T_StatP=5,T_GenP=200,&
+      longname='Monthly Mean of RMS of difference IA-AN of pressure reduced to MSL')
+PARAM(500310,'EFA-U',dis=0,cat=2,num=2,T_StatP=5,T_GenP=201,&
+      longname='Monthly Mean of RMS of difference FG-AN of u-component of wind')
+PARAM(500311,'EIA-U',dis=0,cat=2,num=2,T_StatP=5,T_GenP=200,&
+      longname='Monthly Mean of RMS of difference IA-AN of u-component of wind')
+PARAM(500312,'EFA-V',dis=0,cat=2,num=3,T_StatP=5,T_GenP=201,&
+      longname='Monthly Mean of RMS of difference FG-AN of v-component of wind')
+PARAM(500313,'EIA-V',dis=0,cat=2,num=3,T_StatP=5,T_GenP=200,&
+      longname='Monthly Mean of RMS of difference IA-AN of v-component of wind')
+PARAM(500314,'EFA-FI',dis=0,cat=3,num=4,T_StatP=5,T_GenP=201,&
+      longname='Monthly Mean of RMS of difference FG-AN of geopotential')
+PARAM(500315,'EIA-FI',dis=0,cat=3,num=4,T_StatP=5,T_GenP=200,&
+      longname='Monthly Mean of RMS of difference IA-AN of geopotential')
+PARAM(500316,'EFA-RH',dis=0,cat=1,num=1,T_StatP=5,T_GenP=201,&
+      longname='Monthly Mean of RMS of difference FG-AN of relative humidity')
+PARAM(500317,'EIA-RH',dis=0,cat=1,num=1,T_StatP=5,T_GenP=200,&
+      longname='Monthly Mean of RMS of difference IA-AN of relative humidity')
+PARAM(500318,'EFA-T',dis=0,cat=0,num=0,T_StatP=5,T_GenP=201,&
+      longname='Monthly Mean of RMS of difference FG-AN of temperature')
+PARAM(500319,'EIA-T',dis=0,cat=0,num=0,T_StatP=5,T_GenP=200,&
+      longname='Monthly Mean of RMS of difference IA-AN of temperature')
+PARAM(500320,'EFA-OM',dis=0,cat=2,num=8,T_StatP=5,T_GenP=201,&
+      longname='Monthly Mean of RMS of difference FG-AN of vert.velocity (pressure)')
+PARAM(500321,'EIA-OM',dis=0,cat=2,num=8,T_StatP=5,T_GenP=200,&
+      longname='Monthly Mean of RMS of difference IA-AN of vert.velocity (pressure)')
+PARAM(500322,'EFA-KE',dis=0,cat=2,num=196,T_StatP=5,T_GenP=201,&
+      longname='RMS of difference "first guess - analysis" of kinetic energy')
+PARAM(500323,'EIA-KE',dis=0,cat=2,num=196,T_StatP=5,T_GenP=200,&
+      longname='RMS of difference "initialized analysis - analysis" of kinetic energy')
+PARAM(500372,'T_2M_S',dis=0,cat=0,num=0,T_FFS=103,SF_FFS=0,SV_FFS=2,T_GenP=197,&
+      longname='smoothed forecast, temperature')
+PARAM(500373,'TMAX_2M_S',dis=0,cat=0,num=0,T_StatP=2,T_FFS=103,SF_FFS=0,SV_FFS=2,T_GenP=197,&
+      longname='smoothed forecast, maximum temp.')
+PARAM(500374,'TMIN_2M_S',dis=0,cat=0,num=0,T_StatP=3,T_FFS=103,SF_FFS=0,SV_FFS=2,T_GenP=197,&
+      longname='smoothed forecast, minimum temp.')
+PARAM(500375,'TD_2M_S',dis=0,cat=0,num=6,T_FFS=103,SF_FFS=0,SV_FFS=2,T_GenP=197,&
+      longname='smoothed forecast, dew point temp.')
+PARAM(500376,'U_10M_S',dis=0,cat=2,num=2,T_FFS=103,SF_FFS=0,SV_FFS=10,T_GenP=197,&
+      longname='smoothed forecast, u comp. of wind')
+PARAM(500377,'V_10M_S',dis=0,cat=2,num=3,T_FFS=103,SF_FFS=0,SV_FFS=10,T_GenP=197,&
+      longname='smoothed forecast, v comp. of wind')
+PARAM(500378,'TOT_PREC_S',dis=0,cat=1,num=52,T_StatP=1,T_GenP=197,&
+      longname='smoothed forecast, total precipitation (Accumulation)')
+PARAM(500379,'CLCT_S',dis=0,cat=6,num=1,T_GenP=197,&
+      longname='smoothed forecast, total cloud cover')
+PARAM(500380,'CLCL_S',dis=0,cat=6,num=22,T_SFS=1,T_FFS=100,SF_FFS=-2,SV_FFS=800,T_GenP=197,&
+      longname='smoothed forecast, cloud cover low')
+PARAM(500381,'CLCM_S',dis=0,cat=6,num=22,T_SFS=100,SF_SFS=-2,SV_SFS=800,T_FFS=100,SF_FFS=-2,SV_FFS=400,T_GenP=197,&
+      longname='smoothed forecast, cloud cover medium')
+PARAM(500382,'CLCH_S',dis=0,cat=6,num=22,T_SFS=100,SF_SFS=-2,SV_SFS=400,T_FFS=100,SF_FFS=-2,SV_FFS=0,T_GenP=197,&
+      longname='smoothed forecast, cloud cover high')
+PARAM(500383,'SNOW_GSP_S',dis=0,cat=1,num=56,T_StatP=1,T_GenP=197,&
+      longname='smoothed forecast, large-scale snowfall')
+PARAM(500384,'T_S_S',dis=2,cat=3,num=18,T_FFS=106,SF_FFS=2,SV_FFS=0,T_GenP=197,&
+      longname='smoothed forecast, soil temperature')
+PARAM(500385,'VMAX_10M_S',dis=0,cat=2,num=22,T_StatP=2,T_FFS=103,SF_FFS=0,SV_FFS=10,T_GenP=197,&
+      longname='smoothed forecast, wind speed (gust)')
+PARAM(500386,'TOT_PREC_C',dis=0,cat=1,num=52,T_StatP=1,T_GenP=198,&
+      longname='calibrated forecast, total precipitation  (Accumulation)')
+PARAM(500387,'SNOW_GSP_C',dis=0,cat=1,num=56,T_StatP=1,T_GenP=198,&
+      longname='calibrated forecast, large-scale snowfall')
+PARAM(500388,'VMAX_10M_C',dis=0,cat=2,num=22,T_StatP=2,T_FFS=103,SF_FFS=0,SV_FFS=10,T_GenP=198,&
+      longname='calibrated forecast, wind speed (gust)')
+PARAM(500401,'TOT_PREC_D',dis=0,cat=1,num=52,T_StatP=4,&
+      longname='Total Precipitation Difference')
+PARAM(500419,'ASOB_T',dis=0,cat=4,num=9,T_StatP=0,T_FFS=8,T_GenP=1,&
+      longname='Net short wave radiation flux')
+PARAM(500420,'ATHB_T',dis=0,cat=5,num=5,T_StatP=0,T_FFS=8,T_GenP=1,&
+      longname='Net long wave radiation flux')
+PARAM(500421,'ASOB_S',dis=0,cat=4,num=9,T_StatP=0,T_FFS=1,T_GenP=1,&
+      longname='Net short wave radiation flux (at the surface)')
+PARAM(500422,'ATHB_S',dis=0,cat=5,num=5,T_StatP=0,T_FFS=1,T_GenP=1,&
+      longname='Net long wave radiation flux')
+PARAM(500437,'W_SKRR_01',dis=0,cat=195,num=1,T_StatP=2,T_GenP=5,&
+      longname='Probability of 1h total precipitation >= 10mm')
+PARAM(500438,'U_SKRRH_01',dis=0,cat=195,num=3,T_StatP=2,T_GenP=5,&
+      longname='Probability of 1h total precipitation >= 25mm')
+PARAM(500439,'W_SKRR_06',dis=0,cat=195,num=14,T_StatP=2,T_GenP=5,&
+      longname='Probability of 6h total precipitation >= 20mm')
+PARAM(500440,'U_SKRRH_06',dis=0,cat=195,num=17,T_StatP=2,T_GenP=5,&
+      longname='Probability of 6h total precipitation >= 35mm')
+PARAM(500441,'W_DRR_12',dis=0,cat=195,num=26,T_StatP=2,T_GenP=5,&
+      longname='Probability of 12h total precipitation >= 25mm')
+PARAM(500442,'U_DRRER_12',dis=0,cat=195,num=29,T_StatP=2,T_GenP=5,&
+      longname='Probability of 12h total precipitation >= 40mm')
+PARAM(500443,'E_DR_12',dis=0,cat=195,num=32,T_StatP=2,T_GenP=5,&
+      longname='Probability of 12h total precipitation >= 70mm')
+PARAM(500444,'W_SFL_06',dis=0,cat=195,num=69,T_StatP=2,T_GenP=5,&
+      longname='Probability of 6h accumulated snow >=0.5cm')
+PARAM(500445,'W_SF_06',dis=0,cat=195,num=70,T_StatP=2,T_GenP=5,&
+      longname='Probability of 6h accumulated snow >= 5cm')
+PARAM(500446,'U_SFSK_06',dis=0,cat=195,num=71,T_StatP=2,T_GenP=5,&
+      longname='Probability of 6h accumulated snow >= 10cm')
+PARAM(500447,'W_SFL_12',dis=0,cat=195,num=72,T_StatP=2,T_GenP=5,&
+      longname='Probability of 12h accumulated snow >=0.5cm')
+PARAM(500448,'W_SF_12',dis=0,cat=195,num=74,T_StatP=2,T_GenP=5,&
+      longname='Probability of 12h accumulated snow >= 10cm')
+PARAM(500449,'U_SFSK_12',dis=0,cat=195,num=75,T_StatP=2,T_GenP=5,&
+      longname='Probability of 12h accumulated snow >= 15cm')
+PARAM(500450,'E_SF_12',dis=0,cat=195,num=77,T_StatP=2,T_GenP=5,&
+      longname='Probability of 12h accumulated snow >= 25cm')
+PARAM(500451,'W_WND_01',dis=0,cat=195,num=132,T_StatP=2,T_GenP=5,&
+      longname='Probability of 1h maximum wind gust speed >= 14m/s')
+PARAM(500452,'W_STM_01',dis=0,cat=195,num=134,T_StatP=2,T_GenP=5,&
+      longname='Probability of 1h maximum wind gust speed >= 18m/s')
+PARAM(500453,'W_STMSW_01',dis=0,cat=195,num=136,T_StatP=2,T_GenP=5,&
+      longname='Probability of 1h maximum wind gust speed >= 25m/s')
+PARAM(500454,'U_ORKAR_01',dis=0,cat=195,num=137,T_StatP=2,T_GenP=5,&
+      longname='Probability of 1h maximum wind gust speed >= 29m/s')
+PARAM(500455,'U_ORK_01',dis=0,cat=195,num=138,T_StatP=2,T_GenP=5,&
+      longname='Probability of 1h maximum wind gust speed >= 33m/s')
+PARAM(500456,'E_ORK_01',dis=0,cat=195,num=139,T_StatP=2,T_GenP=5,&
+      longname='Probability of 1h maximum wind gust speed >= 39m/s')
+PARAM(500457,'W_GLEIS_01',dis=0,cat=195,num=191,T_StatP=2,T_GenP=5,&
+      longname='Probability of black ice during 1h')
+PARAM(500458,'W_GEW_01',dis=0,cat=195,num=197,T_StatP=2,T_GenP=5,&
+      longname='Probability of thunderstorm during 1h')
+PARAM(500459,'W_GEWSK_01',dis=0,cat=195,num=198,T_StatP=2,T_GenP=5,&
+      longname='Probability of heavy thunderstorm during 1h')
+PARAM(500460,'U_GEWSW_01',dis=0,cat=195,num=199,T_StatP=2,T_GenP=5,&
+      longname='Probability of severe thunderstorm during 1h')
+PARAM(500461,'W_SVW_12',dis=0,cat=195,num=212,T_StatP=2,T_GenP=5,&
+      longname='Probability of snowdrift during 12h')
+PARAM(500462,'U_SVWSK_12',dis=0,cat=195,num=213,T_StatP=2,T_GenP=5,&
+      longname='Probability of strong snowdrift during 12h')
+PARAM(500463,'W_FR_01',dis=0,cat=195,num=232,T_StatP=3,T_GenP=5,&
+      longname='Probability of temperature < 0 deg C during 1h')
+PARAM(500464,'W_FRSTR_06',dis=0,cat=195,num=236,T_StatP=3,T_GenP=5,&
+      longname='Probability of temperature <= -10 deg C during 6h')
+PARAM(500465,'UVI_CS_COR',dis=0,cat=4,num=195,&
+      longname='UV Index, clear sky; corrected for albedo, aerosol and altitude')
+PARAM(500466,'UVI_B_CS',dis=0,cat=4,num=196,&
+      longname='Basic UV Index, clear sky; MSL, fixed albedo, fixed aerosol')
+PARAM(500467,'UVI_CL_COR',dis=0,cat=4,num=197,&
+      longname='UV Index, clouded sky; corrected for albedo, aerosol, altitude and clouds')
+PARAM(500468,'UVI_MAX_CS',dis=0,cat=4,num=50,T_StatP=2,&
+      longname='UV Index, clear sky, maximum')
+PARAM(500469,'TOT_O3',dis=0,cat=14,num=0,T_StatP=1,&
+      longname='Total ozone')
+PARAM(500471,'UVI_MAX_H',dis=0,cat=4,num=194,T_StatP=2,&
+      longname='Time of maximum of UV Index, clouded')
+PARAM(500472,'C_TYPE',dis=0,cat=6,num=201,&
+      longname='Type of convection (0..4)')
+PARAM(500473,'PT1M',dis=0,cat=192,num=1,&
+      longname='perceived temperature')
+PARAM(500474,'WCF',dis=0,cat=0,num=13,&
+      longname='wind chill factor')
+PARAM(500475,'T_SEA',dis=10,cat=3,num=0,&
+      longname='Water temperature')
+PARAM(500477,'ABSV',dis=0,cat=2,num=10,&
+      longname='Absolute Vorticity')
+PARAM(500478,'SUL_PROB',dis=0,cat=192,num=3,&
+      longname='probability to perceive sultriness')
+PARAM(500479,'CLO',dis=0,cat=192,num=2,&
+      longname='value of isolation of clothes')
+PARAM(500480,'ASWDIR_S',dis=0,cat=4,num=198,T_StatP=0,T_FFS=1,&
+      longname='Downward direct short wave radiation flux at surface (mean over forecast time)')
+PARAM(500481,'ASWDIFD_S',dis=0,cat=4,num=199,T_StatP=0,T_FFS=1,&
+      longname='Downward diffusive short wave radiation flux at surface (mean over forecast time)')
+PARAM(500482,'ASWDIFU_S',dis=0,cat=4,num=8,T_StatP=0,T_FFS=1,&
+      longname='Upward diffusive short wave radiation flux at surface ( mean over forecast time)')
+PARAM(500490,'FR_LAKE',dis=1,cat=2,num=2,&
+      longname='Water Fraction')
+PARAM(500491,'DEPTH_LK',dis=1,cat=2,num=0,T_SFS=162,T_FFS=1,&
+      longname='Lake depth')
+PARAM(500492,'FETCH_LK',dis=0,cat=2,num=33,&
+      longname='Wind fetch')
+PARAM(500493,'GAMSO_LK',dis=1,cat=2,num=11,T_SFS=162,T_FFS=1,&
+      longname='Attenuation coefficient of water with respect to solar radiation')
+PARAM(500494,'DP_BS_LK',dis=1,cat=2,num=3,T_SFS=164,T_FFS=162,&
+      longname='Depth of thermally active layer of bottom sediment')
+PARAM(500495,'T_BS_LK',dis=1,cat=2,num=4,T_FFS=164,&
+      longname='Temperature at the lower boundary of the thermally active layer of bottom sediment')
+PARAM(500496,'T_MNW_LK',dis=1,cat=2,num=1,T_SFS=162,T_FFS=1,&
+      longname='Mean temperature of the water column')
+PARAM(500497,'T_WML_LK',dis=1,cat=2,num=1,T_SFS=166,T_FFS=1,&
+      longname='Mixed-layer temperature')
+PARAM(500498,'T_BOT_LK',dis=1,cat=2,num=1,T_FFS=162,&
+      longname='Bottom temperature (temperature at the water-bottom sediment interface)')
+PARAM(500499,'H_ML_LK',dis=1,cat=2,num=0,T_SFS=166,T_FFS=1,&
+      longname='Mixed-layer depth')
+PARAM(500500,'C_T_LK',dis=1,cat=2,num=10,T_SFS=162,T_FFS=166,&
+      longname='Shape factor with respect to the temperature profile in the thermocline')
+PARAM(500501,'T_B1_LK',dis=1,cat=2,num=4,T_FFS=165,&
+      longname='Temperature at the lower boundary of the upper layer of bottom sediment (penetrated by thermal wave)')
+PARAM(500502,'H_B1_LK',dis=1,cat=2,num=3,T_SFS=165,T_FFS=162,&
+      longname='Sediment thickness of the upper layer of bottom sediments')
+PARAM(500503,'PIDC_BASE_HFT',dis=0,cat=19,num=195,T_GenP=2,&
+      longname='Icing Base (hft) - Icing Degree Composit')
+PARAM(500504,'PIDC_MAX_BASE_HFT',dis=0,cat=19,num=196,T_GenP=2,&
+      longname='Icing Max Base (hft) - Icing Degree Composit')
+PARAM(500505,'PIDC_MAX_TOP_HFT',dis=0,cat=19,num=197,T_GenP=2,&
+      longname='Icing Max Top (hft) - Icing Degree Composit')
+PARAM(500506,'PIDC_TOP_HFT',dis=0,cat=19,num=198,T_GenP=2,&
+      longname='Icing Top (hft) - Icing Degree Composit')
+PARAM(500507,'PIDC_VERT_CODE',dis=0,cat=19,num=199,T_GenP=2,&
+      longname='Icing Vertical Code (1=continuous,2=discontinuous) - Icing Degree Composit')
+PARAM(500508,'PIDC_MAX_CODE',dis=0,cat=19,num=200,T_GenP=2,&
+      longname='Icing Max Code (1=light,2=moderate,3=severe) - Icing Degree Composit')
+PARAM(500509,'PISC_BASE_HFT',dis=0,cat=19,num=201,T_GenP=2,&
+      longname='Icing Base (hft) - Icing Scenario Composit')
+PARAM(500510,'PISC_SIG_BASE_HFT',dis=0,cat=19,num=202,T_GenP=2,&
+      longname='Icing Signifikant Base (hft) - Icing Scenario Composit')
+PARAM(500511,'PISC_SIG_TOP_HFT',dis=0,cat=19,num=203,T_GenP=2,&
+      longname='Icing Signifikant Top (hft) - Icing Scenario Composit')
+PARAM(500512,'PISC_TOP_HFT',dis=0,cat=19,num=204,T_GenP=2,&
+      longname='Icing Top (hft) - Icing Scenario Composit')
+PARAM(500513,'PISC_VERT_CODE',dis=0,cat=19,num=205,T_GenP=2,&
+      longname='Icing Vertical Code (1=continuous,2=discontinuous) - Icing Scenario Composit')
+PARAM(500514,'PISC_SIG_CODE',dis=0,cat=19,num=206,T_GenP=2,&
+      longname='Icing Signifikant Code (1=general,2=convective,3=stratiform,4=freezing) - Icing Scenario Composit')
+PARAM(500515,'DIDC_BASE_HFT',dis=0,cat=19,num=195,T_GenP=0,&
+      longname='Icing Base (hft) - Icing Degree Composit')
+PARAM(500516,'DIDC_MAX_BASE_HFT',dis=0,cat=19,num=196,T_GenP=0,&
+      longname='Icing Max Base (hft) - Icing Degree Composit')
+PARAM(500517,'DIDC_MAX_TOP_HFT',dis=0,cat=19,num=197,T_GenP=0,&
+      longname='Icing Max Top (hft) - Icing Degree Composit')
+PARAM(500518,'DIDC_TOP_HFT',dis=0,cat=19,num=198,T_GenP=0,&
+      longname='Icing Top (hft) - Icing Degree Composit')
+PARAM(500519,'DIDC_VERT_CODE',dis=0,cat=19,num=199,T_GenP=0,&
+      longname='Icing Vertical Code (1=continuous,2=discontinuous) - Icing Degree Composit')
+PARAM(500520,'DIDC_MAX_CODE',dis=0,cat=19,num=200,T_GenP=0,&
+      longname='Icing Max Code (1=light,2=moderate,3=severe) - Icing Degree Composit')
+PARAM(500521,'DISC_BASE_HFT',dis=0,cat=19,num=201,T_GenP=0,&
+      longname='Icing Base (hft) - Icing Scenario Composit')
+PARAM(500522,'DISC_SIG_BASE_HFT',dis=0,cat=19,num=202,T_GenP=0,&
+      longname='Icing Signifikant Base (hft) - Icing Scenario Composit')
+PARAM(500523,'DISC_SIG_TOP_HFT',dis=0,cat=19,num=203,T_GenP=0,&
+      longname='Icing Signifikant Top (hft) - Icing Scenario Composit')
+PARAM(500524,'DISC_TOP_HFT',dis=0,cat=19,num=204,T_GenP=0,&
+      longname='Icing Top (hft) - Icing Scenario Composit')
+PARAM(500525,'DISC_VERT_CODE',dis=0,cat=19,num=205,T_GenP=0,&
+      longname='Icing Vertical Code (1=continuous,2=discontinuous) - Icing Scenario Composit')
+PARAM(500526,'DISC_SIG_CODE',dis=0,cat=19,num=206,T_GenP=0,&
+      longname='Icing Signifikant Code (1=general,2=convective,3=stratiform,4=freezing) - Icing Scenario Composit')
+PARAM(500527,'PID_CODE',dis=0,cat=19,num=207,T_GenP=2,&
+      longname='Icing Degree Code (1=light,2=moderate,3=severe)')
+PARAM(500528,'PIS_CODE',dis=0,cat=19,num=208,T_GenP=2,&
+      longname='Icing Scenario Code (1=general,2=convective,3=stratiform,4=freezing)')
+PARAM(500529,'DID_CODE',dis=0,cat=19,num=207,T_GenP=0,&
+      longname='Icing Degree Code (1=light,2=moderate,3=severe)')
+PARAM(500530,'DIS_CODE',dis=0,cat=19,num=208,T_GenP=0,&
+      longname='Icing Scenario Code (1=general,2=convective,3=stratiform,4=freezing)')
+PARAM(500531,'WW_0-9',dis=0,cat=19,num=209,&
+      longname='current weather (symbol number: 0..9)')
+PARAM(500538,'CL_TYPE_SAT',dis=3,cat=0,num=192,&
+      longname='cloud type')
+PARAM(500539,'CL_TOP_HEIGHT',dis=3,cat=1,num=2,&
+      longname='cloud top height')
+PARAM(500540,'CL_TOP_TEMP',dis=3,cat=1,num=192,&
+      longname='cloud top temperature')
+PARAM(500541,'VORTIC_U',dis=0,cat=2,num=198,&
+      longname='Relative vorticity, u-component')
+PARAM(500542,'VORTIC_V',dis=0,cat=2,num=199,&
+      longname='Relative vorticity, v-component')
+PARAM(500543,'VORTIC_W',dis=0,cat=2,num=12,&
+      longname='vertical vorticity')
+PARAM(500544,'POT_VORTIC',dis=0,cat=2,num=14,&
+      longname='Potential vorticity')
+PARAM(500545,'DEN',dis=0,cat=3,num=10,&
+      longname='Density')
+PARAM(500546,'ALTS',dis=0,cat=3,num=11,&
+      longname='Altimeter Settings')
+PARAM(500547,'PREC_CON_D',dis=0,cat=1,num=37,T_StatP=4,&
+      longname='Convective Precipitation (difference)')
+PARAM(500548,'SM',dis=2,cat=3,num=19,&
+      longname='Soil moisture')
+PARAM(500549,'SM',dis=2,cat=0,num=22,&
+      longname='Soil moisture')
+PARAM(500550,'PVP',dis=0,cat=193,num=23,&
+      longname='Potentielle Vorticity (auf Druckflaechen, nicht isentrop)')
+PARAM(500551,'VORG',dis=0,cat=193,num=7,&
+      longname='geostrophische Vorticity')
+PARAM(500552,'FORCOMEGA',dis=0,cat=193,num=8,&
+      longname='Forcing rechte Seite Omegagleichung')
+PARAM(500553,'QVX',dis=0,cat=193,num=9,&
+      longname='Q-Vektor X-Komponente (geostrophisch)')
+PARAM(500554,'QVY',dis=0,cat=193,num=10,&
+      longname='Q-Vektor Y-Komponente (geostrophisch)')
+PARAM(500555,'DIVGEO',dis=0,cat=193,num=11,&
+      longname='Divergenz Q (geostrophisch)')
+PARAM(500556,'QVNGEO',dis=0,cat=193,num=12,&
+      longname='Q-Vektor senkrecht zu d. Isothermen (geostrophisch)')
+PARAM(500557,'QVSGEO',dis=0,cat=193,num=13,&
+      longname='Q-Vektor parallel zu d. Isothermen (geostrophisch)')
+PARAM(500558,'DIVQNGEO',dis=0,cat=193,num=14,&
+      longname='Divergenz Qn geostrophisch')
+PARAM(500559,'DIVQSGEO',dis=0,cat=193,num=15,&
+      longname='Divergenz Qs geostrophisch')
+PARAM(500560,'FRONTO',dis=0,cat=193,num=16,&
+      longname='Frontogenesefunktion')
+PARAM(500562,'DIVQ',dis=0,cat=193,num=17,&
+      longname='Divergenz')
+PARAM(500563,'QVS',dis=0,cat=193,num=18,&
+      longname='Q-Vektor parallel zu den Isothermen')
+PARAM(500564,'DIVQN',dis=0,cat=193,num=19,&
+      longname='Divergenz Qn')
+PARAM(500565,'DIVQS',dis=0,cat=193,num=20,&
+      longname='Divergenz Qs')
+PARAM(500566,'FRONTOF',dis=0,cat=193,num=21,&
+      longname='Frontogenesis function')
+PARAM(500567,'CATIX',dis=0,cat=193,num=22,&
+      longname='Clear Air Turbulence Index')
+PARAM(500568,'GH',dis=0,cat=3,num=5,&
+      longname='Geopotential height')
+PARAM(500569,'RDIV',dis=0,cat=2,num=13,&
+      longname='Relative Divergenz')
+PARAM(500570,'TOP_DCON',dis=0,cat=6,num=202,&
+      longname='Dry convection top index')
+PARAM(500572,'TIDAL',dis=1,cat=0,num=192,&
+      longname='Tidal tendencies')
+PARAM(500573,'SST_IC',dis=10,cat=3,num=192,&
+      longname='Sea surface temperature interpolated in time in C')
+PARAM(500574,'LNPS',dis=0,cat=3,num=25,&
+      longname='Logarithm of Pressure')
+PARAM(500575,'PPP',dis=0,cat=3,num=195,&
+      longname='3 hour pressure change')
+PARAM(500577,'WVAR',dis=2,cat=3,num=197,T_GenP=6,&
+      longname='Variance of soil moisture content')
+PARAM(500578,'WCOV',dis=2,cat=3,num=198,T_GenP=6,&
+      longname='Covariance of soil moisture content')
+PARAM(500579,'T_S_L',dis=2,cat=3,num=18,T_SFS=106,T_FFS=106,&
+      longname='Soil Temperature (layer)')
+PARAM(500580,'W_G3',dis=2,cat=3,num=20,T_SFS=106,SF_SFS=2,SV_SFS=7,T_FFS=106,SF_FFS=2,SV_FFS=0,&
+      longname='Soil Moisture Content (0-7 cm)')
+PARAM(500581,'W_G4',dis=2,cat=3,num=20,T_SFS=106,SF_SFS=2,SV_SFS=50,T_FFS=106,SF_FFS=2,SV_FFS=7,&
+      longname='Soil Moisture Content (7-50 cm)')
+PARAM(500584,'DURSUN',dis=0,cat=6,num=33,T_StatP=1,&
+      longname='Sunshine duration')
+PARAM(500585,'EDP',dis=0,cat=19,num=216,&
+      longname='Eddy Dissipation Rate')
+PARAM(500586,'ELD',dis=0,cat=19,num=217,&
+      longname='Ellrod Index')
+PARAM(500588,'SNOW_MELT',dis=0,cat=1,num=16,T_StatP=1,&
+      longname='Snow melt')
+PARAM(500590,'ICAHT',dis=0,cat=3,num=3,&
+      longname='ICAO Standard Atmosphere reference height')
+PARAM(500591,'RR_SNOW',dis=0,cat=1,num=209,T_StatP=1,&
+      longname='Niederschlagsdargebot: potential water supply (rain and snow melt) from snowpack - accumulation')
+PARAM(500593,'GRAD',dis=0,cat=4,num=3,&
+      longname='Global radiation flux')
+PARAM(500594,'EXNER',dis=0,cat=3,num=26,&
+      longname='exner pressure')
+PARAM(500595,'VN',dis=0,cat=2,num=34,&
+      longname='normal wind component')
+PARAM(500596,'VT',dis=0,cat=2,num=35,&
+      longname='tangential wind component')
+PARAM(500597,'THETA_V',dis=0,cat=0,num=15,&
+      longname='virtual potential temperature')
+PARAM(500598,'CURD',dis=10,cat=1,num=0,&
+      longname='Current Direction')
+PARAM(500599,'CURS',dis=10,cat=1,num=1,&
+      longname='Current Speed')
+PARAM(500620,'TS',dis=0,cat=196,num=1,T_GenP=5,&
+      longname='Prob Gewitter')
+PARAM(500621,'TSX',dis=0,cat=196,num=2,T_GenP=5,&
+      longname='Prob Starkes Gewitter')
+PARAM(500622,'TSXX',dis=0,cat=196,num=3,T_GenP=5,&
+      longname='Prob Schweres Gewitter')
+PARAM(500623,'RA25',dis=0,cat=196,num=4,T_GenP=5,&
+      longname='Prob Dauerregen')
+PARAM(500624,'RA40',dis=0,cat=196,num=5,T_GenP=5,&
+      longname='Prob Ergiebiger Dauerregen')
+PARAM(500625,'RA70',dis=0,cat=196,num=6,T_GenP=5,&
+      longname='Prob Extrem ergiebiger Dauerregen')
+PARAM(500626,'BLSN6',dis=0,cat=196,num=7,T_GenP=5,&
+      longname='Prob Schneeverwehung')
+PARAM(500627,'BLSN8',dis=0,cat=196,num=8,T_GenP=5,&
+      longname='Prob Starke Schneeverwehung')
+PARAM(500628,'FZ',dis=0,cat=196,num=9,T_GenP=5,&
+      longname='Prob Glaette')
+PARAM(500629,'FZRA',dis=0,cat=196,num=10,T_GenP=5,&
+      longname='Prob oertlich Glatteis')
+PARAM(500630,'FZRAX',dis=0,cat=196,num=11,T_GenP=5,&
+      longname='Prob Glatteis')
+PARAM(500631,'FG',dis=0,cat=196,num=12,T_GenP=5,&
+      longname='Prob Nebel (ueberoertl. Sichtweite < 150 m)')
+PARAM(500632,'TAU',dis=0,cat=196,num=13,T_GenP=5,&
+      longname='Prob Tauwetter')
+PARAM(500633,'TAUX',dis=0,cat=196,num=14,T_GenP=5,&
+      longname='Prob Starkes Tauwetter')
+PARAM(500634,'DTKE_SSO',dis=0,cat=19,num=220,&
+      longname='Wake-production of TKE due to sub-grid scale orography')
+PARAM(500635,'DTKE_HSH',dis=0,cat=19,num=221,&
+      longname='Shear-production of TKE due to separated horizontal shear modes')
+PARAM(500636,'DTKE_CON',dis=0,cat=19,num=219,&
+      longname='Buoyancy-production of TKE due to sub-grid scale convection')
+PARAM(500637,'DTKE',dis=0,cat=19,num=218,&
+      longname='Production of TKE')
+PARAM(500638,'ATM_RSTC',dis=0,cat=2,num=200,&
+      longname='Atmospheric resistance')
+PARAM(500639,'HTOP_THERM',dis=0,cat=6,num=197,&
+      longname='Height of thermals above MSL')
+PARAM(500640,'VSOILA',dis=0,cat=197,num=33,&
+      longname='Mass concentration of dust (minimum mode)')
+PARAM(500642,'LAPSE_RATE',dis=0,cat=0,num=8,&
+      longname='Lapse rate')
+PARAM(500643,'VSOILB',dis=0,cat=197,num=34,&
+      longname='Mass concentration of dust (medium mode)')
+PARAM(500644,'VSOILC',dis=0,cat=197,num=35,&
+      longname='Mass concentration of dust (maximum mode)')
+PARAM(500645,'VSOILA0',dis=0,cat=197,num=72,&
+      longname='Number concentration of dust (minimum mode)')
+PARAM(500646,'VSOILB0',dis=0,cat=197,num=73,&
+      longname='Number concentration of dust (medium mode)')
+PARAM(500647,'VSOILC0',dis=0,cat=197,num=74,&
+      longname='Number concentration of dust (maximum mode)')
+PARAM(500648,'VSOILS',dis=0,cat=197,num=251,&
+      longname='Mass concentration of dust (sum of all modes)')
+PARAM(500649,'VSOILS0',dis=0,cat=197,num=252,&
+      longname='Number concentration of dust (sum of all modes)')
+PARAM(500650,'DUMMY_1',dis=0,cat=254,num=1,&
+      longname='DUMMY_1')
+PARAM(500651,'DUMMY_2',dis=0,cat=254,num=2,&
+      longname='DUMMY_2')
+PARAM(500652,'DUMMY_3',dis=0,cat=254,num=3,&
+      longname='DUMMY_3')
+PARAM(500654,'DUMMY_4',dis=0,cat=254,num=4,&
+      longname='DUMMY_4')
+PARAM(500655,'DUMMY_5',dis=0,cat=254,num=5,&
+      longname='DUMMY_5')
+PARAM(500656,'DUMMY_6',dis=0,cat=254,num=6,&
+      longname='DUMMY_6')
+PARAM(500657,'DUMMY_7',dis=0,cat=254,num=7,&
+      longname='DUMMY_7')
+PARAM(500658,'DUMMY_8',dis=0,cat=254,num=8,&
+      longname='DUMMY_8')
+PARAM(500659,'DUMMY_9',dis=0,cat=254,num=9,&
+      longname='DUMMY_9')
+PARAM(500660,'DUMMY_10',dis=0,cat=254,num=10,&
+      longname='DUMMY_10')
+PARAM(500661,'DUMMY_11',dis=0,cat=254,num=11,&
+      longname='DUMMY_11')
+PARAM(500662,'DUMMY_12',dis=0,cat=254,num=12,&
+      longname='DUMMY_12')
+PARAM(500663,'DUMMY_13',dis=0,cat=254,num=13,&
+      longname='DUMMY_13')
+PARAM(500664,'DUMMY_14',dis=0,cat=254,num=14,&
+      longname='DUMMY_14')
+PARAM(500665,'DUMMY_15',dis=0,cat=254,num=15,&
+      longname='DUMMY_15')
+PARAM(500666,'DUMMY_16',dis=0,cat=254,num=16,&
+      longname='DUMMY_16')
+PARAM(500667,'DUMMY_17',dis=0,cat=254,num=17,&
+      longname='DUMMY_17')
+PARAM(500668,'DUMMY_18',dis=0,cat=254,num=18,&
+      longname='DUMMY_18')
+PARAM(500669,'DUMMY_19',dis=0,cat=254,num=19,&
+      longname='DUMMY_19')
+PARAM(500670,'DUMMY_20',dis=0,cat=254,num=20,&
+      longname='DUMMY_20')
+PARAM(500671,'DUMMY_21',dis=0,cat=254,num=21,&
+      longname='DUMMY_21')
+PARAM(500672,'DUMMY_22',dis=0,cat=254,num=22,&
+      longname='DUMMY_22')
+PARAM(500673,'DUMMY_23',dis=0,cat=254,num=23,&
+      longname='DUMMY_23')
+PARAM(500674,'DUMMY_24',dis=0,cat=254,num=24,&
+      longname='DUMMY_24')
+PARAM(500675,'DUMMY_25',dis=0,cat=254,num=25,&
+      longname='DUMMY_25')
+PARAM(500676,'DUMMY_26',dis=0,cat=254,num=26,&
+      longname='DUMMY_26')
+PARAM(500677,'DUMMY_27',dis=0,cat=254,num=27,&
+      longname='DUMMY_27')
+PARAM(500678,'DUMMY_28',dis=0,cat=254,num=28,&
+      longname='DUMMY_28')
+PARAM(500679,'DUMMY_29',dis=0,cat=254,num=29,&
+      longname='DUMMY_29')
+PARAM(500680,'DUMMY_30',dis=0,cat=254,num=30,&
+      longname='DUMMY_30')
+PARAM(500681,'DUMMY_31',dis=0,cat=254,num=31,&
+      longname='DUMMY_31')
+PARAM(500682,'DUMMY_32',dis=0,cat=254,num=32,&
+      longname='DUMMY_32')
+PARAM(500683,'DUMMY_33',dis=0,cat=254,num=33,&
+      longname='DUMMY_33')
+PARAM(500684,'DUMMY_34',dis=0,cat=254,num=34,&
+      longname='DUMMY_34')
+PARAM(500685,'DUMMY_35',dis=0,cat=254,num=35,&
+      longname='DUMMY_35')
+PARAM(500686,'DUMMY_36',dis=0,cat=254,num=36,&
+      longname='DUMMY_36')
+PARAM(500687,'DUMMY_37',dis=0,cat=254,num=37,&
+      longname='DUMMY_37')
+PARAM(500688,'DUMMY_38',dis=0,cat=254,num=38,&
+      longname='DUMMY_38')
+PARAM(500689,'DUMMY_39',dis=0,cat=254,num=39,&
+      longname='DUMMY_39')
+PARAM(500690,'DUMMY_40',dis=0,cat=254,num=40,&
+      longname='DUMMY_40')
+PARAM(500691,'DUMMY_41',dis=0,cat=254,num=41,&
+      longname='DUMMY_41')
+PARAM(500692,'DUMMY_42',dis=0,cat=254,num=42,&
+      longname='DUMMY_42')
+PARAM(500693,'DUMMY_43',dis=0,cat=254,num=43,&
+      longname='DUMMY_43')
+PARAM(500694,'DUMMY_44',dis=0,cat=254,num=44,&
+      longname='DUMMY_44')
+PARAM(500695,'DUMMY_45',dis=0,cat=254,num=45,&
+      longname='DUMMY_45')
+PARAM(500696,'DUMMY_46',dis=0,cat=254,num=46,&
+      longname='DUMMY_46')
+PARAM(500697,'DUMMY_47',dis=0,cat=254,num=47,&
+      longname='DUMMY_47')
+PARAM(500698,'DUMMY_48',dis=0,cat=254,num=48,&
+      longname='DUMMY_48')
+PARAM(500699,'DUMMY_49',dis=0,cat=254,num=49,&
+      longname='DUMMY_49')
+PARAM(500700,'DUMMY_50',dis=0,cat=254,num=50,&
+      longname='DUMMY_50')
+PARAM(500701,'DUMMY_51',dis=0,cat=254,num=51,&
+      longname='DUMMY_51')
+PARAM(500702,'DUMMY_52',dis=0,cat=254,num=52,&
+      longname='DUMMY_52')
+PARAM(500703,'DUMMY_53',dis=0,cat=254,num=53,&
+      longname='DUMMY_53')
+PARAM(500704,'DUMMY_54',dis=0,cat=254,num=54,&
+      longname='DUMMY_54')
+PARAM(500705,'DUMMY_55',dis=0,cat=254,num=55,&
+      longname='DUMMY_55')
+PARAM(500706,'DUMMY_56',dis=0,cat=254,num=56,&
+      longname='DUMMY_56')
+PARAM(500707,'DUMMY_57',dis=0,cat=254,num=57,&
+      longname='DUMMY_57')
+PARAM(500708,'DUMMY_58',dis=0,cat=254,num=58,&
+      longname='DUMMY_58')
+PARAM(500709,'DUMMY_59',dis=0,cat=254,num=59,&
+      longname='DUMMY_59')
+PARAM(500710,'DUMMY_60',dis=0,cat=254,num=60,&
+      longname='DUMMY_60')
+PARAM(500711,'DUMMY_61',dis=0,cat=254,num=61,&
+      longname='DUMMY_61')
+PARAM(500712,'DUMMY_62',dis=0,cat=254,num=62,&
+      longname='DUMMY_62')
+PARAM(500713,'DUMMY_63',dis=0,cat=254,num=63,&
+      longname='DUMMY_63')
+PARAM(500714,'DUMMY_64',dis=0,cat=254,num=64,&
+      longname='DUMMY_64')
+PARAM(500715,'DUMMY_65',dis=0,cat=254,num=65,&
+      longname='DUMMY_65')
+PARAM(500716,'DUMMY_66',dis=0,cat=254,num=66,&
+      longname='DUMMY_66')
+PARAM(500717,'DUMMY_67',dis=0,cat=254,num=67,&
+      longname='DUMMY_67')
+PARAM(500718,'DUMMY_68',dis=0,cat=254,num=68,&
+      longname='DUMMY_68')
+PARAM(500719,'DUMMY_69',dis=0,cat=254,num=69,&
+      longname='DUMMY_69')
+PARAM(500720,'DUMMY_70',dis=0,cat=254,num=70,&
+      longname='DUMMY_70')
+PARAM(500721,'DUMMY_71',dis=0,cat=254,num=71,&
+      longname='DUMMY_71')
+PARAM(500722,'DUMMY_72',dis=0,cat=254,num=72,&
+      longname='DUMMY_72')
+PARAM(500723,'DUMMY_73',dis=0,cat=254,num=73,&
+      longname='DUMMY_73')
+PARAM(500724,'DUMMY_74',dis=0,cat=254,num=74,&
+      longname='DUMMY_74')
+PARAM(500725,'DUMMY_75',dis=0,cat=254,num=75,&
+      longname='DUMMY_75')
+PARAM(500726,'DUMMY_76',dis=0,cat=254,num=76,&
+      longname='DUMMY_76')
+PARAM(500727,'DUMMY_77',dis=0,cat=254,num=77,&
+      longname='DUMMY_77')
+PARAM(500728,'DUMMY_78',dis=0,cat=254,num=78,&
+      longname='DUMMY_78')
+PARAM(500729,'DUMMY_79',dis=0,cat=254,num=79,&
+      longname='DUMMY_79')
+PARAM(500730,'DUMMY_80',dis=0,cat=254,num=80,&
+      longname='DUMMY_80')
+PARAM(500731,'DUMMY_81',dis=0,cat=254,num=81,&
+      longname='DUMMY_81')
+PARAM(500732,'DUMMY_82',dis=0,cat=254,num=82,&
+      longname='DUMMY_82')
+PARAM(500733,'DUMMY_83',dis=0,cat=254,num=83,&
+      longname='DUMMY_83')
+PARAM(500734,'DUMMY_84',dis=0,cat=254,num=84,&
+      longname='DUMMY_84')
+PARAM(500735,'DUMMY_85',dis=0,cat=254,num=85,&
+      longname='DUMMY_85')
+PARAM(500736,'DUMMY_86',dis=0,cat=254,num=86,&
+      longname='DUMMY_86')
+PARAM(500737,'DUMMY_87',dis=0,cat=254,num=87,&
+      longname='DUMMY_87')
+PARAM(500738,'DUMMY_88',dis=0,cat=254,num=88,&
+      longname='DUMMY_88')
+PARAM(500739,'DUMMY_89',dis=0,cat=254,num=89,&
+      longname='DUMMY_89')
+PARAM(500740,'DUMMY_90',dis=0,cat=254,num=90,&
+      longname='DUMMY_90')
+PARAM(500741,'DUMMY_91',dis=0,cat=254,num=91,&
+      longname='DUMMY_91')
+PARAM(500742,'DUMMY_92',dis=0,cat=254,num=92,&
+      longname='DUMMY_92')
+PARAM(500743,'DUMMY_93',dis=0,cat=254,num=93,&
+      longname='DUMMY_93')
+PARAM(500744,'DUMMY_94',dis=0,cat=254,num=94,&
+      longname='DUMMY_94')
+PARAM(500745,'DUMMY_95',dis=0,cat=254,num=95,&
+      longname='DUMMY_95')
+PARAM(500746,'DUMMY_96',dis=0,cat=254,num=96,&
+      longname='DUMMY_96')
+PARAM(500747,'DUMMY_97',dis=0,cat=254,num=97,&
+      longname='DUMMY_97')
+PARAM(500748,'DUMMY_98',dis=0,cat=254,num=98,&
+      longname='DUMMY_98')
+PARAM(500749,'DUMMY_99',dis=0,cat=254,num=99,&
+      longname='DUMMY_99')
+PARAM(500750,'DUMMY_100',dis=0,cat=254,num=100,&
+      longname='DUMMY_100')
+PARAM(500751,'DUMMY_101',dis=0,cat=254,num=101,&
+      longname='DUMMY_101')
+PARAM(500752,'DUMMY_102',dis=0,cat=254,num=102,&
+      longname='DUMMY_102')
+PARAM(500753,'DUMMY_103',dis=0,cat=254,num=103,&
+      longname='DUMMY_103')
+PARAM(500754,'DUMMY_104',dis=0,cat=254,num=104,&
+      longname='DUMMY_104')
+PARAM(500755,'DUMMY_105',dis=0,cat=254,num=105,&
+      longname='DUMMY_105')
+PARAM(500756,'DUMMY_106',dis=0,cat=254,num=106,&
+      longname='DUMMY_106')
+PARAM(500757,'DUMMY_107',dis=0,cat=254,num=107,&
+      longname='DUMMY_107')
+PARAM(500758,'DUMMY_108',dis=0,cat=254,num=108,&
+      longname='DUMMY_108')
+PARAM(500759,'DUMMY_109',dis=0,cat=254,num=109,&
+      longname='DUMMY_109')
+PARAM(500760,'DUMMY_110',dis=0,cat=254,num=110,&
+      longname='DUMMY_110')
+PARAM(500761,'DUMMY_111',dis=0,cat=254,num=111,&
+      longname='DUMMY_111')
+PARAM(500762,'DUMMY_112',dis=0,cat=254,num=112,&
+      longname='DUMMY_112')
+PARAM(500763,'DUMMY_113',dis=0,cat=254,num=113,&
+      longname='DUMMY_113')
+PARAM(500764,'DUMMY_114',dis=0,cat=254,num=114,&
+      longname='DUMMY_114')
+PARAM(500765,'DUMMY_115',dis=0,cat=254,num=115,&
+      longname='DUMMY_115')
+PARAM(500766,'DUMMY_116',dis=0,cat=254,num=116,&
+      longname='DUMMY_116')
+PARAM(500767,'DUMMY_117',dis=0,cat=254,num=117,&
+      longname='DUMMY_117')
+PARAM(500768,'DUMMY_118',dis=0,cat=254,num=118,&
+      longname='DUMMY_118')
+PARAM(500769,'DUMMY_119',dis=0,cat=254,num=119,&
+      longname='DUMMY_119')
+PARAM(500770,'DUMMY_120',dis=0,cat=254,num=120,&
+      longname='DUMMY_120')
+PARAM(500771,'DUMMY_121',dis=0,cat=254,num=121,&
+      longname='DUMMY_121')
+PARAM(500772,'DUMMY_122',dis=0,cat=254,num=122,&
+      longname='DUMMY_122')
+PARAM(500773,'DUMMY_123',dis=0,cat=254,num=123,&
+      longname='DUMMY_123')
+PARAM(500774,'DUMMY_124',dis=0,cat=254,num=124,&
+      longname='DUMMY_124')
+PARAM(500775,'DUMMY_125',dis=0,cat=254,num=125,&
+      longname='DUMMY_125')
+PARAM(500776,'DUMMY_126',dis=0,cat=254,num=126,&
+      longname='DUMMY_126')
+PARAM(500777,'DUMMY_127',dis=0,cat=254,num=127,&
+      longname='DUMMY_127')
+PARAM(500778,'DUMMY_128',dis=0,cat=254,num=128,&
+      longname='DUMMY_128')
+PARAM(500779,'DUMMY_129',dis=0,cat=254,num=129,&
+      longname='DUMMY_129')
+PARAM(500780,'DUMMY_130',dis=0,cat=254,num=130,&
+      longname='DUMMY_130')
+PARAM(500781,'DUMMY_131',dis=0,cat=254,num=131,&
+      longname='DUMMY_131')
+PARAM(500782,'DUMMY_132',dis=0,cat=254,num=132,&
+      longname='DUMMY_132')
+PARAM(500783,'DUMMY_133',dis=0,cat=254,num=133,&
+      longname='DUMMY_133')
+PARAM(500784,'DUMMY_134',dis=0,cat=254,num=134,&
+      longname='DUMMY_134')
+PARAM(500785,'DUMMY_135',dis=0,cat=254,num=135,&
+      longname='DUMMY_135')
+PARAM(500786,'DUMMY_136',dis=0,cat=254,num=136,&
+      longname='DUMMY_136')
+PARAM(500787,'DUMMY_137',dis=0,cat=254,num=137,&
+      longname='DUMMY_137')
+PARAM(500788,'DUMMY_138',dis=0,cat=254,num=138,&
+      longname='DUMMY_138')
+PARAM(500789,'DUMMY_139',dis=0,cat=254,num=139,&
+      longname='DUMMY_139')
+PARAM(500790,'DUMMY_140',dis=0,cat=254,num=140,&
+      longname='DUMMY_140')
+PARAM(500791,'DUMMY_141',dis=0,cat=254,num=141,&
+      longname='DUMMY_141')
+PARAM(500792,'DUMMY_142',dis=0,cat=254,num=142,&
+      longname='DUMMY_142')
+PARAM(500793,'DUMMY_143',dis=0,cat=254,num=143,&
+      longname='DUMMY_143')
+PARAM(500794,'DUMMY_144',dis=0,cat=254,num=144,&
+      longname='DUMMY_144')
+PARAM(500795,'DUMMY_145',dis=0,cat=254,num=145,&
+      longname='DUMMY_145')
+PARAM(500796,'DUMMY_146',dis=0,cat=254,num=146,&
+      longname='DUMMY_146')
+PARAM(500797,'DUMMY_147',dis=0,cat=254,num=147,&
+      longname='DUMMY_147')
+PARAM(500798,'DUMMY_148',dis=0,cat=254,num=148,&
+      longname='DUMMY_148')
+PARAM(500799,'DUMMY_149',dis=0,cat=254,num=149,&
+      longname='DUMMY_149')
+PARAM(500800,'DUMMY_150',dis=0,cat=254,num=150,&
+      longname='DUMMY_150')
+PARAM(500801,'DUMMY_151',dis=0,cat=254,num=151,&
+      longname='DUMMY_151')
+PARAM(500802,'DUMMY_152',dis=0,cat=254,num=152,&
+      longname='DUMMY_152')
+PARAM(500803,'DUMMY_153',dis=0,cat=254,num=153,&
+      longname='DUMMY_153')
+PARAM(500804,'DUMMY_154',dis=0,cat=254,num=154,&
+      longname='DUMMY_154')
+PARAM(500805,'DUMMY_155',dis=0,cat=254,num=155,&
+      longname='DUMMY_155')
+PARAM(500806,'DUMMY_156',dis=0,cat=254,num=156,&
+      longname='DUMMY_156')
+PARAM(500807,'DUMMY_157',dis=0,cat=254,num=157,&
+      longname='DUMMY_157')
+PARAM(500808,'DUMMY_158',dis=0,cat=254,num=158,&
+      longname='DUMMY_158')
+PARAM(500809,'DUMMY_159',dis=0,cat=254,num=159,&
+      longname='DUMMY_159')
+PARAM(500810,'DUMMY_160',dis=0,cat=254,num=160,&
+      longname='DUMMY_160')
+PARAM(500811,'DUMMY_161',dis=0,cat=254,num=161,&
+      longname='DUMMY_161')
+PARAM(500812,'DUMMY_162',dis=0,cat=254,num=162,&
+      longname='DUMMY_162')
+PARAM(500813,'DUMMY_163',dis=0,cat=254,num=163,&
+      longname='DUMMY_163')
+PARAM(500814,'DUMMY_164',dis=0,cat=254,num=164,&
+      longname='DUMMY_164')
+PARAM(500815,'DUMMY_165',dis=0,cat=254,num=165,&
+      longname='DUMMY_165')
+PARAM(500816,'DUMMY_166',dis=0,cat=254,num=166,&
+      longname='DUMMY_166')
+PARAM(500817,'DUMMY_167',dis=0,cat=254,num=167,&
+      longname='DUMMY_167')
+PARAM(500818,'DUMMY_168',dis=0,cat=254,num=168,&
+      longname='DUMMY_168')
+PARAM(500819,'DUMMY_169',dis=0,cat=254,num=169,&
+      longname='DUMMY_169')
+PARAM(500820,'DUMMY_170',dis=0,cat=254,num=170,&
+      longname='DUMMY_170')
+PARAM(500821,'DUMMY_171',dis=0,cat=254,num=171,&
+      longname='DUMMY_171')
+PARAM(500822,'DUMMY_172',dis=0,cat=254,num=172,&
+      longname='DUMMY_172')
+PARAM(500823,'DUMMY_173',dis=0,cat=254,num=173,&
+      longname='DUMMY_173')
+PARAM(500824,'DUMMY_174',dis=0,cat=254,num=174,&
+      longname='DUMMY_174')
+PARAM(500825,'DUMMY_175',dis=0,cat=254,num=175,&
+      longname='DUMMY_175')
+PARAM(500826,'DUMMY_176',dis=0,cat=254,num=176,&
+      longname='DUMMY_176')
+PARAM(500827,'DUMMY_177',dis=0,cat=254,num=177,&
+      longname='DUMMY_177')
+PARAM(500828,'DUMMY_178',dis=0,cat=254,num=178,&
+      longname='DUMMY_178')
+PARAM(500829,'DUMMY_179',dis=0,cat=254,num=179,&
+      longname='DUMMY_179')
+PARAM(500830,'DUMMY_180',dis=0,cat=254,num=180,&
+      longname='DUMMY_180')
+PARAM(500831,'DUMMY_181',dis=0,cat=254,num=181,&
+      longname='DUMMY_181')
+PARAM(500832,'DUMMY_182',dis=0,cat=254,num=182,&
+      longname='DUMMY_182')
+PARAM(500833,'DUMMY_183',dis=0,cat=254,num=183,&
+      longname='DUMMY_183')
+PARAM(500834,'DUMMY_184',dis=0,cat=254,num=184,&
+      longname='DUMMY_184')
+PARAM(500835,'DUMMY_185',dis=0,cat=254,num=185,&
+      longname='DUMMY_185')
+PARAM(500836,'DUMMY_186',dis=0,cat=254,num=186,&
+      longname='DUMMY_186')
+PARAM(500837,'DUMMY_187',dis=0,cat=254,num=187,&
+      longname='DUMMY_187')
+PARAM(500838,'DUMMY_188',dis=0,cat=254,num=188,&
+      longname='DUMMY_188')
+PARAM(500839,'DUMMY_189',dis=0,cat=254,num=189,&
+      longname='DUMMY_189')
+PARAM(500840,'DUMMY_190',dis=0,cat=254,num=190,&
+      longname='DUMMY_190')
+PARAM(500841,'DUMMY_191',dis=0,cat=254,num=191,&
+      longname='DUMMY_191')
+PARAM(500842,'DUMMY_192',dis=0,cat=254,num=192,&
+      longname='DUMMY_192')
+PARAM(500843,'DUMMY_193',dis=0,cat=254,num=193,&
+      longname='DUMMY_193')
+PARAM(500844,'DUMMY_194',dis=0,cat=254,num=194,&
+      longname='DUMMY_194')
+PARAM(500845,'DUMMY_195',dis=0,cat=254,num=195,&
+      longname='DUMMY_195')
+PARAM(500846,'DUMMY_196',dis=0,cat=254,num=196,&
+      longname='DUMMY_196')
+PARAM(500847,'DUMMY_197',dis=0,cat=254,num=197,&
+      longname='DUMMY_197')
+PARAM(500848,'DUMMY_198',dis=0,cat=254,num=198,&
+      longname='DUMMY_198')
+PARAM(500849,'DUMMY_199',dis=0,cat=254,num=199,&
+      longname='DUMMY_199')
+PARAM(500850,'DUMMY_200',dis=0,cat=254,num=200,&
+      longname='DUMMY_200')
+PARAM(500851,'DUMMY_201',dis=0,cat=254,num=201,&
+      longname='DUMMY_201')
+PARAM(500852,'DUMMY_202',dis=0,cat=254,num=202,&
+      longname='DUMMY_202')
+PARAM(500853,'DUMMY_203',dis=0,cat=254,num=203,&
+      longname='DUMMY_203')
+PARAM(500854,'DUMMY_204',dis=0,cat=254,num=204,&
+      longname='DUMMY_204')
+PARAM(500855,'DUMMY_205',dis=0,cat=254,num=205,&
+      longname='DUMMY_205')
+PARAM(500856,'DUMMY_206',dis=0,cat=254,num=206,&
+      longname='DUMMY_206')
+PARAM(500857,'DUMMY_207',dis=0,cat=254,num=207,&
+      longname='DUMMY_207')
+PARAM(500858,'DUMMY_208',dis=0,cat=254,num=208,&
+      longname='DUMMY_208')
+PARAM(500859,'DUMMY_209',dis=0,cat=254,num=209,&
+      longname='DUMMY_209')
+PARAM(500860,'DUMMY_210',dis=0,cat=254,num=210,&
+      longname='DUMMY_210')
+PARAM(500861,'DUMMY_211',dis=0,cat=254,num=211,&
+      longname='DUMMY_211')
+PARAM(500862,'DUMMY_212',dis=0,cat=254,num=212,&
+      longname='DUMMY_212')
+PARAM(500863,'DUMMY_213',dis=0,cat=254,num=213,&
+      longname='DUMMY_213')
+PARAM(500864,'DUMMY_214',dis=0,cat=254,num=214,&
+      longname='DUMMY_214')
+PARAM(500865,'DUMMY_215',dis=0,cat=254,num=215,&
+      longname='DUMMY_215')
+PARAM(500866,'DUMMY_216',dis=0,cat=254,num=216,&
+      longname='DUMMY_216')
+PARAM(500867,'DUMMY_217',dis=0,cat=254,num=217,&
+      longname='DUMMY_217')
+PARAM(500868,'DUMMY_218',dis=0,cat=254,num=218,&
+      longname='DUMMY_218')
+PARAM(500869,'DUMMY_219',dis=0,cat=254,num=219,&
+      longname='DUMMY_219')
+PARAM(500870,'DUMMY_220',dis=0,cat=254,num=220,&
+      longname='DUMMY_220')
+PARAM(500871,'DUMMY_221',dis=0,cat=254,num=221,&
+      longname='DUMMY_221')
+PARAM(500872,'DUMMY_222',dis=0,cat=254,num=222,&
+      longname='DUMMY_222')
+PARAM(500873,'DUMMY_223',dis=0,cat=254,num=223,&
+      longname='DUMMY_223')
+PARAM(500874,'DUMMY_224',dis=0,cat=254,num=224,&
+      longname='DUMMY_224')
+PARAM(500875,'DUMMY_225',dis=0,cat=254,num=225,&
+      longname='DUMMY_225')
+PARAM(500876,'DUMMY_226',dis=0,cat=254,num=226,&
+      longname='DUMMY_226')
+PARAM(500877,'DUMMY_227',dis=0,cat=254,num=227,&
+      longname='DUMMY_227')
+PARAM(500878,'DUMMY_228',dis=0,cat=254,num=228,&
+      longname='DUMMY_228')
+PARAM(500879,'DUMMY_229',dis=0,cat=254,num=229,&
+      longname='DUMMY_229')
+PARAM(500880,'DUMMY_230',dis=0,cat=254,num=230,&
+      longname='DUMMY_230')
+PARAM(500881,'DUMMY_231',dis=0,cat=254,num=231,&
+      longname='DUMMY_231')
+PARAM(500882,'DUMMY_232',dis=0,cat=254,num=232,&
+      longname='DUMMY_232')
+PARAM(500883,'DUMMY_233',dis=0,cat=254,num=233,&
+      longname='DUMMY_233')
+PARAM(500884,'DUMMY_234',dis=0,cat=254,num=234,&
+      longname='DUMMY_234')
+PARAM(500885,'DUMMY_235',dis=0,cat=254,num=235,&
+      longname='DUMMY_235')
+PARAM(500886,'DUMMY_236',dis=0,cat=254,num=236,&
+      longname='DUMMY_236')
+PARAM(500887,'DUMMY_237',dis=0,cat=254,num=237,&
+      longname='DUMMY_237')
+PARAM(500888,'DUMMY_238',dis=0,cat=254,num=238,&
+      longname='DUMMY_238')
+PARAM(500889,'DUMMY_239',dis=0,cat=254,num=239,&
+      longname='DUMMY_239')
+PARAM(500890,'DUMMY_240',dis=0,cat=254,num=240,&
+      longname='DUMMY_240')
+PARAM(500891,'DUMMY_241',dis=0,cat=254,num=241,&
+      longname='DUMMY_241')
+PARAM(500892,'DUMMY_242',dis=0,cat=254,num=242,&
+      longname='DUMMY_242')
+PARAM(500893,'DUMMY_243',dis=0,cat=254,num=243,&
+      longname='DUMMY_243')
+PARAM(500894,'DUMMY_244',dis=0,cat=254,num=244,&
+      longname='DUMMY_244')
+PARAM(500895,'DUMMY_245',dis=0,cat=254,num=245,&
+      longname='DUMMY_245')
+PARAM(500896,'DUMMY_246',dis=0,cat=254,num=246,&
+      longname='DUMMY_246')
+PARAM(500897,'DUMMY_247',dis=0,cat=254,num=247,&
+      longname='DUMMY_247')
+PARAM(500898,'DUMMY_248',dis=0,cat=254,num=248,&
+      longname='DUMMY_248')
+PARAM(500899,'DUMMY_249',dis=0,cat=254,num=249,&
+      longname='DUMMY_249')
+PARAM(500900,'DUMMY_250',dis=0,cat=254,num=250,&
+      longname='DUMMY_250')
+PARAM(500901,'DUMMY_251',dis=0,cat=254,num=251,&
+      longname='DUMMY_251')
+PARAM(500902,'DUMMY_252',dis=0,cat=254,num=252,&
+      longname='DUMMY_252')
+PARAM(500903,'DUMMY_253',dis=0,cat=254,num=253,&
+      longname='DUMMY_253')
+PARAM(500904,'DUMMY_254',dis=0,cat=254,num=254,&
+      longname='DUMMY_254')
+PARAM(500905,'QV_S',dis=0,cat=1,num=0,T_FFS=1,&
+      longname='Specific Humidity (S)')
+PARAM(502307,'ALB_DIF12',dis=0,cat=19,num=18,T_StatP=0,&
+      longname='Albedo - diffusive solar - time average (0.3 - 5.0 m-6)')
+PARAM(502308,'ALB_DIF',dis=0,cat=19,num=18,&
+      longname='Albedo - diffusive solar (0.3 - 5.0 m-6)')
+PARAM(502309,'CLAT',dis=0,cat=191,num=1,gridnum=1,&
+      longname='center latitude')
+PARAM(502310,'CLON',dis=0,cat=191,num=2,gridnum=1,&
+      longname='center longitude')
+PARAM(502311,'ELAT',dis=0,cat=191,num=1,gridnum=3,&
+      longname='edge midpoint latitude')
+PARAM(502312,'ELON',dis=0,cat=191,num=2,gridnum=3,&
+      longname='edge midpoint longitude')
+PARAM(502313,'VLAT',dis=0,cat=191,num=1,gridnum=2,&
+      longname='vertex latitude')
+PARAM(502314,'VLON',dis=0,cat=191,num=2,gridnum=2,&
+      longname='vertex longitude')
+PARAM(502315,'NCCLOUD',dis=0,cat=6,num=28,&
+      longname='Number of cloud droplets per unit mass of air')
+PARAM(502316,'NCICE',dis=0,cat=6,num=29,&
+      longname='Number of cloud ice particles per unit mass of air')
+PARAM(502317,'LHFL_S',dis=0,cat=0,num=10,T_FFS=1,&
+      longname='Latent Heat Net Flux - instant - at surface')
+PARAM(502318,'SHFL_S',dis=0,cat=0,num=11,T_FFS=1,&
+      longname='Sensible Heat Net Flux - instant - at surface')
+PARAM(502319,'ACCLHFL_S',dis=0,cat=0,num=10,T_StatP=1,T_FFS=1,&
+      longname='Latent Heat Net Flux - accumulated _ surface')
+PARAM(502320,'ACCSHFL_S',dis=0,cat=0,num=11,T_StatP=1,T_FFS=1,&
+      longname='Sensible Heat Net Flux - accumulated _ surface')
+PARAM(502321,'ACCSOB_S',dis=0,cat=4,num=9,T_StatP=1,T_FFS=1,&
+      longname='Net short wave radiation flux - accumulated _ surface')
+PARAM(502322,'ACCTHB_S',dis=0,cat=5,num=5,T_StatP=1,T_FFS=1,&
+      longname='Net long wave radiation flux - accumulated _  surface')
+PARAM(502323,'ACCTHB_T',dis=0,cat=5,num=5,T_StatP=1,T_FFS=8,&
+      longname='Net long wave radiation flux  - accumulated _ model top')
+PARAM(502327,'ACCSOB_T',dis=0,cat=4,num=9,T_StatP=1,T_FFS=8,&
+      longname='Net short wave radiation flux - accumulated _ model top')
+PARAM(502328,'T_SNOW_M',dis=0,cat=0,num=18,T_FFS=114,&
+      longname='Snow temperature  - multi level')
+PARAM(502329,'H_SNOW_M',dis=0,cat=1,num=11,T_FFS=114,&
+      longname='Snow depth  - multi level')
+PARAM(502330,'RHO_SNOW_M',dis=0,cat=1,num=61,T_FFS=114,&
+      longname='Snow density in  - multi level')
+PARAM(502331,'W_SNOW_M',dis=0,cat=1,num=60,T_FFS=114,&
+      longname='Water equivalent  of accumulated snoe depth in - multi level')
+PARAM(502332,'WLIQ_SNOW_M',dis=0,cat=1,num=210,T_FFS=114,&
+      longname='Liquid water content in snow - multi level')
+PARAM(502333,'SALT_LK',dis=1,cat=2,num=12,&
+      longname='salinity')
+PARAM(502334,'STRF',dis=0,cat=2,num=4,&
+      longname='Stream function')
+PARAM(502335,'VPOT',dis=0,cat=2,num=5,&
+      longname='Velocity potential')
+PARAM(502336,'SKT',dis=0,cat=0,num=17,T_FFS=1,&
+      longname='Skin temperature')
+PARAM(502339,'SWDIRS_RAD',dis=0,cat=4,num=198,T_FFS=1,&
+      longname='Downward direct short wave radiation flux at surface')
+PARAM(502340,'SNOWC',dis=0,cat=1,num=42,&
+      longname='Snow cover')
+PARAM(502341,'CLCH',dis=0,cat=6,num=22,T_SFS=100,SF_SFS=0,SV_SFS=40000,T_FFS=100,SF_FFS=0,SV_FFS=0,&
+      longname='Cloud Cover (0 - 400 hPa)')
+PARAM(502342,'CLCM',dis=0,cat=6,num=22,T_SFS=100,SV_SFS=80000,T_FFS=100,SV_FFS=40000,&
+      longname='Cloud Cover (400 - 800 hPa)')
+PARAM(502343,'CLCL',dis=0,cat=6,num=22,T_SFS=1,T_FFS=100,SV_FFS=80000,&
+      longname='Cloud Cover (800 hPa - Soil)')
+PARAM(502344,'ALB_UV12',dis=0,cat=19,num=222,T_StatP=0,&
+      longname='Albedo - diffusive solar - time average (UV: 0.3 - 0.7 m-6)')
+PARAM(502345,'ALB_UV',dis=0,cat=19,num=222,&
+      longname='Albedo - diffusive solar (UV: 0.3 - 0.7 m-6)')
+PARAM(502346,'ALB_NI12',dis=0,cat=19,num=223,T_StatP=0,&
+      longname='Albedo - near infrared - time average (0.7 - 5.0 m-6)')
+PARAM(502347,'ALB_NI',dis=0,cat=19,num=223,&
+      longname='Albedo - near infrared (0.7 - 5.0 m-6)')
+PARAM(502348,'RUNOFF_S',dis=2,cat=0,num=5,T_StatP=1,T_FFS=106,SF_FFS=0,SV_FFS=0,&
+      longname='Water Runoff (s)')
+PARAM(502349,'RUNOFF_G',dis=2,cat=0,num=5,T_StatP=1,T_FFS=106,SF_FFS=1,SV_FFS=1,&
+      longname='Water Runoff')
+PARAM(502352,'EDP_MAX_UFIR',dis=0,cat=19,num=224,&
+      longname='Eddy Dissipation Rate Total Col-Max. Upper FIR')
+PARAM(502353,'EDP_MAX_LUIR',dis=0,cat=19,num=225,&
+      longname='Eddy Dissipation Rate Total Col-Max. Lower UIR')
+PARAM(502354,'EDP_MAX_UUIR',dis=0,cat=19,num=226,&
+      longname='Eddy Dissipation Rate Total Col-Max. Upper UIR')
+PARAM(502397,'VTMP',dis=0,cat=0,num=1,&
+      longname='Virtual Temperature')
+PARAM(502424,'VUCSH',dis=0,cat=2,num=15,&
+      longname='Vertical u-component shear')
+PARAM(502425,'VVCSH',dis=0,cat=2,num=16,&
+      longname='Vertical v-component shear')
+PARAM(502693,'PT',dis=0,cat=0,num=2,&
+      longname='Potential temperature')
+PARAM(502700,'BLD',dis=0,cat=2,num=20,&
+      longname='Boundary layer dissipation')
+PARAM(502701,'SUND',dis=0,cat=6,num=24,T_StatP=1,T_FFS=1,&
+      longname='Sunshine duration')
+PARAM(502702,'BTMP',dis=0,cat=4,num=4,&
+      longname='Brightness temperature')
+PARAM(502703,'HEATX',dis=0,cat=0,num=12,&
+      longname='Heat index')
+PARAM(502705,'TCW',dis=0,cat=1,num=51,&
+      longname='Total column water')
+PARAM(502706,'NCPCP',dis=0,cat=1,num=9,&
+      longname='Large scale precipitation (non-convective)')
+PARAM(502707,'SRWEQ',dis=0,cat=1,num=12,&
+      longname='Snowfall rate water equivalent')
+PARAM(502708,'SNOC',dis=0,cat=1,num=14,&
+      longname='Convective snow')
+PARAM(502709,'SNOL',dis=0,cat=1,num=15,&
+      longname='Large scale snow')
+PARAM(502710,'SNOAG',dis=0,cat=1,num=17,&
+      longname='Snow age')
+PARAM(502711,'ABSH',dis=0,cat=1,num=18,&
+      longname='Absolute humidity')
+PARAM(502712,'PTYPE',dis=0,cat=1,num=19,&
+      longname='Precipitation type')
+PARAM(502713,'ILIQW',dis=0,cat=1,num=20,&
+      longname='Integrated liquid water')
+PARAM(502714,'TCOND',dis=0,cat=1,num=21,&
+      longname='Condensate')
+PARAM(502715,'ICMR',dis=0,cat=1,num=23,&
+      longname='Ice water mixing ratio')
+PARAM(502717,'MAXRH',dis=0,cat=1,num=27,&
+      longname='Maximum relative humidity')
+PARAM(502718,'MAXAH',dis=0,cat=1,num=28,&
+      longname='Maximum absolute humidity')
+PARAM(502719,'ASNOW',dis=0,cat=1,num=29,&
+      longname='Total snowfall')
+PARAM(502720,'PWCAT',dis=0,cat=1,num=30,&
+      longname='Precipitable water category')
+PARAM(502721,'HAIL',dis=0,cat=1,num=31,&
+      longname='Hail')
+PARAM(502722,'CRAIN',dis=0,cat=1,num=33,&
+      longname='Categorical rain')
+PARAM(502723,'CFRZR',dis=0,cat=1,num=34,&
+      longname='Categorical freezing rain')
+PARAM(502724,'CICEP',dis=0,cat=1,num=35,&
+      longname='Categorical ice pellets')
+PARAM(502725,'CSNOW',dis=0,cat=1,num=36,&
+      longname='Categorical snow')
+PARAM(502727,'CPOFP',dis=0,cat=1,num=39,&
+      longname='Percent frozen precipitation')
+PARAM(502728,'PEVAP',dis=0,cat=1,num=40,&
+      longname='Potential evaporation')
+PARAM(502729,'PEVPR',dis=0,cat=1,num=41,&
+      longname='Potential evaporation rate')
+PARAM(502730,'FRAIN',dis=0,cat=1,num=43,&
+      longname='Rain fraction of total cloud water')
+PARAM(502731,'RIME',dis=0,cat=1,num=44,&
+      longname='Rime factor')
+PARAM(502732,'LSWP',dis=0,cat=1,num=47,&
+      longname='Large scale water precipitation (non-convective)')
+PARAM(502733,'CWP',dis=0,cat=1,num=48,&
+      longname='Convective water precipitation')
+PARAM(502734,'TWATP',dis=0,cat=1,num=49,&
+      longname='Total water precipitation')
+PARAM(502735,'TSNOWP',dis=0,cat=1,num=50,&
+      longname='Total snow precipitation')
+PARAM(502737,'SF',dis=0,cat=1,num=53,&
+      longname='Snow Fall water equivalent')
+PARAM(502738,'CSRATE',dis=0,cat=1,num=58,&
+      longname='Convective snowfall rate')
+PARAM(502739,'LSSRATE',dis=0,cat=1,num=59,&
+      longname='Large scale snowfall rate')
+PARAM(502740,'SDWE',dis=0,cat=1,num=13,&
+      longname='Water equivalent of accumulated snow depth')
+PARAM(502741,'FPRATE',dis=0,cat=1,num=67,&
+      longname='Freezing rain precipitation rate')
+PARAM(502742,'IPRATE',dis=0,cat=1,num=68,&
+      longname='Ice pellets precipitation rate')
+PARAM(502743,'MAXGUST',dis=0,cat=2,num=21,&
+      longname='Maximum wind speed')
+PARAM(502744,'UGUST',dis=0,cat=2,num=23,&
+      longname='u-component of wind (gust)')
+PARAM(502745,'VGUST',dis=0,cat=2,num=24,&
+      longname='v-component of wind (gust)')
+PARAM(502746,'MFLX',dis=0,cat=2,num=26,&
+      longname='Horizontal momentum flux')
+PARAM(502747,'USTM',dis=0,cat=2,num=27,&
+      longname='U-component storm motion')
+PARAM(502748,'VSTM',dis=0,cat=2,num=28,&
+      longname='V-component storm motion')
+PARAM(502749,'THICK',dis=0,cat=3,num=12,&
+      longname='Thickness')
+PARAM(502751,'MINDPD',dis=0,cat=0,num=14,&
+      longname='Minimum dew point depression')
+PARAM(502752,'PRESALT',dis=0,cat=3,num=13,&
+      longname='Pressure altitude')
+PARAM(502753,'DENALT',dis=0,cat=3,num=14,&
+      longname='Density altitude')
+PARAM(502754,'5WAVH',dis=0,cat=3,num=15,&
+      longname='5-wave geopotential height')
+PARAM(502755,'U-GWD',dis=0,cat=3,num=16,&
+      longname='Zonal flux of gravity wave stress')
+PARAM(502756,'V-GWD',dis=0,cat=3,num=17,&
+      longname='Meridional flux of gravity wave stress')
+PARAM(502757,'HPBL',dis=0,cat=3,num=18,&
+      longname='Planetary boundary layer height')
+PARAM(502758,'5WAVA',dis=0,cat=3,num=19,&
+      longname='5-wave geopotential height anomaly')
+PARAM(502759,'NSWRT',dis=0,cat=4,num=1,&
+      longname='Net short-wave radiation flux (top of atmosphere)')
+PARAM(502760,'DSWRF',dis=0,cat=4,num=7,&
+      longname='Downward short-wave radiation flux')
+PARAM(502761,'NSWRFCS',dis=0,cat=4,num=11,&
+      longname='Net short-wave radiation flux, clear sky')
+PARAM(502762,'DWUVR',dis=0,cat=4,num=12,&
+      longname='Downward UV radiation')
+PARAM(502763,'NLWRS',dis=0,cat=5,num=0,&
+      longname='Net long wave radiation flux (surface)')
+PARAM(502764,'NLWRT',dis=0,cat=5,num=1,&
+      longname='Net long wave radiation flux (top of atmosphere)')
+PARAM(502765,'DLWRF',dis=0,cat=5,num=3,&
+      longname='Downward long-wave radiation flux')
+PARAM(502766,'ULWRF',dis=0,cat=5,num=4,&
+      longname='Upward long-wave radiation flux')
+PARAM(502767,'NLWRCS',dis=0,cat=5,num=6,&
+      longname='Net long-wave radiation flux, clear sky')
+PARAM(502768,'CICE',dis=0,cat=6,num=0,&
+      longname='Cloud Ice')
+PARAM(502769,'CWAT',dis=0,cat=6,num=6,&
+      longname='Cloud water')
+PARAM(502770,'CDCA',dis=0,cat=6,num=7,&
+      longname='Cloud amount')
+PARAM(502771,'CDCT',dis=0,cat=6,num=8,&
+      longname='Cloud type')
+PARAM(502772,'TMAXT',dis=0,cat=6,num=9,&
+      longname='Thunderstorm maximum tops')
+PARAM(502773,'THUNC',dis=0,cat=6,num=10,&
+      longname='Thunderstorm coverage')
+PARAM(502774,'CDCB',dis=0,cat=6,num=11,&
+      longname='Cloud base')
+PARAM(502775,'CDCT',dis=0,cat=6,num=12,&
+      longname='Cloud top')
+PARAM(502776,'CWORK',dis=0,cat=6,num=15,&
+      longname='Cloud work function')
+PARAM(502777,'CUEFI',dis=0,cat=6,num=16,&
+      longname='Convective cloud efficiency')
+PARAM(502778,'TCOND1',dis=0,cat=6,num=17,&
+      longname='Total condensate')
+PARAM(502779,'TCOLW',dis=0,cat=6,num=18,&
+      longname='Total column-integrated cloud water')
+PARAM(502780,'TCOLI',dis=0,cat=6,num=19,&
+      longname='Total column-integrated cloud ice')
+PARAM(502781,'TCOLC',dis=0,cat=6,num=20,&
+      longname='Total column-integrated condensate')
+PARAM(502782,'FICE',dis=0,cat=6,num=21,&
+      longname='Ice fraction of total condensate')
+PARAM(502783,'CDCIMR',dis=0,cat=6,num=23,&
+      longname='Cloud ice mixing ratio')
+PARAM(502785,'KX',dis=0,cat=7,num=2,&
+      longname='K index')
+PARAM(502786,'TOTALX',dis=0,cat=7,num=4,&
+      longname='Total totals index')
+PARAM(502787,'SX',dis=0,cat=7,num=5,&
+      longname='Sweat index')
+PARAM(502788,'EHLX',dis=0,cat=7,num=9,&
+      longname='Energy helicity index')
+PARAM(502789,'LFTX',dis=0,cat=7,num=10,&
+      longname='Surface lifted index')
+PARAM(502790,'4LFTX',dis=0,cat=7,num=11,&
+      longname='Best (4-layer) lifted index')
+PARAM(502791,'AEROT',dis=0,cat=13,num=0,&
+      longname='Aerosol type')
+PARAM(502792,'BSWID',dis=0,cat=15,num=0,&
+      longname='Base spectrum width')
+PARAM(502793,'BRVEL',dis=0,cat=15,num=2,&
+      longname='Base radial velocity')
+PARAM(502794,'VERIL',dis=0,cat=15,num=3,&
+      longname='Vertically-integrated liquid')
+PARAM(502795,'LMAXBR',dis=0,cat=15,num=4,&
+      longname='Layer-maximum base reflectivity')
+PARAM(502796,'PREC',dis=0,cat=15,num=5,T_StatP=1,&
+      longname='Precipitation')
+PARAM(502797,'ACCES',dis=0,cat=18,num=0,&
+      longname='Air concentration of Caesium 137')
+PARAM(502798,'ACIOD',dis=0,cat=18,num=1,&
+      longname='Air concentration of Iodine 131')
+PARAM(502799,'ACRADP',dis=0,cat=18,num=2,&
+      longname='Air concentration of radioactive pollutant')
+PARAM(502800,'GDCES',dis=0,cat=18,num=3,&
+      longname='Ground deposition of Caesium 137')
+PARAM(502801,'GDIOD',dis=0,cat=18,num=4,&
+      longname='Ground deposition of Iodine 131')
+PARAM(502802,'GDRADP',dis=0,cat=18,num=5,&
+      longname='Ground deposition of radioactive pollutant')
+PARAM(502843,'TIACCP',dis=0,cat=18,num=6,&
+      longname='Time-integrated air concentration of caesium pollutant')
+PARAM(502844,'TIACIP',dis=0,cat=18,num=7,&
+      longname='Time-integrated air concentration of iodine pollutant')
+PARAM(502845,'TIACRP',dis=0,cat=18,num=8,&
+      longname='Time-integrated air concentration of radioactive pollutant')
+PARAM(502846,'VOLASH',dis=0,cat=19,num=4,&
+      longname='Volcanic ash')
+PARAM(502847,'ICIT',dis=0,cat=19,num=5,&
+      longname='Icing top')
+PARAM(502848,'ICIB',dis=0,cat=19,num=6,&
+      longname='Icing base')
+PARAM(502849,'TURBT',dis=0,cat=19,num=8,&
+      longname='Turbulence top')
+PARAM(502850,'TURBB',dis=0,cat=19,num=9,&
+      longname='Turbulence base')
+PARAM(502851,'TURB',dis=0,cat=19,num=10,&
+      longname='Turbulence')
+PARAM(502852,'PBLREG',dis=0,cat=19,num=12,&
+      longname='Planetary boundary layer regime')
+PARAM(502853,'CONTI',dis=0,cat=19,num=13,&
+      longname='Contrail intensity')
+PARAM(502854,'CONTET',dis=0,cat=19,num=14,&
+      longname='Contrail engine type')
+PARAM(502855,'CONTT',dis=0,cat=19,num=15,&
+      longname='Contrail top')
+PARAM(502856,'CONTB',dis=0,cat=19,num=16,&
+      longname='Contrail base')
+PARAM(502857,'MXALB',dis=0,cat=19,num=17,&
+      longname='Maximum snow albedo')
+PARAM(502858,'ICI',dis=0,cat=19,num=20,&
+      longname='Icing')
+PARAM(502859,'CBHEXT',dis=0,cat=6,num=25,&
+      longname='Horizontal extent of cumulonimbus (CB)')
+PARAM(502860,'ICT',dis=0,cat=19,num=21,&
+      longname='In-cloud turbulence')
+PARAM(502861,'CAT',dis=0,cat=19,num=22,&
+      longname='Clear air turbulence (CAT)')
+PARAM(502862,'SLDP',dis=0,cat=19,num=23,&
+      longname='Supercooled large droplet probability (see Note 4)')
+PARAM(502864,'TSEC',dis=0,cat=191,num=0,&
+      longname='Seconds prior to initial reference time (defined in Section 1)')
+PARAM(502865,'FFLDG',dis=1,cat=0,num=0,&
+      longname='Flash flood guidance (Encoded as an accumulation over a floating subinterval of time between the ref')
+PARAM(502866,'FFLDRO',dis=1,cat=0,num=1,&
+      longname='Flash flood runoff (Encoded as an accumulation over a floating subinterval of time)')
+PARAM(502867,'RSSC',dis=1,cat=0,num=2,&
+      longname='Remotely sensed snow cover')
+PARAM(502868,'ESCT',dis=1,cat=0,num=3,&
+      longname='Elevation of snow covered terrain')
+PARAM(502869,'SWEPON',dis=1,cat=0,num=4,&
+      longname='Snow water equivalent percent of normal')
+PARAM(502870,'BGRUN',dis=1,cat=0,num=5,&
+      longname='Baseflow-groundwater runoff')
+PARAM(502871,'SSRUN',dis=1,cat=0,num=6,&
+      longname='Storm surface runoff')
+PARAM(502872,'CPPOP',dis=1,cat=1,num=0,&
+      longname='Conditional percent precipitation amount fractile for an overall period (Encoded as an accumulation)')
+PARAM(502873,'PPOSP',dis=1,cat=1,num=1,&
+      longname='Percent precipitation in a sub-period of an overall period (Encoded as per cent accumulation over th')
+PARAM(502874,'POP',dis=1,cat=1,num=2,&
+      longname='Probability of 0.01 inch of precipitation (POP)')
+PARAM(502875,'EVAPT',dis=2,cat=0,num=6,&
+      longname='Evapotranspiration')
+PARAM(502876,'LANDU',dis=2,cat=0,num=8,&
+      longname='Land use')
+PARAM(502877,'SOILW',dis=2,cat=0,num=9,&
+      longname='Volumetric soil moisture content')
+PARAM(502878,'GFLUX',dis=2,cat=0,num=10,&
+      longname='Ground heat flux')
+PARAM(502879,'MSTAV',dis=2,cat=0,num=11,&
+      longname='Moisture availability')
+PARAM(502880,'SFEXC',dis=2,cat=0,num=12,&
+      longname='Exchange coefficient')
+PARAM(502881,'BMIXL',dis=2,cat=0,num=14,&
+      longname='Blackadar mixing length scale')
+PARAM(502882,'CCOND',dis=2,cat=0,num=15,&
+      longname='Canopy conductance')
+PARAM(502883,'RCS',dis=2,cat=0,num=18,&
+      longname='Solar parameter in canopy conductance')
+PARAM(502885,'RCSOL',dis=2,cat=0,num=20,&
+      longname='Soil moisture parameter in canopy conductance')
+PARAM(502886,'RCQ',dis=2,cat=0,num=21,&
+      longname='Humidity parameter in canopy conductance')
+PARAM(502887,'CISOILW',dis=2,cat=0,num=23,&
+      longname='Column-integrated soil water')
+PARAM(502888,'HFLUX',dis=2,cat=0,num=24,&
+      longname='Heat flux')
+PARAM(502889,'VSW',dis=2,cat=0,num=25,&
+      longname='Volumetric soil moisture')
+PARAM(502890,'VWILTM',dis=2,cat=0,num=27,&
+      longname='Volumetric wilting point')
+PARAM(502891,'UPLST',dis=2,cat=3,num=1,&
+      longname='Upper layer soil temperature')
+PARAM(502892,'UPLSM',dis=2,cat=3,num=2,&
+      longname='Upper layer soil moisture')
+PARAM(502893,'LOWLSM',dis=2,cat=3,num=3,&
+      longname='Lower layer soil moisture')
+PARAM(502894,'BOTLST',dis=2,cat=3,num=4,&
+      longname='Bottom layer soil temperature')
+PARAM(502895,'SOIL1',dis=2,cat=3,num=5,&
+      longname='Liquid volumetric soil moisture (non-frozen)')
+PARAM(502896,'RLYRS',dis=2,cat=3,num=6,&
+      longname='Number of soil layers in root zone')
+PARAM(502897,'SMREF',dis=2,cat=3,num=7,&
+      longname='Transpiration stress-onset (soil moisture)')
+PARAM(502898,'SMDRY',dis=2,cat=3,num=8,&
+      longname='Direct evaporation cease (soil moisture)')
+PARAM(502899,'POROS',dis=2,cat=3,num=9,&
+      longname='Soil porosity')
+PARAM(502900,'LIQVSM',dis=2,cat=3,num=10,&
+      longname='Liquid volumetric soil moisture (non-frozen)')
+PARAM(502919,'VOLTSO',dis=2,cat=3,num=11,&
+      longname='Volumetric transpiration stress-onset (soil moisture)')
+PARAM(502920,'TRANSO',dis=2,cat=3,num=12,&
+      longname='Transpiration stress-onset (soil moisture)')
+PARAM(502921,'VOLDEC',dis=2,cat=3,num=13,&
+      longname='Volumetric direct evaporation cease (soil moisture)')
+PARAM(502922,'DIREC',dis=2,cat=3,num=14,&
+      longname='Direct evaporation cease (soil moisture)')
+PARAM(502923,'SOILP',dis=2,cat=3,num=15,&
+      longname='Soil porosity')
+PARAM(502924,'VSOSM',dis=2,cat=3,num=16,&
+      longname='Volumetric saturation of soil moisture')
+PARAM(502926,'ESTP',dis=3,cat=1,num=0,&
+      longname='Estimated precipitation')
+PARAM(502927,'IRRATE',dis=3,cat=1,num=1,&
+      longname='Instantaneous rain rate')
+PARAM(502928,'CTOPHQI',dis=3,cat=1,num=3,&
+      longname='Cloud top height quality indicator')
+PARAM(502929,'ESTU',dis=3,cat=1,num=4,&
+      longname='Estimated u component of wind')
+PARAM(502930,'ESTV',dis=3,cat=1,num=5,&
+      longname='Estimated v component of wind')
+PARAM(502931,'NPIXU',dis=3,cat=1,num=6,&
+      longname='Number of pixels used')
+PARAM(502932,'SOLZA',dis=3,cat=1,num=7,&
+      longname='Solar zenith angle')
+PARAM(502933,'RFL06',dis=3,cat=1,num=9,&
+      longname='Reflectance in 0.6 micron channel')
+PARAM(502934,'RFL08',dis=3,cat=1,num=10,&
+      longname='Reflectance in 0.8 micron channel')
+PARAM(502935,'RFL16',dis=3,cat=1,num=11,&
+      longname='Reflectance in 1.6 micron channel')
+PARAM(502936,'RFL39',dis=3,cat=1,num=12,&
+      longname='Reflectance in 3.9 micron channel')
+PARAM(502937,'ATMDIV',dis=3,cat=1,num=13,&
+      longname='Atmospheric divergence')
+PARAM(502938,'DIRPW',dis=10,cat=0,num=10,&
+      longname='Primary wave direction')
+PARAM(502939,'PERPW',dis=10,cat=0,num=11,&
+      longname='Primary wave mean period')
+PARAM(502940,'PERSW',dis=10,cat=0,num=13,&
+      longname='Secondary wave mean period')
+PARAM(502941,'DSLM',dis=10,cat=3,num=1,&
+      longname='Deviation of sea level from mea')
+PARAM(502942,'TSEC',dis=10,cat=191,num=0,&
+      longname='Seconds prior to initial reference time (defined in Section 1)')
+PARAM(502943,'HSTDV',dis=0,cat=3,num=7,&
+      longname='Standard deviation of height')
+PARAM(502944,'TMAX',dis=0,cat=0,num=4,&
+      longname='Maximum temperature')
+PARAM(502945,'TMIN',dis=0,cat=0,num=5,&
+      longname='Minimum temperature')
+PARAM(502946,'VIS',dis=0,cat=19,num=0,&
+      longname='Visibility')
+PARAM(502947,'RDSP2',dis=0,cat=15,num=7,&
+      longname='Radar spectra (2)')
+PARAM(502948,'RDSP3',dis=0,cat=15,num=8,&
+      longname='Radar spectra (3)')
+PARAM(502949,'PLI',dis=0,cat=7,num=0,&
+      longname='Parcel lifted index (to 500 hPa)')
+PARAM(502950,'TA',dis=0,cat=0,num=9,&
+      longname='Temperature anomaly')
+PARAM(502951,'PRESA',dis=0,cat=3,num=8,&
+      longname='Pressure anomaly')
+PARAM(502952,'GPA',dis=0,cat=3,num=9,&
+      longname='Geopotential height anomaly')
+PARAM(502953,'MNTSF',dis=0,cat=2,num=6,&
+      longname='Montgomery stream Function')
+PARAM(502954,'SGCVV',dis=0,cat=2,num=7,&
+      longname='Sigma coordinate vertical velocity')
+PARAM(502955,'ABSD',dis=0,cat=2,num=11,&
+      longname='Absolute divergence')
+PARAM(502958,'UCURR',dis=10,cat=1,num=2,&
+      longname='U-component of current')
+PARAM(502959,'VCURR',dis=10,cat=1,num=3,&
+      longname='V-component of current')
+PARAM(502960,'PWAT',dis=0,cat=1,num=3,&
+      longname='Precipitable water')
+PARAM(502961,'SATD',dis=0,cat=1,num=5,&
+      longname='Saturation deficit')
+PARAM(502962,'PRATE',dis=0,cat=1,num=7,&
+      longname='Precipitation rate')
+PARAM(502963,'TSTM',dis=0,cat=19,num=2,&
+      longname='Thunderstorm probability')
+PARAM(502964,'ACPCP',dis=0,cat=1,num=10,&
+      longname='Convective precipitation (water)')
+PARAM(502965,'TTHDP',dis=10,cat=4,num=2,&
+      longname='Transient thermocline depth')
+PARAM(502966,'MTHD',dis=10,cat=4,num=0,&
+      longname='Main thermocline depth')
+PARAM(502967,'MTHA',dis=10,cat=4,num=1,&
+      longname='Main thermocline anomaly')
+PARAM(502968,'BLI',dis=0,cat=7,num=1,&
+      longname='Best lifted index (to 500 hPa)')
+PARAM(502969,'SSW',dis=2,cat=0,num=3,&
+      longname='Soil moisture content')
+PARAM(503011,'S',dis=10,cat=4,num=3,&
+      longname='Salinity')
+PARAM(503012,'DICED',dis=10,cat=2,num=2,&
+      longname='Direction of ice drift')
+PARAM(503013,'SICED',dis=10,cat=2,num=3,&
+      longname='Speed of ice drift')
+PARAM(503014,'UICE',dis=10,cat=2,num=4,&
+      longname='U-component of ice drift')
+PARAM(503015,'VICE',dis=10,cat=2,num=5,&
+      longname='V-component of ice drift')
+PARAM(503016,'ICEG',dis=10,cat=2,num=6,&
+      longname='Ice growth rate')
+PARAM(503017,'ICED',dis=10,cat=2,num=7,&
+      longname='Ice divergence')
+PARAM(503019,'DIRSW',dis=10,cat=0,num=12,&
+      longname='Secondary wave direction')
+PARAM(503020,'NSWRS',dis=0,cat=4,num=0,&
+      longname='Net short-wave radiation flux (surface)')
+PARAM(503021,'LWRAD',dis=0,cat=4,num=5,&
+      longname='Radiance (with respect to wave number)')
+PARAM(503022,'SWRAD',dis=0,cat=4,num=6,&
+      longname='Radiance (with respect to wave length)')
+PARAM(503023,'CIN',dis=0,cat=7,num=7,&
+      longname='Convective inhibition')
+PARAM(503024,'WMIXE',dis=0,cat=2,num=19,&
+      longname='Wind mixing energy')
+PARAM(503025,'ST',dis=2,cat=0,num=2,&
+      longname='Soil Temperature')
+PARAM(503028,'WILT',dis=2,cat=0,num=26,T_SFS=106,SF_SFS=0,SV_SFS=2,T_FFS=106,SF_FFS=0,SV_FFS=0,&
+      longname='Wilting point')
+PARAM(503038,'SNOHF',dis=0,cat=0,num=16,&
+      longname='Snow phase change heat flux')
+PARAM(503039,'VAPP',dis=0,cat=1,num=4,&
+      longname='Vapor pressure')
+PARAM(503047,'FR_LUC',dis=2,cat=0,num=36,&
+      longname='Land use class fraction')
+PARAM(503048,'SATOSM',dis=2,cat=3,num=17,&
+      longname='Saturation of soil moisture')
+PARAM(503049,'EDR',dis=0,cat=19,num=227,&
+      longname='Eddy dissipitation rate of TKE')
+PARAM(503050,'RAD_PRECIP',dis=0,cat=15,num=195,&
+      longname='Radar precipitation rate')
+PARAM(503052,'RAD_QUAL',dis=0,cat=15,num=196,&
+      longname='Radar quality information')
+PARAM(503053,'RAD_BL',dis=0,cat=15,num=197,&
+      longname='Radar blacklist')
+PARAM(503054,'RAD_HEIGHT',dis=0,cat=15,num=198,&
+      longname='Height of radar beam above ground')
+PARAM(503055,'QV_DIA',dis=0,cat=1,num=211,&
+      longname='Specific humidity (diagnostic)')
+PARAM(503056,'QC_DIA',dis=0,cat=1,num=212,&
+      longname='Specific cloud water content (diagnostic)')
+PARAM(503057,'QI_DIA',dis=0,cat=1,num=213,&
+      longname='Specific cloud ice content (diagnostic)')
+PARAM(503058,'TQV_DIA',dis=0,cat=1,num=214,&
+      longname='Total column integrated water vapour (diagnostic)')
+PARAM(503059,'TQC_DIA',dis=0,cat=1,num=215,&
+      longname='Total column integrated cloud water (diagnostic)')
+PARAM(503060,'TQI_DIA',dis=0,cat=1,num=216,&
+      longname='Total column integrated cloud ice (diagnostic)')
+PARAM(503061,'SWDIFDS_RAD',dis=0,cat=4,num=199,T_FFS=1,&
+      longname='Downward diffusive short wave radiation flux at surface (mean over forecast time)')
+PARAM(503062,'SWDIFUS_RAD',dis=0,cat=4,num=8,T_FFS=1,&
+      longname='Upward diffusive short wave radiation flux at surface ( mean over forecast time)')
+PARAM(503063,'UMFL_S',dis=0,cat=2,num=17,T_FFS=1,&
+      longname='Momentum Flux, U-Component (m)')
+PARAM(503064,'VMFL_S',dis=0,cat=2,num=18,T_FFS=1,&
+      longname='Momentum Flux, V-Component (m)')
+PARAM(503068,'RADAR_RQ',dis=0,cat=16,num=192,T_StatP=1,&
+      longname='precipitation, qualified,BRD')
+PARAM(503069,'RADAR_RS',dis=0,cat=16,num=193,T_StatP=1,&
+      longname='precipitation,BRD')
+PARAM(503070,'RADAR_RE',dis=0,cat=16,num=194,T_StatP=1,&
+      longname='precipitation phase,BRD')
+PARAM(503071,'RADAR_RH',dis=0,cat=16,num=195,T_StatP=1,&
+      longname='hail flag,BRD')
+PARAM(503072,'RADAR_FS',dis=0,cat=16,num=196,T_StatP=1,&
+      longname='snow_rate,BRD')
+PARAM(503073,'RADAR_FQ',dis=0,cat=16,num=197,T_StatP=1,&
+      longname='snow_rate,qualified,BRD')
+PARAM(503074,'AW',dis=0,cat=191,num=193,&
+      longname='Area weights for regular lon-lat grid')
+PARAM(503075,'HSURF_V',dis=0,cat=3,num=6,gridnum=2,T_SFS=101,T_FFS=1,&
+      longname='Geometric height of the earths surface above mean sea level at vertex point (ICON)')
+PARAM(503076,'AVDIS_SSO',dis=0,cat=3,num=23,T_StatP=0,&
+      longname='Gravity wave dissipation')
+PARAM(503078,'RH_MIX_EC',dis=0,cat=1,num=220,&
+      longname='Relative humidity over mixed phase')
+PARAM(503079,'SMI',dis=2,cat=3,num=200,T_SFS=106,T_FFS=106,&
+      longname='Soil moisture index (multilayers)')
+PARAM(503080,'LUC',dis=2,cat=0,num=35,&
+      longname='Land use class')
+PARAM(503081,'DPTH',dis=10,cat=4,num=14,&
+      longname='Water depth')
+PARAM(503082,'USTR',dis=10,cat=0,num=17,&
+      longname='Friction velocity')
+PARAM(503083,'DRAG',dis=10,cat=0,num=16,&
+      longname='Coefficient of drag with waves')
+PARAM(503084,'STRS',dis=10,cat=0,num=19,&
+      longname='Normalized wave stress')
+PARAM(503085,'TM1W',dis=10,cat=0,num=26,&
+      longname='Inverse mean frequency of wind waves')
+PARAM(503086,'TM2W',dis=10,cat=0,num=29,&
+      longname='Mean zero-crossing period of wind waves')
+PARAM(503087,'SPRW',dis=10,cat=0,num=32,&
+      longname='Directional width of wind waves')
+PARAM(503088,'TM1S',dis=10,cat=0,num=27,&
+      longname='Inverse mean frequency of total swell')
+PARAM(503089,'TM2S',dis=10,cat=0,num=30,&
+      longname='Inverse mean zero crossing period of total swell')
+PARAM(503090,'SPRS',dis=10,cat=0,num=33,&
+      longname='Directional width of total swell')
+PARAM(503091,'GODA',dis=10,cat=0,num=45,&
+      longname='Goda peakedness parameter')
+PARAM(503092,'SKUR',dis=10,cat=0,num=43,&
+      longname='Spectral kurtosis')
+PARAM(503093,'BEFI',dis=10,cat=0,num=44,&
+      longname='Benjamin-Feir index')
+PARAM(503094,'MXWH',dis=10,cat=0,num=24,&
+      longname='Maximum individual wave height')
+PARAM(503095,'MXWP',dis=10,cat=0,num=23,&
+      longname='Maximum wave period')
+PARAM(503096,'PFRQ',dis=10,cat=0,num=201,&
+      longname='Peak frequency (interpolated)')
+PARAM(503097,'SQSL',dis=10,cat=0,num=20,&
+      longname='Meansquare slope')
+PARAM(503106,'QH',dis=0,cat=1,num=71,&
+      longname='Hail  mixing ratio')
+PARAM(503107,'TQH',dis=0,cat=1,num=72,&
+      longname='Hail')
+PARAM(503108,'PRH_GSP',dis=0,cat=1,num=73,&
+      longname='Hail  precipitation rate')
+PARAM(503109,'DBZ_CLOUD',dis=0,cat=15,num=9,&
+      longname='Reflectivity of cloud droplets')
+PARAM(503110,'DBZ_ICE',dis=0,cat=15,num=10,&
+      longname='Reflectivity of  cloud ice')
+PARAM(503111,'DBZ_SNOW',dis=0,cat=15,num=11,&
+      longname='Reflectivity of snow')
+PARAM(503112,'DBZ_RAIN',dis=0,cat=15,num=12,&
+      longname='Reflectivity of rain')
+PARAM(503113,'DBZ_GRAUPEL',dis=0,cat=15,num=13,&
+      longname='Reflectivity of graupel')
+PARAM(503114,'DBZ_HAIL',dis=0,cat=15,num=14,&
+      longname='Reflectivity of hail')
+PARAM(503115,'NCRAIN',dis=0,cat=1,num=228,&
+      longname='Specific number concentration of rain')
+PARAM(503116,'NDRAIN',dis=0,cat=1,num=229,&
+      longname='Number density of rain')
+PARAM(503117,'NCSNOW',dis=0,cat=1,num=217,&
+      longname='Specific number concentration of snow')
+PARAM(503118,'NCGRAUPEL',dis=0,cat=1,num=218,&
+      longname='Specific number concentration of graupel')
+PARAM(503119,'NCHAIL',dis=0,cat=1,num=219,&
+      longname='Specific number concentration of hail')
+PARAM(503120,'NDSNOW',dis=0,cat=1,num=221,&
+      longname='Number density of snow')
+PARAM(503121,'NDGRAUPEL',dis=0,cat=1,num=222,&
+      longname='Number density of graupel')
+PARAM(503122,'NDHAIL',dis=0,cat=1,num=223,&
+      longname='Number density of hail')
+PARAM(503123,'DENR',dis=0,cat=1,num=224,&
+      longname='Mass density of rain')
+PARAM(503124,'DENS',dis=0,cat=1,num=225,&
+      longname='Mass density of snow')
+PARAM(503125,'DENG',dis=0,cat=1,num=226,&
+      longname='Mass density of graupel')
+PARAM(503126,'DENC',dis=0,cat=6,num=203,&
+      longname='Mass density of cloud droplets')
+PARAM(503127,'DENI',dis=0,cat=6,num=204,&
+      longname='Mass density of cloud ice')
+PARAM(503128,'DENH',dis=0,cat=1,num=227,&
+      longname='Mass density of hail')
+PARAM(503130,'HAIL_GSP',dis=0,cat=1,num=73,T_StatP=1,&
+      longname='Hail  precipitation rate, accumulation')
+PARAM(503132,'NDCLOUD',dis=0,cat=6,num=30,&
+      longname='Number density of cloud droplets')
+PARAM(503133,'NDICE',dis=0,cat=6,num=31,&
+      longname='Number density of cloud ice particles')
+PARAM(503134,'THDS_RAD',dis=0,cat=5,num=3,T_FFS=1,&
+      longname='Downward long-wave radiation flux')
+PARAM(503135,'ATHD_S',dis=0,cat=5,num=3,T_StatP=0,T_FFS=1,&
+      longname='Downward long-wave radiation flux avg')
+PARAM(503136,'ACCTHD_S',dis=0,cat=5,num=3,T_StatP=1,T_FFS=1,&
+      longname='Downward long-wave radiation flux accum')
+PARAM(503137,'EDP_MAX_LFIR',dis=0,cat=19,num=228,&
+      longname='Eddy Dissipation Rate Total Col-Max. Lower FIR')
+PARAM(503142,'LPI',dis=0,cat=17,num=192,&
+      longname='Lightning Potential Index')
+PARAM(503143,'RD_SNOW',dis=0,cat=1,num=230,T_StatP=1,&
+      longname='Rain drain from snowpack - accumulation')
+PARAM(503145,'ABSH_2M',dis=0,cat=1,num=18,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m absolute humidity')
+PARAM(503146,'HMIN10CL',dis=0,cat=3,num=196,&
+      longname='Height of -10 degree Celsius isotherm')
+PARAM(503147,'EDPP',dis=0,cat=19,num=229)
+PARAM(503148,'ADEDO2',dis=215,cat=7,num=0,&
+      longname='Adedokun 2 Index')
+PARAM(503149,'ASWDIR_SH',dis=0,cat=4,num=198,T_StatP=0,T_FFS=201,&
+      longname='Downward direct short wave radiation flux at surface on horizontal plane (time average)')
+PARAM(503150,'BOAGAE_WE',dis=0,cat=191,num=194,&
+      longname='Gauss Boaga Coordinates West to East,East Sector')
+PARAM(503151,'BOAGAE_SN',dis=0,cat=191,num=195,&
+      longname='Gauss Boaga Coordinates South to North,East Sector')
+PARAM(503152,'BOAGAW_WE',dis=0,cat=191,num=196,&
+      longname='Gauss Boaga Coordinates West to East, West Sector')
+PARAM(503153,'BOAGAW_SN',dis=0,cat=191,num=197,&
+      longname='Gauss Boaga Coordinates South to North, West Sector')
+PARAM(503154,'BRN',dis=0,cat=7,num=16,&
+      longname='Bulk Richardson number')
+PARAM(503155,'CAPE_3KM',dis=0,cat=7,num=6,T_SFS=192,T_FFS=103,SF_FFS=0,SV_FFS=3000,&
+      longname='Cape of mixed (mean) layer parcel, ascent up to 3 km')
+PARAM(503156,'CAT_TI1',dis=0,cat=19,num=230,&
+      longname='Ellrod and Knapp turbulence index1')
+PARAM(503157,'CAT_TI2',dis=0,cat=19,num=231,&
+      longname='Ellrod and Knapp turbulence index2')
+PARAM(503158,'WDEF_H',dis=0,cat=193,num=29,&
+      longname='Deformation of horizontal wind field')
+PARAM(503159,'CAT_DVT',dis=0,cat=19,num=232,&
+      longname='Divergence trend (scaled divergence tendency needed for CAT_DVI)')
+PARAM(503160,'CAT_DTI',dis=0,cat=19,num=233,&
+      longname='Divergence modified turbulence index (Ellrod and Knox)')
+PARAM(503161,'CLI_RATIO',dis=0,cat=1,num=231,&
+      longname='Cloud ice ratio qi/(qc+qi)')
+PARAM(503162,'CONV_PERCENT',dis=0,cat=1,num=232,&
+      longname='Percentage of convective precipitation (from total prec)')
+PARAM(503163,'DCI',dis=0,cat=7,num=194,T_FFS=10,&
+      longname='Deep convection index')
+PARAM(503164,'DDCLASS',dis=215,cat=2,num=0,&
+      longname='Wind direction in azimuth class')
+PARAM(503165,'DDCLASS_10M',dis=215,cat=2,num=0,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='Wind direction in azimuth class')
+PARAM(503166,'DD_G',dis=0,cat=2,num=43,&
+      longname='Geostrophic wind direction')
+PARAM(503167,'DURSUN_M',dis=0,cat=6,num=205,T_StatP=11,T_FFS=1,&
+      longname='Possible astronomical maximum of sunshine')
+PARAM(503168,'DURSUN_R',dis=0,cat=6,num=206,T_FFS=1,&
+      longname='Relative duration of sunshine (DURSUN * 100 / DURSUN_M)')
+PARAM(503169,'D_TD',dis=0,cat=0,num=7,&
+      longname='Dewpoint depression')
+PARAM(503170,'D_TD_2M',dis=0,cat=0,num=7,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m dewpoint depression')
+PARAM(503171,'ENTH',dis=0,cat=7,num=195,&
+      longname='Enthalpy')
+PARAM(503172,'ENTH_2M',dis=0,cat=7,num=195,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m Enthalpy')
+PARAM(503173,'SP_G',dis=0,cat=2,num=44,&
+      longname='Geostrophic wind speed')
+PARAM(503174,'ASOD_S',dis=0,cat=4,num=7,T_StatP=0,T_FFS=1,&
+      longname='Downward short wave radiation flux at surface (time average)')
+PARAM(503175,'ASOD_SH',dis=0,cat=4,num=7,T_StatP=0,T_FFS=201,&
+      longname='Downward short wave radiation flux at surface on horizontal plane (time average)')
+PARAM(503176,'ASOD_SvE',dis=0,cat=4,num=7,T_StatP=0,T_FFS=202,&
+      longname='Downward short wave radiation flux at surface on vertical surface facing east (time average)')
+PARAM(503177,'ASOD_SvN',dis=0,cat=4,num=7,T_StatP=0,T_FFS=203,&
+      longname='Downward short wave radiation flux at surface on vertical surface facing north (time average)')
+PARAM(503178,'ASOD_SvS',dis=0,cat=4,num=7,T_StatP=0,T_FFS=204,&
+      longname='Downward short wave radiation flux at surface on vertical surface facing south (time average)')
+PARAM(503179,'ASOD_SvW',dis=0,cat=4,num=7,T_StatP=0,T_FFS=205,&
+      longname='Downward short wave radiation flux at surface on vertical surface facing west (time average)')
+PARAM(503180,'LAGTIMEU',dis=215,cat=2,num=1,&
+      longname='Along-wind Lagrangian time scale (Hanna)')
+PARAM(503181,'LAGTIMEV',dis=215,cat=2,num=2,&
+      longname='Cross-wind Lagrangian time scale (Hanna)')
+PARAM(503182,'LAGTIMEW',dis=215,cat=2,num=3,&
+      longname='Vertical Lagrangian time scale (Hanna)')
+PARAM(503183,'LAGTIMEX',dis=215,cat=2,num=4,&
+      longname='Zonal Lagrangian time scale (direct) (Hanna)')
+PARAM(503184,'LAGTIMEY',dis=215,cat=2,num=5,&
+      longname='Meridional Lagrangian time scale (direct) (Hanna)')
+PARAM(503185,'LAGTIMEZ',dis=215,cat=2,num=6,&
+      longname='Vertical Lagrangian time scale (direct) (Hanna)')
+PARAM(503186,'LCL_ML',dis=0,cat=3,num=6,T_SFS=192,T_FFS=5,&
+      longname='Height of lifting condensation level of mixed (mean) layer parcel')
+PARAM(503187,'LFC_ML',dis=0,cat=3,num=6,T_SFS=192,T_FFS=194,&
+      longname='Height of level of free convection of mixed (mean) layer parcel')
+PARAM(503188,'LUM',dis=215,cat=19,num=0,&
+      longname='Luminosity')
+PARAM(503189,'ATHD_S_T2M',dis=215,cat=5,num=1,T_StatP=0,T_FFS=1,&
+      longname='Downward long-wave radiation flux at surface based on T_2M (time average)')
+PARAM(503190,'ATHD_S_TG',dis=215,cat=5,num=2,T_StatP=0,T_FFS=1,&
+      longname='Downward long-wave radiation flux at surface based on T_G (time average)')
+PARAM(503191,'ATHD_S_TS',dis=215,cat=5,num=3,T_StatP=0,T_FFS=1,&
+      longname='Downward long-wave radiation flux at surface based on T_SO(0) (time average)')
+PARAM(503192,'MIXRAT',dis=0,cat=1,num=2,&
+      longname='Humidity mixing ratio')
+PARAM(503193,'MIXRAT_2M',dis=0,cat=1,num=2,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m Humidity mixing ratio')
+PARAM(503194,'PDIFF_CON',dis=0,cat=3,num=197,T_SFS=2,T_FFS=3,&
+      longname='Pressure difference between cloud base and cloud top')
+PARAM(503195,'RH_ICE',dis=0,cat=1,num=94,&
+      longname='relative humidity over ice')
+PARAM(503196,'RI',dis=0,cat=7,num=17,&
+      longname='Gradient Richardson number')
+PARAM(503197,'SI',dis=0,cat=7,num=13,&
+      longname='Showalter index')
+PARAM(503198,'SIGMAU',dis=215,cat=2,num=7,&
+      longname='Along-wind velocity fluctuation (Hanna)')
+PARAM(503199,'SIGMAV',dis=215,cat=2,num=8,&
+      longname='Cross-wind velocity fluctuation (Hanna)')
+PARAM(503200,'SIGMAW',dis=215,cat=2,num=9,&
+      longname='Vertical velocity fluctuation (Hanna)')
+PARAM(503201,'SIGMAX',dis=215,cat=2,num=10,&
+      longname='Zonal velocity fluctuation (Hanna)')
+PARAM(503202,'SIGMAY',dis=215,cat=2,num=11,&
+      longname='Meridional velocity fluctuation (Hanna)')
+PARAM(503203,'SIGMAZ',dis=215,cat=2,num=12,&
+      longname='Vertical velocity fluctuation (Hanna)')
+PARAM(503204,'SLI',dis=0,cat=7,num=10,T_FFS=10,&
+      longname='Surface lifted index')
+PARAM(503205,'SNOW_PERCENT',dis=0,cat=1,num=233,&
+      longname='Percentage of precipitation in snow (from total prec.)')
+PARAM(503206,'SWISS00',dis=215,cat=7,num=1,&
+      longname='Thunderstorm index for Switzerland (night time)')
+PARAM(503207,'SWISS12',dis=215,cat=7,num=2,&
+      longname='Thunderstorm index for Switzerland (day time)')
+PARAM(503208,'SWISS_SN',dis=0,cat=191,num=198,&
+      longname='Swiss coordinate (south-north)')
+PARAM(503209,'SWISS_WE',dis=0,cat=191,num=199,&
+      longname='Swiss coordinate (west-east)')
+PARAM(503210,'PT_2M',dis=0,cat=0,num=2,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m potential temperature')
+PARAM(503211,'TD',dis=0,cat=0,num=6,&
+      longname='Dew point temperature')
+PARAM(503212,'THETAE_2M',dis=0,cat=0,num=3,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m equivalentTemperature')
+PARAM(503213,'THETA_V_2M',dis=0,cat=0,num=15,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m virtual potential temperature')
+PARAM(503214,'TTOP_CON',dis=0,cat=0,num=0,T_FFS=3,&
+      longname='Temperature at cloud top')
+PARAM(503215,'TW',dis=0,cat=0,num=27,&
+      longname='Wet bulb temperature')
+PARAM(503216,'TW_2M',dis=0,cat=0,num=27,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m wet bulb temperature')
+PARAM(503217,'T_2M_SNOWC',dis=0,cat=0,num=195,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m temperature, corrected in presence of snow')
+PARAM(503218,'UTCI_SHADOW',dis=0,cat=0,num=194,&
+      longname='Universal thermal climate index without direct incident short wave radiation')
+PARAM(503219,'UTCI_SUN',dis=0,cat=0,num=21,&
+      longname='Universal thermal climate index with direct incident short wave radiation')
+PARAM(503220,'U_G',dis=0,cat=2,num=41,&
+      longname='u-component of geostrophic wind')
+PARAM(503221,'V_G',dis=0,cat=2,num=42,&
+      longname='v-component of geostrophic wind')
+PARAM(503222,'RELV_G',dis=0,cat=193,num=26,&
+      longname='Relative geostrophic vorticity')
+PARAM(503223,'RELV_ADV_G',dis=0,cat=193,num=27,&
+      longname='Relative geostrophic vorticity advection')
+PARAM(503226,'WDIV_3D',dis=0,cat=193,num=28,&
+      longname='Wind divergence (3D)')
+PARAM(503227,'WSHEAR_INT',dis=0,cat=2,num=201,&
+      longname='Mean vertical wind shear for specified layer or layer-mean vertical wind shear')
+PARAM(503228,'WSHEAR_DIFF',dis=0,cat=2,num=202,&
+      longname='Norm of (vertical) wind shear vector between two levels')
+PARAM(503229,'ASH1',dis=0,cat=20,num=2,cTyp=62025,modNum=1,&
+      longname='Prognostic mass mixing ratio of volcanic ash particles for bin number 1')
+PARAM(503230,'ASH2',dis=0,cat=20,num=2,cTyp=62025,modNum=2,&
+      longname='Prognostic mass mixing ratio of volcanic ash particles for bin number 2')
+PARAM(503231,'ASH3',dis=0,cat=20,num=2,cTyp=62025,modNum=3,&
+      longname='Prognostic mass mixing ratio of volcanic ash particles for bin number 3')
+PARAM(503232,'ASH4',dis=0,cat=20,num=2,cTyp=62025,modNum=4,&
+      longname='Prognostic mass mixing ratio of volcanic ash particles for bin number 4')
+PARAM(503233,'ASH5',dis=0,cat=20,num=2,cTyp=62025,modNum=5,&
+      longname='Prognostic mass mixing ratio of volcanic ash particles for bin number 5')
+PARAM(503234,'ASH6',dis=0,cat=20,num=2,cTyp=62025,modNum=6,&
+      longname='Prognostic mass mixing ratio of volcanic ash particles for bin number 6')
+PARAM(503235,'ASHA',dis=0,cat=20,num=2,cTyp=62025,modNum=1,&
+      longname='Modal prognostic mass mixing ratio of volcanic ash particles (fine mode)')
+PARAM(503236,'ASHB',dis=0,cat=20,num=2,cTyp=62025,modNum=2,&
+      longname='Modal prognostic mass mixing ratio of volcanic ash particles (medium mode)')
+PARAM(503237,'ASHC',dis=0,cat=20,num=2,cTyp=62025,modNum=3,&
+      longname='Modal prognostic mass mixing ratio of volcanic ash particles (coarse mode)')
+PARAM(503238,'ASHA0',dis=0,cat=20,num=60,cTyp=62025,modNum=1,&
+      longname='Modal prognostic specific number concentration of volcanic ash particles (fine mode)')
+PARAM(503239,'ASHB0',dis=0,cat=20,num=60,cTyp=62025,modNum=2,&
+      longname='Modal prognostic specific number concentration of volcanic ash particles (medium mode)')
+PARAM(503240,'ASHC0',dis=0,cat=20,num=60,cTyp=62025,modNum=3,&
+      longname='Modal prognostic specific number concentration of volcanic ash particles (coarse mode)')
+PARAM(503241,'DUSTA',dis=0,cat=20,num=2,cTyp=62001,modNum=1,&
+      longname='Modal prognostic mass mixing ratio of mineral dust particles (fine mode)')
+PARAM(503242,'DUSTB',dis=0,cat=20,num=2,cTyp=62001,modNum=2,&
+      longname='Modal prognostic mass mixing ratio of mineral dust particles (medium mode)')
+PARAM(503243,'DUSTC',dis=0,cat=20,num=2,cTyp=62001,modNum=3,&
+      longname='Modal prognostic mass mixing ratio of mineral dust particles (coarse mode)')
+PARAM(503244,'DUSTA0',dis=0,cat=20,num=60,cTyp=62001,modNum=1,&
+      longname='Modal prognostic specific number concentration  of mineral dust particles (fine mode)')
+PARAM(503245,'DUSTB0',dis=0,cat=20,num=60,cTyp=62001,modNum=2,&
+      longname='Modal prognostic specific number concentration  of mineral dust particles (medium mode)')
+PARAM(503246,'DUSTC0',dis=0,cat=20,num=60,cTyp=62001,modNum=3,&
+      longname='Modal prognostic specific number concentration  of mineral dust particles (coarsemode)')
+PARAM(503247,'SEASA',dis=0,cat=20,num=2,cTyp=62008,modNum=1,&
+      longname='Modal prognostic mass mixing ratio of sea salt particles (fine mode)')
+PARAM(503248,'SEASB',dis=0,cat=20,num=2,cTyp=62008,modNum=2,&
+      longname='Modal prognostic mass mixing ratio of sea salt particles (medium mode)')
+PARAM(503249,'SEASC',dis=0,cat=20,num=2,cTyp=62008,modNum=3,&
+      longname='Modal prognostic mass mixing ratio of sea salt particles (coarse mode)')
+PARAM(503250,'SEASA0',dis=0,cat=20,num=60,cTyp=62008,modNum=1,&
+      longname='Modal prognostic specific number concentration of sea salt particles (fine mode)')
+PARAM(503251,'SEASB0',dis=0,cat=20,num=60,cTyp=62008,modNum=2,&
+      longname='Modal prognostic specific number concentration of sea salt particles (medium mode)')
+PARAM(503252,'SEASC0',dis=0,cat=20,num=60,cTyp=62008,modNum=3,&
+      longname='Modal prognostic specific number concentration of sea salt particles (coarse mode)')
+PARAM(503253,'Cs-137w',dis=0,cat=18,num=11,cTyp=30172,&
+      longname='Cs137 - wet deposition')
+PARAM(503254,'I_131a',dis=0,cat=18,num=14,cTyp=30141,&
+      longname='Prognostic specific activity concentration of Iodine 131 aerosol')
+PARAM(503255,'Te-132t',dis=0,cat=18,num=13,cTyp=30129,&
+      longname='Te132 - total (wet + dry) deposition')
+PARAM(503256,'Zr_95',dis=0,cat=18,num=14,cTyp=30079,&
+      longname='Prognostic specific activity concentration of Zirconium 95')
+PARAM(503257,'Xe_133',dis=0,cat=18,num=14,cTyp=30161,&
+      longname='Prognostic specific activity concentration of Xenon 133')
+PARAM(503258,'I_131g',dis=0,cat=18,num=14,cTyp=30138,&
+      longname='Prognostic specific activity concentration of Iodine 131 elementary gaseous')
+PARAM(503259,'I_131o',dis=0,cat=18,num=14,cTyp=30139,&
+      longname='Prognostic specific activity concentration of Iodine 131 organic bounded')
+PARAM(503260,'Ba_140',dis=0,cat=18,num=14,cTyp=30175,&
+      longname='Prognostic specific activity concentration of Barium 140')
+PARAM(503261,'Ru_103',dis=0,cat=18,num=14,cTyp=30102,&
+      longname='Prognostic specific activity concentration of Ruthenium 103')
+PARAM(503262,'ASH_TOTAL_MC',dis=0,cat=20,num=0,cTyp=62025,&
+      longname='Diagnostic total mass concentration of volcanic ash')
+PARAM(503263,'ASH_MAX_TOTAL_MC_SFC_200'&
+      ,dis=0,cat=20,num=61,T_SFS=100,SF_SFS=0,SV_SFS=101325,T_FFS=100,SF_FFS=0,SV_FFS=46500,cTyp=62025,&
+      longname='Diagnostic maximum total mass concentration of volcanic ash in layer SFC-FL200')
+PARAM(503265,'ASH_TOTAL_MC_VI',dis=0,cat=20,num=1,T_FFS=10,cTyp=62025,&
+      longname='Diagnostic total column of mass concentration of volcanic ash')
+PARAM(503266,'ASH_HML_MAX',dis=0,cat=20,num=62,cTyp=62025,&
+      longname='Diagnostic height of model layer with maximal total mass concentration of volcanic ash')
+PARAM(503267,'AOD_ASH',dis=0,cat=20,num=102,&
+      longname='Diagnostic volcanic ash optical depth')
+PARAM(503268,'AOD_DUST',dis=0,cat=20,num=102,&
+      longname='Diagnostic mineral dust optical depth')
+PARAM(503269,'AOD_SEAS',dis=0,cat=20,num=102,&
+      longname='Diagnostic sea salt optical depth')
+PARAM(503270,'RADIONUC_MAX_AC_LAYER',dis=0,cat=18,num=15,&
+      longname='Diagnostic vmaximum activity concentration of radionuclides in a layer')
+PARAM(503273,'ASH_MAX_TOTAL_MC_200_350'&
+      ,dis=0,cat=20,num=61,T_SFS=100,SF_SFS=0,SV_SFS=46500,T_FFS=100,SF_FFS=0,SV_FFS=24000,cTyp=62025,&
+      longname='Diagnostic maximum total mass concentration of volcanic ash in layer FL200-FL350')
+PARAM(503274,'ASH_MAX_TOTAL_MC_SFC_100'&
+      ,dis=0,cat=20,num=61,T_SFS=100,SF_SFS=0,SV_SFS=101325,T_FFS=100,SF_FFS=0,SV_FFS=70000,cTyp=62025,&
+      longname='Diagnostic maximum total mass concentration of volcanic ash in layer SFC-FL100')
+PARAM(503275,'ASH_MAX_TOTAL_MC_350_550'&
+      ,dis=0,cat=20,num=61,T_SFS=100,SF_SFS=0,SV_SFS=24000,T_FFS=100,SF_FFS=0,SV_FFS=9100,cTyp=62025,&
+      longname='Diagnostic maximum total mass concentration of volcanic ash in layer FL350-FL550')
+PARAM(503276,'ASH_MAX_TOTAL_MC_100_245'&
+      ,dis=0,cat=20,num=61,T_SFS=100,SF_SFS=0,SV_SFS=70000,T_FFS=100,SF_FFS=0,SV_FFS=38500,cTyp=62025,&
+      longname='Diagnostic maximum total mass concentration of volcanic ash in layer FL100-FL245')
+PARAM(503277,'ASH_MAX_TOTAL_MC_245_390'&
+      ,dis=0,cat=20,num=61,T_SFS=100,SF_SFS=0,SV_SFS=38500,T_FFS=100,SF_FFS=0,SV_FFS=20000,cTyp=62025,&
+      longname='Diagnostic maximum total mass concentration of volcanic ash in layer FL245-FL390')
+PARAM(503278,'ASH_MAX_TOTAL_MC_390_530'&
+      ,dis=0,cat=20,num=61,T_SFS=100,SF_SFS=0,SV_SFS=20000,T_FFS=100,SF_FFS=0,SV_FFS=10000,cTyp=62025,&
+      longname='Diagnostic maximum total mass concentration of volcanic ash in layer FL390-FL530')
+PARAM(503279,'ASH_MAX_TOTAL_MC_LAYER',dis=0,cat=20,num=61,cTyp=62025,&
+      longname='Diagnostic maximum total mass concentration of volcanic ash in a layer')
+PARAM(503280,'AEROSOL_OPTICAL_DEPTH',dis=0,cat=20,num=102,&
+      longname='Aerosol optical depth')
+PARAM(503282,'RADIONUC_AC_VI',dis=0,cat=18,num=192,T_FFS=10,&
+      longname='Diagnostic total column of activity concentration of radionuclides')
+PARAM(503283,'THLTHLCOV',dis=0,cat=198,num=0,&
+      longname='Liquid water potential temperature variance')
+PARAM(503284,'QTQTCOV',dis=0,cat=198,num=1,&
+      longname='Total water specific humidity variance')
+PARAM(503285,'THLQTCOV',dis=0,cat=198,num=2,&
+      longname='Liquid water potential temperature - total water specific humidity covariance')
+PARAM(503286,'FR_PAVED',dis=2,cat=0,num=196,&
+      longname='Impervious (paved or sealed) surface fraction')
+PARAM(503287,'AHF',dis=2,cat=0,num=197,&
+      longname='Antropogenic heat flux (e.g. urban heating, traffic)')
+PARAM(503292,'ALB_SEAICE',dis=0,cat=19,num=234,&
+      longname='Sea ice albedo - diffusive solar (0.3 - 5.0 m-6)')
+PARAM(503293,'RAIN_GSP_D',dis=0,cat=1,num=77,T_StatP=4,&
+      longname='Large Scale Rain Difference')
+PARAM(503294,'SNOW_GSP_D',dis=0,cat=1,num=56,T_StatP=4,&
+      longname='Large Scale Snowfall water Equivalent Difference')
+PARAM(503295,'RAIN_CON_D',dis=0,cat=1,num=76,T_StatP=4,&
+      longname='Convective Rain Difference')
+PARAM(503296,'SNOW_CON_D',dis=0,cat=1,num=55,T_StatP=4,&
+      longname='Convective Snowfall Water Equivalent Difference')
+PARAM(503299,'SKYVIEW',dis=0,cat=199,num=0,&
+      longname='Sky-view-factor')
+PARAM(503300,'HORIZON',dis=0,cat=199,num=1,&
+      longname='Horizon angle - topography')
+PARAM(503301,'SLO_ASP',dis=0,cat=199,num=3,&
+      longname='Slope aspect - topography')
+PARAM(503302,'SLO_ANG',dis=0,cat=199,num=2,&
+      longname='Slope angle - topography')
+PARAM(503303,'TOT_PR',dis=0,cat=1,num=52,&
+      longname='Total precipitation rate')
+PARAM(503304,'MCONV',dis=0,cat=1,num=26,&
+      longname='Horizontal moisture convergence')
+PARAM(503305,'SODT_RAD',dis=0,cat=4,num=7,T_FFS=8,&
+      longname='TOA downward solar radiation')
+PARAM(503306,'THUS_RAD',dis=0,cat=5,num=4,T_FFS=1,&
+      longname='Surface upward thermal radiation')
+PARAM(503307,'ATHU_S',dis=0,cat=5,num=4,T_StatP=0,T_FFS=1,&
+      longname='Surface upward thermal radiation')
+PARAM(503308,'QH_LIQ',dis=0,cat=1,num=110,&
+      longname='Specific mass of liquid water coating on hail')
+PARAM(503309,'QG_LIQ',dis=0,cat=1,num=113,&
+      longname='Specific mass of liquid water coating on graupel')
+PARAM(503310,'QS_LIQ',dis=0,cat=1,num=116,&
+      longname='Specific mass of liquid water coating on snow')
+PARAM(503311,'NCRAIN',dis=0,cat=1,num=100,&
+      longname='Specific number concentration of rain')
+PARAM(503312,'NDRAIN',dis=0,cat=1,num=104,&
+      longname='Number density of rain')
+PARAM(503313,'NCSNOW',dis=0,cat=1,num=101,&
+      longname='Specific number concentration of snow')
+PARAM(503314,'NCGRAUPEL',dis=0,cat=1,num=102,&
+      longname='Specific number concentration of graupel')
+PARAM(503315,'NCHAIL',dis=0,cat=1,num=103,&
+      longname='Specific number concentration of hail')
+PARAM(503316,'NDSNOW',dis=0,cat=1,num=105,&
+      longname='Number density of snow')
+PARAM(503317,'NDGRAUPEL',dis=0,cat=1,num=106,&
+      longname='Number density of graupel')
+PARAM(503318,'NDHAIL',dis=0,cat=1,num=107,&
+      longname='Number density of hail')
+PARAM(503319,'DENR',dis=0,cat=1,num=96,&
+      longname='Mass density of rain')
+PARAM(503320,'DENS',dis=0,cat=1,num=97,&
+      longname='Mass density of snow')
+PARAM(503321,'DENG',dis=0,cat=1,num=98,&
+      longname='Mass density of graupel')
+PARAM(503322,'DENC',dis=0,cat=6,num=38,&
+      longname='Mass density of cloud droplets')
+PARAM(503323,'DENI',dis=0,cat=6,num=39,&
+      longname='Mass density of cloud ice')
+PARAM(503324,'DENH',dis=0,cat=1,num=99,&
+      longname='Mass density of hail')
+PARAM(503326,'RADIONUC_AC_VI',dis=0,cat=18,num=17,T_FFS=10,&
+      longname='Diagnostic total column of activity concentration of radionuclides')
+PARAM(503327,'HBAS_ASH_CLD',dis=0,cat=3,num=6,T_FFS=21,cTyp=62025,&
+      longname='Base for given threshold of mass density for volcanic ash cloud')
+PARAM(503328,'HBAS_DUST_CLD',dis=0,cat=3,num=6,T_FFS=21,cTyp=62001,&
+      longname='Base for given threshold of mass density for mineral dust cloud')
+PARAM(503330,'HTOP_ASH_CLD',dis=0,cat=3,num=6,T_FFS=22,cTyp=62025,&
+      longname='Top for given threshold of mass density for volcanic ash cloud')
+PARAM(503331,'HTOP_DUST_CLD',dis=0,cat=3,num=6,T_FFS=22,cTyp=62001,&
+      longname='Top for given threshold of mass density for mineral dust cloud')
+PARAM(503332,'HTOP_RADIONUC_CLD',dis=0,cat=3,num=6,T_FFS=24,&
+      longname='Top for given threshold of air concentration of radionuclides')
+PARAM(503333,'EMISS_DUSTB',dis=0,cat=20,num=3,cTyp=62001,modNum=2,&
+      longname='Emission rate of dust for mode 2')
+PARAM(503334,'EMISS_DUSTC',dis=0,cat=20,num=3,cTyp=62001,modNum=3,&
+      longname='Emission rate of dust for mode 3')
+PARAM(503335,'EMISS_DUSTA',dis=0,cat=20,num=3,cTyp=62001,modNum=1,&
+      longname='Emission rate of dust for mode 1')
+PARAM(503336,'ACCEMISS_DUSTB',dis=0,cat=20,num=3,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated dust Emission for mode 2')
+PARAM(503337,'ACCEMISS_DUSTA',dis=0,cat=20,num=3,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated dust Emission for mode 1')
+PARAM(503338,'ACCEMISS_DUSTC',dis=0,cat=20,num=3,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated dust Emission for mode 3')
+PARAM(503339,'USTAR_THRES',dis=0,cat=2,num=203,&
+      longname='Threshold friction velocity')
+PARAM(503340,'HBAS_RADIONUC_CLD',dis=0,cat=3,num=6,T_FFS=23,&
+      longname='Base for given threshold of air concentration of radionuclides')
+PARAM(503341,'UH_MAX',dis=0,cat=7,num=15,T_StatP=2,&
+      longname='Maximum amplitude (positive or negative) of updraft helicity  (over given time interval)')
+PARAM(503342,'VORW_CTMAX',dis=0,cat=2,num=206,T_StatP=2,&
+      longname='Maximum rotation amplitude (positive or negative) (over given time interval and column)')
+PARAM(503343,'W_CTMAX',dis=0,cat=2,num=207,T_StatP=2,&
+      longname='Maximum updraft track (over given time interval and column)')
+PARAM(503344,'TCOND10_MX',dis=0,cat=1,num=81,T_StatP=2,T_SFS=8,T_FFS=20,SF_FFS=2,SV_FFS=26315,&
+      longname='Maximum total-column integrated condensed water above -10 C isotherm (over given time interval)')
+PARAM(503345,'TCOND_MAX',dis=0,cat=1,num=81,T_StatP=2,T_SFS=8,T_FFS=1,&
+      longname='Maximum total-column integrated condensed  water (over given time interval)')
+PARAM(503346,'DBZCMP_OBS',dis=0,cat=16,num=5,T_GenP=8,&
+      longname='Composite reflectivity - observation')
+PARAM(503347,'DBZCMP_SIM',dis=0,cat=16,num=5,&
+      longname='Composite reflectivity - forecast (simulation)')
+PARAM(503348,'LPI_MAX',dis=0,cat=17,num=192,T_StatP=2,&
+      longname='Maximum of Lightning Potential Index (over given time interval)')
+PARAM(503349,'DBZ_CTMAX',dis=0,cat=15,num=1,T_StatP=2,T_SFS=8,T_FFS=1,&
+      longname='Maximum reflectivity track (over given time interval and entire atmosphere)')
+PARAM(503350,'RELV',dis=0,cat=2,num=12,&
+      longname='relative vorticity')
+PARAM(503351,'T_MRT',dis=0,cat=192,num=4,&
+      longname='mean radiation temperature of an environment assumed black body related to standing human')
+PARAM(503352,'T_2M_L',dis=0,cat=0,num=0,T_SFS=181,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m Temperature, restricted to land')
+PARAM(503353,'TD_2M_L',dis=0,cat=0,num=6,T_SFS=181,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m Dew Point Temperature, restricted to land')
+PARAM(503354,'RELHUM_2M_L',dis=0,cat=1,num=1,T_SFS=181,T_FFS=103,SF_FFS=0,SV_FFS=2,&
+      longname='2m Relative Humidity, restricted to land')
+PARAM(503355,'VGUST_DYN_10M',dis=0,cat=2,num=204,T_StatP=2,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='Maximum 10m dynamical gust')
+PARAM(503356,'VGUST_CON_10M',dis=0,cat=2,num=205,T_StatP=2,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='Maximum 10m convective gust')
+PARAM(503357,'VABSMX_10M',dis=0,cat=2,num=1,T_StatP=2,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='Maximum 10m wind speed without  gust')
+PARAM(503358,'RCLD',dis=0,cat=1,num=234,&
+      longname='Standard deviation of saturation deficit')
+PARAM(503359,'EVAP_PL',dis=2,cat=0,num=198,&
+      longname='Evaporation of plants (integrated since "nightly reset")')
+PARAM(503360,'BETU',dis=0,cat=20,num=59,cTyp=62101,&
+      longname='Birch (betula) pollen concentration')
+PARAM(503362,'BETUfr',dis=2,cat=0,num=4,T_GenP=9,cTyp=62101,&
+      longname='Fraction of land occupied by birch (betula)')
+PARAM(503363,'BETUreso',dis=0,cat=20,num=192,cTyp=62101,&
+      longname='Number of birch (betula) pollen in the reservoir (previous timestep)')
+PARAM(503364,'BETUresn',dis=0,cat=20,num=193,cTyp=62101,&
+      longname='Number of birch (betula) pollen released into the reservoir (new)')
+PARAM(503365,'BETUress',dis=0,cat=20,num=193,T_StatP=11,cTyp=62101,&
+      longname='Sum of released birch (betula) pollen into the reservoir (daily sum)')
+PARAM(503366,'BETUsdes',dis=0,cat=20,num=194,cTyp=62101,&
+      longname='State of the birch (betula) season (eq.zero before and after season, the higher, the more plants are')
+PARAM(503367,'BETUhcem',dis=0,cat=20,num=195,T_GenP=9,cTyp=62101,&
+      longname='Height correction for emission (decreasing emission with height) for birch (betula)')
+PARAM(503368,'BETUrprec',dis=2,cat=0,num=13,cTyp=62101,&
+      longname='Precipitation reservoir (liquid water on the flowers, preventing them from flowering) of birch (betu')
+PARAM(503369,'BETUctsum',dis=0,cat=20,num=196,cTyp=62101,&
+      longname='Cumulated weighted 2m temperature sum of daily values for birch (betula) pollen')
+PARAM(503370,'BETUtthrs',dis=0,cat=20,num=197,T_GenP=9,cTyp=62101,&
+      longname='Cumulated 2m temperature sum threshold for the start of birch (betula) pollen season (climatological')
+PARAM(503371,'BETUtthre',dis=0,cat=20,num=198,T_GenP=9,cTyp=62101,&
+      longname='Cumulated 2m temperature sum threshold for the end of birch (betula) pollen season (climatological)')
+PARAM(503372,'BETUsaisa',dis=0,cat=20,num=200,cTyp=62101,&
+      longname='Number of days since the start of birch (betula) pollen season (if present day is outside the season')
+PARAM(503373,'BETUsaisl',dis=0,cat=20,num=201,cTyp=62101,&
+      longname='Length of birch (betula) pollen season')
+PARAM(503374,'BETUfe',dis=0,cat=20,num=202,cTyp=62101,&
+      longname='Pollen number emission flux for birch (betula)')
+PARAM(503375,'ALNU',dis=0,cat=20,num=59,cTyp=62100,&
+      longname='Alder (alnus) pollen concentration')
+PARAM(503376,'ALNUfr',dis=2,cat=0,num=4,T_GenP=9,cTyp=62100,&
+      longname='Fraction of land occupied by alder (alnus)')
+PARAM(503377,'ALNUreso',dis=0,cat=20,num=192,cTyp=62100,&
+      longname='Number of alder (alnus) pollen in the reservoir (previous timestep)')
+PARAM(503378,'ALNUresn',dis=0,cat=20,num=193,cTyp=62100,&
+      longname='Number of alder (alnus) pollen released into the reservoir (new)')
+PARAM(503379,'ALNUress',dis=0,cat=20,num=193,T_StatP=11,cTyp=62100,&
+      longname='Sum of released alder (alnus) pollen into the reservoir (daily sum)')
+PARAM(503380,'ALNUsdes',dis=0,cat=20,num=194,cTyp=62100,&
+      longname='State of the alder (alnus) season (eq.zero before and after season, the higher, the more plants are ')
+PARAM(503381,'ALNUhcem',dis=0,cat=20,num=195,T_GenP=9,cTyp=62100,&
+      longname='Height correction for emission (decreasing emission with height) for alder (alnus)')
+PARAM(503382,'ALNUrprec',dis=2,cat=0,num=13,cTyp=62100,&
+      longname='Precipitation reservoir (liquid water on the flowers, preventing them from flowering) of alder (alnu')
+PARAM(503383,'ALNUctsum',dis=0,cat=20,num=196,cTyp=62100,&
+      longname='Cumulated weighted 2m temperature sum of daily values for alder (alnus) pollen')
+PARAM(503384,'ALNUtthrs',dis=0,cat=20,num=197,T_GenP=9,cTyp=62100,&
+      longname='Cumulated 2m temperature sum threshold for the start of  alder (alnus) pollen season (climatological')
+PARAM(503385,'ALNUtthre',dis=0,cat=20,num=198,T_GenP=9,cTyp=62100,&
+      longname='Cumulated 2m temperature sum threshold for the end of  alder (alnus) pollen season (climatological)')
+PARAM(503386,'ALNUsaisn',dis=0,cat=20,num=199,cTyp=62100,&
+      longname='Number of days since the start of alder (alnus) pollen season (if present day is in the season: zero')
+PARAM(503387,'ALNUsaisa',dis=0,cat=20,num=200,cTyp=62100,&
+      longname='Number of days since the start of alder (alnus) pollen season (if present day is outside the season:')
+PARAM(503388,'ALNUsaisl',dis=0,cat=20,num=201,cTyp=62100,&
+      longname='Length of alder (alnus) pollen season')
+PARAM(503389,'ALNUfe',dis=0,cat=20,num=202,cTyp=62100,&
+      longname='Pollen number emission flux for alder (alnus)')
+PARAM(503390,'POAC',dis=0,cat=20,num=59,cTyp=62300,&
+      longname='Grasses (poaceae) pollen concentration')
+PARAM(503391,'POACfr',dis=2,cat=0,num=4,T_GenP=9,cTyp=62300,&
+      longname='Fraction of land occupied by grasses (poaceae)')
+PARAM(503392,'POACreso',dis=0,cat=20,num=192,cTyp=62300,&
+      longname='Number of grasses (poaceae) pollen in the reservoir (previous timestep)')
+PARAM(503393,'POACresn',dis=0,cat=20,num=193,cTyp=62300,&
+      longname='Number of grasses (poaceae) pollen released into the reservoir (new)')
+PARAM(503394,'POACress',dis=0,cat=20,num=193,T_StatP=11,cTyp=62300,&
+      longname='Sum of released grasses (poaceae) pollen into the reservoir (daily sum)')
+PARAM(503395,'POACsdes',dis=0,cat=20,num=194,cTyp=62300,&
+      longname='State of the grasses (poaceae) season (eq.zero before and after season, the higher, the more plants ')
+PARAM(503396,'POAChcem',dis=0,cat=20,num=195,T_GenP=9,cTyp=62300,&
+      longname='Height correction for emission (decreasing emission with height) for grasses (poaceae)')
+PARAM(503397,'POACrprec',dis=2,cat=0,num=13,cTyp=62300,&
+      longname='Precipitation reservoir (liquid water on the flowers, preventing them from flowering) of grasses (po')
+PARAM(503398,'POACctsum',dis=0,cat=20,num=196,cTyp=62300,&
+      longname='Cumulated weighted 2m temperature sum of daily values for grasses (poaceae) pollen')
+PARAM(503399,'POACtthrs',dis=0,cat=20,num=197,T_GenP=9,cTyp=62300,&
+      longname='Cumulated 2m temperature sum threshold for the start of  grasses (poaceae) pollen season (climatolog')
+PARAM(503400,'POACtthre',dis=0,cat=20,num=198,T_GenP=9,cTyp=62300,&
+      longname='Cumulated 2m temperature sum threshold for the end of  grasses (poaceae) pollen season (climatologic')
+PARAM(503401,'POACsaisn',dis=0,cat=20,num=199,cTyp=62300,&
+      longname='Number of days since the start of grasses (poaceae) pollen season (if present day is in the season: ')
+PARAM(503402,'POACsaisa',dis=0,cat=20,num=200,cTyp=62300,&
+      longname='Number of days since the start of grasses (poaceae) pollen season (if present day is outside the sea')
+PARAM(503403,'POACsaisl',dis=0,cat=20,num=201,cTyp=62300,&
+      longname='Length of grasses (poaceae) pollen season')
+PARAM(503404,'POACfe',dis=0,cat=20,num=202,cTyp=62300,&
+      longname='Pollen number emission flux for grasses (poaceae)')
+PARAM(503405,'AMBR',dis=0,cat=20,num=59,cTyp=62200,&
+      longname='ragweed  (ambrosia) pollen concentration')
+PARAM(503406,'AMBRfr',dis=2,cat=0,num=4,T_GenP=9,cTyp=62200,&
+      longname='Fraction of land occupied by ragweed  (ambrosia)')
+PARAM(503407,'AMBRreso',dis=0,cat=20,num=192,cTyp=62200,&
+      longname='Number of ragweed  (ambrosia) pollen in the reservoir (previous timestep)')
+PARAM(503408,'AMBRresn',dis=0,cat=20,num=193,cTyp=62200,&
+      longname='Number of ragweed  (ambrosia) pollen released into the reservoir (new)')
+PARAM(503409,'AMBRress',dis=0,cat=20,num=193,T_StatP=11,cTyp=62200,&
+      longname='Sum of released ragweed  (ambrosia) pollen into the reservoir (daily sum)')
+PARAM(503410,'AMBRsdes',dis=0,cat=20,num=194,cTyp=62200,&
+      longname='State of the ragweed  (ambrosia) season (eq.zero before and after season, the higher, the more plant')
+PARAM(503411,'AMBRhcem',dis=0,cat=20,num=195,T_GenP=9,cTyp=62200,&
+      longname='Height correction for emission (decreasing emission with height) for ragweed  (ambrosia)')
+PARAM(503412,'AMBRrprec',dis=2,cat=0,num=13,cTyp=62200,&
+      longname='Precipitation reservoir (liquid water on the flowers, preventing them from flowering) of ragweed  (a')
+PARAM(503413,'AMBRctsum',dis=0,cat=20,num=196,cTyp=62200,&
+      longname='Cumulated weighted 2m temperature sum of daily values for ragweed  (ambrosia) pollen')
+PARAM(503414,'AMBRtthrs',dis=0,cat=20,num=197,T_GenP=9,cTyp=62200,&
+      longname='Cumulated 2m temperature sum threshold for the start of  ragweed  (ambrosia) pollen season (climatol')
+PARAM(503415,'AMBRtthre',dis=0,cat=20,num=198,T_GenP=9,cTyp=62200,&
+      longname='Cumulated 2m temperature sum threshold for the end of  ragweed  (ambrosia) pollen season (climatolog')
+PARAM(503416,'AMBRsaisn',dis=0,cat=20,num=199,cTyp=62200,&
+      longname='Number of days since the start of ragweed  (ambrosia) pollen season (if present day is in the season')
+PARAM(503417,'AMBRsaisa',dis=0,cat=20,num=200,cTyp=62200,&
+      longname='Number of days since the start of ragweed  (ambrosia) pollen season (if present day is outside the s')
+PARAM(503418,'AMBRsaisl',dis=0,cat=20,num=201,cTyp=62200,&
+      longname='Length of ragweed  (ambrosia) pollen season')
+PARAM(503419,'AMBRfe',dis=0,cat=20,num=202,cTyp=62200,&
+      longname='Pollen number emission flux for ragweed  (ambrosia)')
+PARAM(503420,'BETUsaisn',dis=0,cat=20,num=199,cTyp=62101,&
+      longname='Number of days since the start of birch (betula) pollen season (if present day is in the season: zer')
+PARAM(503421,'ECHOTOP',dis=0,cat=3,num=0,T_FFS=25,&
+      longname='Echotop-pressure: smallest pressure where radar reflectivity above a threshold is present')
+PARAM(503422,'ECHOTOPinM',dis=0,cat=3,num=6,T_FFS=25,&
+      longname='Echotop-height: largest height where radar reflectivity above a threshold is present')
+PARAM(503423,'MCNV_CTMAX',dis=0,cat=1,num=26,T_StatP=2,&
+      longname='Maximum horizontal moisture convergence track (over given time interval and column)')
+PARAM(503424,'RAPA_SPPT',dis=0,cat=19,num=235,&
+      longname='Random pattern for  the stochastically perturbed parametrization tendencies (SPPT) scheme at levels ')
+PARAM(503425,'SKC',dis=2,cat=0,num=199,&
+      longname='Skin conductivity (ratio ground heat flux to temperature difference soil-skin layer)')
+PARAM(503426,'HSNOW_MAX',dis=0,cat=1,num=235,&
+      longname='Maximum snow height during contiguous accumulating snow period (coupled with snow age)')
+PARAM(503427,'WSHEAR_U',dis=0,cat=2,num=208,&
+      longname='U-component of (vertical) wind shear vector between two levels')
+PARAM(503428,'WSHEAR_V',dis=0,cat=2,num=209,&
+      longname='V-component of (vertical) wind shear vector between two levels')
+PARAM(503431,'ACCDRYDEPO_DUSTA',dis=0,cat=20,num=6,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated dry deposition (surface) of dust for mode 1')
+PARAM(503432,'ACCDRYDEPO_DUSTB',dis=0,cat=20,num=6,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated dry deposition (surface) of dust for mode 2')
+PARAM(503433,'ACCDRYDEPO_DUSTC',dis=0,cat=20,num=6,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated dry deposition (surface) of dust for mode 3')
+PARAM(503434,'ACCWETDEPO_GSP_DUSTA',dis=0,cat=20,num=9,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated wet deposition by grid scale precipitation of dust for mode 1')
+PARAM(503435,'ACCWETDEPO_GSP_DUSTB',dis=0,cat=20,num=9,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated wet deposition by grid scale precipitation of dust for mode 2')
+PARAM(503436,'ACCWETDEPO_GSP_DUSTC',dis=0,cat=20,num=9,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated wet deposition by grid scale precipitation of dust for mode 3')
+PARAM(503437,'ACCWETDEPO_CON_DUSTA',dis=0,cat=20,num=10,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated wet deposition by convective precipitation of dust for mode 1')
+PARAM(503438,'ACCWETDEPO_CON_DUSTB',dis=0,cat=20,num=10,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated wet deposition by convective precipitation of dust for mode 2')
+PARAM(503439,'ACCWETDEPO_CON_DUSTC',dis=0,cat=20,num=10,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated wet deposition by convective precipitation of dust for mode 3')
+PARAM(503440,'ACCWETDEPO_RAIN_DUSTA',dis=0,cat=20,num=203,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated wet deposition of dust if rain reaches the surface for mode 1')
+PARAM(503441,'ACCWETDEPO_RAIN_DUSTB',dis=0,cat=20,num=203,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated wet deposition of dust if rain reaches the surface for mode 2')
+PARAM(503442,'ACCWETDEPO_RAIN_DUSTC',dis=0,cat=20,num=203,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated wet deposition of dust if rain reaches the surface for mode 3')
+PARAM(503443,'ACCSEDIM_DUSTA',dis=0,cat=20,num=11,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated sedimentation of dust for mode 1')
+PARAM(503444,'ACCSEDIM_DUSTB',dis=0,cat=20,num=11,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated sedimentation of dust for mode 2')
+PARAM(503445,'ACCSEDIM_DUSTC',dis=0,cat=20,num=11,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated sedimentation of dust for mode 3')
+PARAM(503446,'ACCDRYDEPO_DUSTA0',dis=0,cat=20,num=204,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated dry deposition of dust number concentration for mode 1')
+PARAM(503447,'ACCDRYDEPO_DUSTB0',dis=0,cat=20,num=204,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated dry deposition of dust number concentration for mode 2')
+PARAM(503448,'ACCDRYDEPO_DUSTC0',dis=0,cat=20,num=204,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated dry deposition of dust number concentration for mode 3')
+PARAM(503449,'ACCWETDEPO_GSP_DUSTA0',dis=0,cat=20,num=205,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated wet deposition by grid scale precipitation of dust number concentration for mode 1')
+PARAM(503450,'ACCWETDEPO_GSP_DUSTB0',dis=0,cat=20,num=205,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated wet deposition by grid scale precipitation of dust number concentration for mode 2')
+PARAM(503451,'ACCWETDEPO_GSP_DUSTC0',dis=0,cat=20,num=205,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated wet deposition by grid scale precipitation of dust number concentration for mode 3')
+PARAM(503452,'ACCWETDEPO_RAIN_DUSTA0',dis=0,cat=20,num=207,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated wet deposition of dust number concentration  if rain reaches the surface for mode 1')
+PARAM(503453,'ACCWETDEPO_RAIN_DUSTB0',dis=0,cat=20,num=207,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated wet deposition of dust number concentration  if rain reaches the surface for mode 2')
+PARAM(503454,'ACCWETDEPO_RAIN_DUSTC0',dis=0,cat=20,num=207,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated wet deposition of dust number concentration  if rain reaches the surface for mode 3')
+PARAM(503455,'ACCSEDIM_DUSTA0',dis=0,cat=20,num=208,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated sedimentation of dust number concentration for mode 1')
+PARAM(503456,'ACCSEDIM_DUSTB0',dis=0,cat=20,num=208,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated sedimentation of dust number concentration for mode 2')
+PARAM(503457,'ACCSEDIM_DUSTC0',dis=0,cat=20,num=208,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated sedimentation of dust number concentration for mode 3')
+PARAM(503458,'SAT_BSC_DUST',dis=0,cat=20,num=107,&
+      longname='Attenuated backscatter from satellite for dust (for given wave length)')
+PARAM(503459,'CEIL_BSC_DUST',dis=0,cat=20,num=108,&
+      longname='Attenuated backscatter from ground (ceilometer) for dust (for given wave length)')
+PARAM(503460,'BSC_DUST',dis=0,cat=20,num=209,&
+      longname='Mineral dust backscatter (not attenuated, for given wave length)')
+PARAM(503461,'SAT_BSC_ASH',dis=0,cat=20,num=107,&
+      longname='Attenuated backscatter from satellite for volcanic ash (for given wave length)')
+PARAM(503462,'CEIL_BSC_ASH',dis=0,cat=20,num=108,&
+      longname='Attenuated backscatter from ground (ceilometer) for volcanic ash (for given wave length)')
+PARAM(503463,'BSC_ASH',dis=0,cat=20,num=209,&
+      longname='Volcanic ash backscatter (not attenuated, for given wave length)')
+PARAM(503464,'ACCWETDEPO_CON_DUSTC0',dis=0,cat=20,num=206,T_StatP=1,cTyp=62001,modNum=3,&
+      longname='Accumulated wet deposition by convective precipitation of dust number concentration for mode 3')
+PARAM(503465,'ACCWETDEPO_CON_DUSTB0',dis=0,cat=20,num=206,T_StatP=1,cTyp=62001,modNum=2,&
+      longname='Accumulated wet deposition by convective precipitation of dust number concentration for mode 2')
+PARAM(503466,'ACCWETDEPO_CON_DUSTA0',dis=0,cat=20,num=206,T_StatP=1,cTyp=62001,modNum=1,&
+      longname='Accumulated wet deposition by convective precipitation of dust number concentration for mode 1')
+PARAM(503467,'T_2M_FILTBIAS',dis=0,cat=0,num=0,T_FFS=103,SF_FFS=0,SV_FFS=2,T_GenP=206,&
+      longname='2m Temperature analysis increment, filtered in time')
+PARAM(503468,'Cs-137t',dis=0,cat=18,num=13,cTyp=30172,&
+      longname='Cs137 - total (wet + dry) deposition')
+PARAM(503469,'Cs_137',dis=0,cat=18,num=14,cTyp=30172,&
+      longname='Prognostic specific activity concentration of Caesium 137')
+PARAM(503470,'ACs-137',dis=0,cat=18,num=10,T_StatP=0,cTyp=30172,&
+      longname='Averaged air concentration of Caesium 137')
+PARAM(503471,'ACCCs-137',dis=0,cat=18,num=10,T_StatP=1,cTyp=30172,&
+      longname='Accumulated air concentration of Caesium 137')
+PARAM(503480,'Kr_85',dis=0,cat=18,num=14,cTyp=30059,&
+      longname='Prognostic specific activity concentration of Krypton 85')
+PARAM(503481,'Kr-85t',dis=0,cat=18,num=13,cTyp=30059,&
+      longname='Kr85 - total (wet + dry) deposition')
+PARAM(503482,'AKr-85',dis=0,cat=18,num=10,T_StatP=0,cTyp=30059,&
+      longname='Averaged air concentration of Krypton 85')
+PARAM(503483,'ACCKr-85',dis=0,cat=18,num=10,T_StatP=1,cTyp=30059,&
+      longname='Accumulated air concentration of Krypton 85')
+PARAM(503484,'Sr_90',dis=0,cat=18,num=14,cTyp=30067,&
+      longname='Prognostic specific activity concentration of Strontium 90')
+PARAM(503485,'ASr-90',dis=0,cat=18,num=10,T_StatP=0,cTyp=30067,&
+      longname='Averaged air concentration of Strontium 90')
+PARAM(503486,'ACCSr-90',dis=0,cat=18,num=10,T_StatP=1,cTyp=30067,&
+      longname='Accumulated air concentration of Strontium 90')
+PARAM(503487,'Sr-90t',dis=0,cat=18,num=13,cTyp=30067,&
+      longname='Sr90 - total (wet + dry) deposition')
+PARAM(503489,'I-131at',dis=0,cat=18,num=13,cTyp=30141,&
+      longname='I131a - total (wet + dry) deposition')
+PARAM(503490,'AI-131a',dis=0,cat=18,num=10,T_StatP=0,cTyp=30141,&
+      longname='Averaged air concentration of Iodine 131 aerosol')
+PARAM(503491,'ACCI-131a',dis=0,cat=18,num=10,T_StatP=1,cTyp=30141,&
+      longname='Accumulated air concentration of Iodine 131 aerosol')
+PARAM(503492,'ACo-60',dis=0,cat=18,num=10,T_StatP=0,cTyp=30042,&
+      longname='Averaged air concentration of Cobalt 60')
+PARAM(503493,'ACCCo-60',dis=0,cat=18,num=10,T_StatP=1,cTyp=30042,&
+      longname='Accumulated air concentration of Cobalt 60')
+PARAM(503494,'Co_60',dis=0,cat=18,num=14,cTyp=30042,&
+      longname='Prognostic specific activity concentration of Cobalt 60')
+PARAM(503495,'Co-60w',dis=0,cat=18,num=11,cTyp=30042,&
+      longname='Co-60 - wet deposition')
+PARAM(503496,'Co-60t',dis=0,cat=18,num=13,cTyp=30042,&
+      longname='Co60 - total (wet + dry) deposition')
+PARAM(503497,'Ru-103t',dis=0,cat=18,num=13,cTyp=30102,&
+      longname='Ru103 - total (wet + dry) deposition')
+PARAM(503499,'ARu-103',dis=0,cat=18,num=10,T_StatP=0,cTyp=30102,&
+      longname='Averaged air concentration of Ruthenium 103')
+PARAM(503500,'ACCRu-103',dis=0,cat=18,num=10,T_StatP=1,cTyp=30102,&
+      longname='Accumulated air concentration of Ruthenium 103')
+PARAM(503501,'Te_132',dis=0,cat=18,num=14,cTyp=30129,&
+      longname='Prognostic specific activity concentration of Tellurium 132')
+PARAM(503502,'ATe-132',dis=0,cat=18,num=10,T_StatP=0,cTyp=30129,&
+      longname='Averaged air concentration of Tellurium 132')
+PARAM(503503,'ACCTe-132',dis=0,cat=18,num=10,T_StatP=1,cTyp=30129,&
+      longname='Accumulated air concentration of Tellurium 132')
+PARAM(503504,'Zr-95t',dis=0,cat=18,num=13,cTyp=30079,&
+      longname='Zr95 - total (wet + dry) deposition')
+PARAM(503505,'AZr-95',dis=0,cat=18,num=10,T_StatP=0,cTyp=30079,&
+      longname='Averaged air concentration of Zirconium 95')
+PARAM(503506,'ACCZr-95',dis=0,cat=18,num=10,T_StatP=1,cTyp=30079,&
+      longname='Accumulated air concentration of Zirconium 95')
+PARAM(503507,'Tr-2t',dis=0,cat=18,num=13,cTyp=30000,&
+      longname='TRACER - total (wet + dry) deposition')
+PARAM(503508,'Tr_2',dis=0,cat=18,num=14,cTyp=30000,&
+      longname='Prognostic specific activity concentration of TRACER')
+PARAM(503509,'ATr-2',dis=0,cat=18,num=10,T_StatP=0,cTyp=30000,&
+      longname='Averaged air concentration of TRACER')
+PARAM(503510,'ACCTr-2',dis=0,cat=18,num=10,T_StatP=1,cTyp=30000,&
+      longname='Accumulated air concentration of TRACER')
+PARAM(503511,'AXe-133',dis=0,cat=18,num=10,T_StatP=0,cTyp=30161,&
+      longname='Averaged air concentration of Xenon 133')
+PARAM(503512,'ACCXe-133',dis=0,cat=18,num=10,T_StatP=1,cTyp=30161,&
+      longname='Accumulated air concentration of Xenon 133')
+PARAM(503513,'Xe-133t',dis=0,cat=18,num=13,cTyp=30161,&
+      longname='Xe133 - total (wet + dry) deposition')
+PARAM(503514,'I-131',dis=0,cat=18,num=10,cTyp=30137,&
+      longname='Air concentration of Iodine 131')
+PARAM(503515,'I-131d',dis=0,cat=18,num=12,cTyp=30137,&
+      longname='I131 - dry deposition')
+PARAM(503516,'AI-131',dis=0,cat=18,num=10,T_StatP=0,cTyp=30137,&
+      longname='Averaged air concentration of Iodine 131')
+PARAM(503517,'ACCI-131',dis=0,cat=18,num=10,T_StatP=1,cTyp=30137,&
+      longname='Accumulated air concentration of Iodine 131')
+PARAM(503518,'I_131',dis=0,cat=18,num=14,cTyp=30137,&
+      longname='Prognostic specific activity concentration of Iodine 131')
+PARAM(503519,'I-131w',dis=0,cat=18,num=11,cTyp=30137,&
+      longname='I131 - wet deposition')
+PARAM(503520,'I-131t',dis=0,cat=18,num=13,cTyp=30137,&
+      longname='I131 - total (wet + dry) deposition')
+PARAM(503522,'AI-131g',dis=0,cat=18,num=10,T_StatP=0,cTyp=30138,&
+      longname='Averaged air concentration of Iodine 131 elementary gaseous')
+PARAM(503523,'ACCI-131g',dis=0,cat=18,num=10,T_StatP=1,cTyp=30138,&
+      longname='Accumulated air concentration of Iodine 131 elementary gaseous')
+PARAM(503524,'I-131gt',dis=0,cat=18,num=13,cTyp=30138,&
+      longname='I131g - total (wet + dry) deposition')
+PARAM(503525,'AI-131o',dis=0,cat=18,num=10,T_StatP=0,cTyp=30139,&
+      longname='Averaged air concentration of Iodine 131 organic bounded')
+PARAM(503526,'ACCI-131o',dis=0,cat=18,num=10,T_StatP=1,cTyp=30139,&
+      longname='Accumulated air concentration of Iodine 131 organic bounded')
+PARAM(503527,'I-131ot',dis=0,cat=18,num=13,cTyp=30139,&
+      longname='I131o - total (wet + dry) deposition')
+PARAM(503528,'Ba-140t',dis=0,cat=18,num=13,cTyp=30175,&
+      longname='Ba140 - total (wet + dry) deposition')
+PARAM(503529,'ABa-140',dis=0,cat=18,num=10,T_StatP=0,cTyp=30175,&
+      longname='Averaged air concentration of Barium 140')
+PARAM(503530,'ACCBa-140',dis=0,cat=18,num=10,T_StatP=1,cTyp=30175,&
+      longname='Accumulated air concentration of Barium 140')
+PARAM(503531,'Ru-106',dis=0,cat=18,num=10,cTyp=30104,&
+      longname='Air concentration of Ruthenium 106')
+PARAM(503532,'Ru-106t',dis=0,cat=18,num=13,cTyp=30104,&
+      longname='Ru106 - total (wet + dry) deposition')
+PARAM(503533,'Ru_106',dis=0,cat=18,num=14,cTyp=30104,&
+      longname='Prognostic specific activity concentration of Ruthenium 106')
+PARAM(503534,'Ru-106d',dis=0,cat=18,num=12,cTyp=30104,&
+      longname='Ru106 - dry deposition')
+PARAM(503535,'Ru-106w',dis=0,cat=18,num=11,cTyp=30104,&
+      longname='Ru106 - wet deposition')
+PARAM(503536,'ARu-106',dis=0,cat=18,num=10,T_StatP=0,cTyp=30104,&
+      longname='Averaged air concentration of Ruthenium 106')
+PARAM(503537,'ACCRu-106',dis=0,cat=18,num=10,T_StatP=1,cTyp=30104,&
+      longname='Accumulated air concentration of Ruthenium 106')
+PARAM(503538,'Co-60d',dis=0,cat=18,num=12,cTyp=30042,&
+      longname='Co-60 - dry deposition')
+PARAM(503539,'Co-60',dis=0,cat=18,num=10,cTyp=30042,&
+      longname='Air concentration of Cobalt 60')
+PARAM(503542,'Kr-85mw',dis=0,cat=18,num=11,cTyp=30060,&
+      longname='Kr85m - wet deposition')
+PARAM(503543,'Kr-85mt',dis=0,cat=18,num=13,cTyp=30060,&
+      longname='Kr85m - total (wet + dry) deposition')
+PARAM(503544,'Kr_85m',dis=0,cat=18,num=14,cTyp=30060,&
+      longname='Prognostic specific activity concentration of Krypton 85m')
+PARAM(503545,'Kr-85md',dis=0,cat=18,num=12,cTyp=30060,&
+      longname='Kr85m - dry deposition')
+PARAM(503546,'AKr-85m',dis=0,cat=18,num=10,T_StatP=0,cTyp=30060,&
+      longname='Averaged air concentration of Krypton 85m')
+PARAM(503547,'ACCKr-85m',dis=0,cat=18,num=10,T_StatP=1,cTyp=30060,&
+      longname='Accumulated air concentration of Krypton 85m')
+PARAM(503548,'Kr-85m',dis=0,cat=18,num=10,cTyp=30060,&
+      longname='Air concentration of Krypton 85m')
+PARAM(503549,'SWISS_LV95_SN',dis=0,cat=191,num=200,&
+      longname='Swiss coordinate LV 95 (south-north)')
+PARAM(503550,'SWISS_LV95_WE',dis=0,cat=191,num=201,&
+      longname='Swiss coordinate LV 95 (west-east)')
+PARAM(503551,'BETUsnc',dis=0,cat=20,num=60,cTyp=62101,&
+      longname='Birch (betula) pollen specific number concentration')
+PARAM(503552,'ALNUsnc',dis=0,cat=20,num=60,cTyp=62100,&
+      longname='Alder (alnus) pollen specific number concentration')
+PARAM(503553,'POACsnc',dis=0,cat=20,num=60,cTyp=62300,&
+      longname='Grasses (poaceae) pollen specific number concentration')
+PARAM(503554,'AMBRsnc',dis=0,cat=20,num=60,cTyp=62200,&
+      longname='Ragweed (ambrosia) pollen specific number concentration')
+PARAM(503555,'DHAIL_AV',dis=0,cat=1,num=238,T_StatP=0,&
+      longname='Average hail diameter')
+PARAM(503556,'DHAIL_SD',dis=0,cat=1,num=238,T_StatP=6,&
+      longname='Standard deviation of hail diameter')
+PARAM(503557,'DHAIL_MX',dis=0,cat=1,num=238,T_StatP=2,&
+      longname='Maximum hail diameter')
+PARAM(503558,'W_UP_DUR',dis=0,cat=2,num=210,&
+      longname='Duration of updraft')
+PARAM(503559,'W_UP_MASK',dis=0,cat=2,num=211,&
+      longname='Updraft mask')
+PARAM(503560,'LFD_TOT',dis=0,cat=17,num=4,T_SFS=8,T_FFS=1,&
+      longname='Total lightning flash density - instantaneous')
+PARAM(503561,'LFD_TOT_AV',dis=0,cat=17,num=4,T_StatP=0,T_SFS=8,T_FFS=1,&
+      longname='Total lightning flash density - time average')
+PARAM(503563,'DT_SMME',dis=0,cat=0,num=26,T_GenP=221,&
+      longname='Temperature tendency perturbation due to stochastic model of model error')
+PARAM(503564,'DU_SMME',dis=0,cat=2,num=39,T_GenP=221,&
+      longname='Zonal wind tendency perturbation due to stochastic model of model error')
+PARAM(503565,'DV_SMME',dis=0,cat=2,num=40,T_GenP=221,&
+      longname='Meridional wind tendency perturbation due to stochastic model of model error')
+PARAM(503566,'RECLOUD',dis=0,cat=1,num=129,&
+      longname='Effective radius of cloud water')
+PARAM(503567,'RERAIN',dis=0,cat=1,num=130,&
+      longname='Effective radius of rain')
+PARAM(503568,'REICE',dis=0,cat=1,num=131,&
+      longname='Effective radius of cloud ice')
+PARAM(503569,'RESNOW',dis=0,cat=1,num=132,&
+      longname='Effective radius of snow')
+PARAM(503570,'REGRAUPEL',dis=0,cat=1,num=133,&
+      longname='Effective radius of graupel')
+PARAM(503571,'REHAIL',dis=0,cat=1,num=134,&
+      longname='Effective radius of hail')
+PARAM(503572,'RECLOUD_SGS',dis=0,cat=1,num=135,&
+      longname='Effective radius of subgrid liquid clouds')
+PARAM(503573,'REICE_SGS',dis=0,cat=1,num=136,&
+      longname='Effective radius of subgrid ice clouds')
+PARAM(503574,'ARRAIN',dis=0,cat=1,num=137,&
+      longname='Effective aspect ratio of rain')
+PARAM(503575,'ARICE',dis=0,cat=1,num=138,&
+      longname='Effective aspect ratio of cloud ice')
+PARAM(503576,'ARSNOW',dis=0,cat=1,num=139,&
+      longname='Effective aspect ratio of snow')
+PARAM(503577,'ARGRAUPEL',dis=0,cat=1,num=140,&
+      longname='Effective aspect ratio of graupel')
+PARAM(503578,'ARHAIL',dis=0,cat=1,num=141,&
+      longname='Effective aspect ratio of hail')
+PARAM(503579,'ARICE_SGS',dis=0,cat=1,num=142,&
+      longname='Effective aspect ratio of subgrid ice clouds')
+PARAM(503580,'RELHUM_LML_FILTINC',dis=0,cat=1,num=1,T_SFS=1,T_FFS=103,T_GenP=207,&
+      longname='Relative Humidity in lowest model layer - time-filtered assimilation increment')
+PARAM(503581,'T_LML_FILTINC',dis=0,cat=0,num=0,T_SFS=1,T_FFS=103,T_GenP=207,&
+      longname='Temperature in lowest model layer - time-filtered assimilation increment')
+PARAM(503582,'DD_10M_SECFREQ',dis=0,cat=2,num=0,T_StatP=11,T_SFS=233,T_FFS=233,&
+      longname='Frequency of winds in defined wind sector for defined time interval')
+PARAM(503583,'SP_AV',dis=0,cat=2,num=1,T_StatP=0,&
+      longname='Wind speed (time average)')
+PARAM(503584,'SP_10M_AV',dis=0,cat=2,num=1,T_StatP=0,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='10m wind speed (time average)')
+PARAM(503585,'SP_10M_SECAV',dis=0,cat=2,num=1,T_StatP=0,T_SFS=233,T_FFS=233,&
+      longname='10m wind speed in wind sector (time average)')
+PARAM(503586,'SP_10M_SECMAX',dis=0,cat=2,num=1,T_StatP=2,T_SFS=233,T_FFS=233,&
+      longname='10m wind speed in wind sector (time maximum)')
+PARAM(503587,'CLCT_AV',dis=0,cat=6,num=1,T_StatP=0,&
+      longname='Total cloud cover (time average)')
+PARAM(503588,'ASWDIR_SN',dis=0,cat=4,num=198,T_StatP=0,T_FFS=206,&
+      longname='Downward direct short-wave radiation flux at surface on a plane normal to the sun (time average)')
+PARAM(503589,'ASWDIR_SNO',dis=0,cat=4,num=198,T_StatP=0,T_FFS=207,&
+      longname='Downward direct short-wave radiation flux at surface on a plane normal to the sun without orographic')
+PARAM(503590,'SUN_EL',dis=0,cat=191,num=202,&
+      longname='Solar elevation angle')
+PARAM(503591,'SUN_AZI',dis=0,cat=191,num=203,&
+      longname='Solar azimuth angle')
+PARAM(503592,'TURB_INTENS_MAX',dis=0,cat=19,num=236,T_StatP=2,&
+      longname='Turbulence intensity (time maximum)')
+PARAM(503593,'SOBS_RAD_CS',dis=0,cat=4,num=11,T_FFS=1,&
+      longname='Clear-sky net solar radiation flux (at the surface)')
+PARAM(503594,'THBS_RAD_CS',dis=0,cat=5,num=6,T_FFS=1,&
+      longname='Clear-sky net thermal radiation flux (at the surface)')
+PARAM(503595,'SOBT_RAD_CS',dis=0,cat=4,num=11,T_FFS=8,&
+      longname='Clear-sky net solar radiation flux (on model top)')
+PARAM(503596,'THBT_RAD_CS',dis=0,cat=5,num=6,T_FFS=8,&
+      longname='Clear-sky net thermal radiation flux (on model top)')
+PARAM(503597,'ASOB_S_CS',dis=0,cat=4,num=11,T_StatP=0,T_FFS=1,&
+      longname='Clear-sky net solar radiation flux (at the surface) - time average')
+PARAM(503598,'ATHB_S_CS',dis=0,cat=5,num=6,T_StatP=0,T_FFS=1,&
+      longname='Clear-sky net thermal radiation flux (at the surface) - time average')
+PARAM(503599,'ASOB_T_CS',dis=0,cat=4,num=11,T_StatP=0,T_FFS=8,&
+      longname='Clear-sky net solar radiation flux (on model top) - time average')
+PARAM(503600,'ATHB_T_CS',dis=0,cat=5,num=6,T_StatP=0,T_FFS=8,&
+      longname='Clear-sky net thermal radiation flux (on model top) - time average')
+PARAM(503601,'ASOD_T',dis=0,cat=4,num=7,T_StatP=0,T_FFS=8,&
+      longname='TOA downward solar radiation (time average)')
+PARAM(503602,'W_SO_SAT',dis=2,cat=3,num=16,T_SFS=106,T_FFS=106,&
+      longname='Volumetric saturation of soil moisture')
+PARAM(503603,'WSOIL_FLX',dis=2,cat=3,num=201,T_FFS=106,&
+      longname='Soil water mass flux at layer interfaces (sum of conductive and diffusive fluxes)')
+PARAM(503604,'Q_ROFF',dis=1,cat=0,num=195,T_SFS=106,T_FFS=106,&
+      longname='Ground water runoff rate, aquifer')
+PARAM(503605,'WT_DEPTH',dis=1,cat=0,num=193,T_FFS=177,&
+      longname='Water table depth')
+PARAM(503606,'W_SO_SL',dis=1,cat=0,num=194,T_FFS=177,&
+      longname='Soil moisture saturation level')
+PARAM(503607,'S_ORO_MAX',dis=0,cat=3,num=198,&
+      longname='Slope of orography (using average of maximum gradient in different directions)')
+PARAM(503608,'TWATFLXU',dis=0,cat=1,num=236,T_FFS=10,&
+      longname='Total column zonal water flux')
+PARAM(503609,'TWATFLXV',dis=0,cat=1,num=237,T_FFS=10,&
+      longname='Total column meridional water flux')
+PARAM(503610,'ATWATFLXU',dis=0,cat=1,num=236,T_StatP=0,T_FFS=10,&
+      longname='Total column zonal water flux - time average')
+PARAM(503611,'ATWATFLXV',dis=0,cat=1,num=237,T_StatP=0,T_FFS=10,&
+      longname='Total column meridional water flux - time average')
+PARAM(503612,'NCL_PUA_ACT',dis=0,cat=6,num=210,T_FFS=2,&
+      longname='Number of active clouds per horizontal unit area')
+PARAM(503613,'NCL_PUA_PSV',dis=0,cat=6,num=211,T_FFS=2,&
+      longname='Number of passive clouds per horizontal unit area')
+PARAM(503614,'CBMFLX_ACT',dis=0,cat=3,num=200,T_FFS=2,&
+      longname='Cloud base mass flux associated with active clouds')
+PARAM(503615,'CBMFLX_PSV',dis=0,cat=3,num=199,T_FFS=2,&
+      longname='Cloud base mass flux associated with passive clouds')
+PARAM(503616,'P_LML_FILTINC',dis=0,cat=3,num=0,T_SFS=1,T_FFS=103,T_GenP=207,&
+      longname='Pressure in lowest model layer - time-filtered assimilation increment')
+PARAM(503617,'UH_MAX_LOW',dis=0,cat=7,num=15,T_StatP=2,T_SFS=102,SF_SFS=0,SV_SFS=3000,T_FFS=102,SF_FFS=0,SV_FFS=0,&
+      longname='Maximum amplitude of updraft helicity in tropospheric column of low height')
+PARAM(503618,'UH_MAX_MED',dis=0,cat=7,num=15,T_StatP=2,T_SFS=102,SF_SFS=0,SV_SFS=5000,T_FFS=102,SF_FFS=0,SV_FFS=2000,&
+      longname='Maximum amplitude of updraft helicity in tropospheric column of medium height')
+PARAM(503619,'DBZSCAN_OBS',dis=0,cat=15,num=200,T_GenP=8,&
+      longname='Single scan reflectivity - observation')
+PARAM(503620,'DBZSCAN_SIM',dis=0,cat=16,num=4,T_FFS=198,&
+      longname='Single scan reflectivity - simulation')
+PARAM(503621,'PR_GSP',dis=0,cat=1,num=54,&
+      longname='Large-scale precipitation rate')
+PARAM(503622,'LPI_CON_CI',dis=0,cat=17,num=193,&
+      longname='Lightning Potential Index from convection scheme, modified by convection index')
+PARAM(503623,'LPI_CON_CI_MAX',dis=0,cat=17,num=193,T_StatP=2,&
+      longname='Maximum Lightning Potential Index from convection scheme, modified by convection index')
+PARAM(503624,'LFD_TOT_MX',dis=0,cat=17,num=4,T_StatP=2,T_SFS=8,T_FFS=1,&
+      longname='Total lightning flash density - maximum')
+PARAM(503625,'MMD_DUSTA',dis=0,cat=20,num=220,cTyp=62001,modNum=1,&
+      longname='Mass median diameter of dust for mode 1')
+PARAM(503626,'MMD_DUSTB',dis=0,cat=20,num=220,cTyp=62001,modNum=2,&
+      longname='Mass median diameter of dust for mode 2')
+PARAM(503627,'MMD_DUSTC',dis=0,cat=20,num=220,cTyp=62001,modNum=3,&
+      longname='Mass median diameter of dust for mode 3')
+PARAM(503628,'SMOKE_HA',dis=0,cat=20,num=2,cTyp=62020,&
+      longname='Smoke - high absorption (mass mixing ratio)')
+PARAM(503629,'SMOKE_DEN_HA',dis=0,cat=20,num=0,cTyp=62020,&
+      longname='Smoke - high absorption (mass density)')
+PARAM(503630,'SMOKE0_HA',dis=0,cat=20,num=60,cTyp=62020,&
+      longname='Smoke - high absorption (specific number concentration)')
+PARAM(503631,'SMOKE_LA',dis=0,cat=20,num=2,cTyp=62021,&
+      longname='Smoke - low absorption (mass mixing ratio)')
+PARAM(503632,'SMOKE_DEN_LA',dis=0,cat=20,num=0,cTyp=62021,&
+      longname='Smoke - low absorption (mass density)')
+PARAM(503633,'SMOKE0_LA',dis=0,cat=20,num=60,cTyp=62021,&
+      longname='Smoke - low absorption (specific number concentration)')
+PARAM(503634,'SO2',dis=0,cat=20,num=52,cTyp=8,&
+      longname='Sulphur dioxide (SO2) - volume mixing ratio')
+PARAM(503635,'SO2_DEN',dis=0,cat=20,num=0,cTyp=8,&
+      longname='Sulphur dioxide (SO2) - mass density')
+PARAM(503636,'CORY',dis=0,cat=20,num=59,cTyp=62104,&
+      longname='Hazel (corylus) pollen concentration')
+PARAM(503637,'CORYfr',dis=2,cat=0,num=4,T_GenP=9,cTyp=62104,&
+      longname='Fraction of land occupied by hazel (corylus)')
+PARAM(503638,'CORYreso',dis=0,cat=20,num=192,cTyp=62104,&
+      longname='Number of hazel (corylus) pollen in the reservoir (previous timestep)')
+PARAM(503639,'CORYresn',dis=0,cat=20,num=193,cTyp=62104,&
+      longname='Number of hazel (corylus) pollen released into the reservoir (new)')
+PARAM(503640,'CORYsdes',dis=0,cat=20,num=194,cTyp=62104,&
+      longname='State of the hazel (corylus) season (eq.zero before and after season, the higher, the more plants ar')
+PARAM(503641,'CORYhcem',dis=0,cat=20,num=195,T_GenP=9,cTyp=62104,&
+      longname='Height correction for emission (decreasing emission with height) for hazel (corylus)')
+PARAM(503642,'CORYress',dis=0,cat=20,num=193,T_StatP=11,cTyp=62104,&
+      longname='Sum of released hazel (corylus) pollen into the reservoir (daily sum)')
+PARAM(503643,'CORYrprec',dis=2,cat=0,num=13,cTyp=62104,&
+      longname='Precipitation reservoir (liquid water on the flowers, preventing them from flowering) of hazel (cory')
+PARAM(503644,'CORYctsum',dis=0,cat=20,num=196,cTyp=62104,&
+      longname='Cumulated weighted 2m temperature sum of daily values for hazel (corylus) pollen')
+PARAM(503645,'CORYtthrs',dis=0,cat=20,num=197,T_GenP=9,cTyp=62104,&
+      longname='Cumulated 2m temperature sum threshold for the start of hazel (corylus) pollen season (climatologica')
+PARAM(503646,'CORYtthre',dis=0,cat=20,num=198,T_GenP=9,cTyp=62104,&
+      longname='Cumulated 2m temperature sum threshold for the end of hazel (corylus) pollen season (climatological)')
+PARAM(503647,'CORYsaisn',dis=0,cat=20,num=199,cTyp=62104,&
+      longname='Number of days since the start of hazel (corylus) pollen season (if present day is in the season: ze')
+PARAM(503648,'CORYsaisl',dis=0,cat=20,num=201,cTyp=62104,&
+      longname='Length of hazel (corylus) pollen season')
+PARAM(503649,'CORYfe',dis=0,cat=20,num=202,cTyp=62104,&
+      longname='Pollen number emission flux for hazel (corylus)')
+PARAM(503650,'CORYsaisa',dis=0,cat=20,num=200,cTyp=62104,&
+      longname='Number of days since the start of hazel (corylus) pollen season (if present day is outside the seaso')
+PARAM(503651,'CORYsnc',dis=0,cat=20,num=60,cTyp=62104,&
+      longname='Hazel (corylus) pollen specific number concentration')
+PARAM(503652,'BETUtune',dis=0,cat=20,num=211,cTyp=62101,&
+      longname='Emission tuning factor for birch (betula) pollen')
+PARAM(503653,'ALNUtune',dis=0,cat=20,num=211,cTyp=62100,&
+      longname='Emission tuning factor for alder (alnus) pollen')
+PARAM(503654,'POACtune',dis=0,cat=20,num=211,cTyp=62300,&
+      longname='Emission tuning factor for grasses (poaceae) pollen')
+PARAM(503655,'AMBRtune',dis=0,cat=20,num=211,cTyp=62200,&
+      longname='Emission tuning factor for ragweed (ambrosia) pollen')
+PARAM(503656,'CORYtune',dis=0,cat=20,num=211,cTyp=62104,&
+      longname='Emission tuning factor for hazel (corylus) pollen')
+PARAM(503657,'T_LML_COSWGT_FILTINC',dis=0,cat=0,num=0,T_SFS=1,T_FFS=103,T_GenP=208,&
+      longname='Temperature in lowest model layer - time-filtered assimilation increment, weighted with cos(2pi loc.')
+PARAM(503658,'H_NEWSNOW_M',dis=2,cat=3,num=207,&
+      longname='Height of new snow (without settling)')
+PARAM(503659,'ICEinSNW_VC_M',dis=0,cat=20,num=210,T_SFS=114,T_FFS=114,cTyp=63000,&
+      longname='Volumetric ice content of snow layer - multi level')
+PARAM(503660,'H2OinSNW_VC_M',dis=0,cat=20,num=210,T_SFS=114,T_FFS=114,cTyp=62002,&
+      longname='Volumetric water content of snow layer - multi level')
+PARAM(503661,'AIRinSNW_VC_M',dis=0,cat=20,num=210,T_SFS=114,T_FFS=114,cTyp=63001,&
+      longname='Volumetric air content of snow layer - multi level')
+PARAM(503662,'DZ_SNOW_M',dis=0,cat=1,num=11,T_SFS=114,T_FFS=114,&
+      longname='Thickness of snow layer - multi level')
+PARAM(503663,'N_SNOW_M',dis=2,cat=3,num=206,&
+      longname='Number of snow layer - multi level')
+PARAM(503664,'TofSNW_LTOP_M',dis=2,cat=3,num=28,T_SFS=114,T_FFS=114,&
+      longname='Snow temperature of layer (defined at layer top) - multi level')
+PARAM(503665,'URB_FR_BLD',dis=2,cat=192,num=0,&
+      longname='Building area fraction (proportion: 0=no building, 1=whole urban area)')
+PARAM(503666,'URB_H2W',dis=2,cat=192,num=1,&
+      longname='Street canyon aspect (height - width) ratio')
+PARAM(503667,'URB_H_BLD',dis=2,cat=192,num=2,&
+      longname='Height of building')
+PARAM(503668,'URB_ALB_TH',dis=2,cat=192,num=3,&
+      longname='Urban material thermal albedo')
+PARAM(503669,'URB_ALB_SO',dis=2,cat=192,num=4,&
+      longname='Urban material shortwave (solar) albedo')
+PARAM(503670,'URB_HCAP',dis=2,cat=192,num=5,&
+      longname='Volumetric heat capacity of urban material (capacity x density)')
+PARAM(503671,'URB_HCON',dis=2,cat=192,num=6,&
+      longname='Heat conductivity of urban material')
+PARAM(503672,'LPI_CON',dis=0,cat=17,num=5,&
+      longname='Lightning Potential Index from convection scheme')
+PARAM(503673,'LPI_CON_MAX',dis=0,cat=17,num=5,T_StatP=2,&
+      longname='Maximum Lightning Potential Index from convection scheme')
+PARAM(503674,'SP_LML_FILTINC',dis=0,cat=2,num=1,T_SFS=1,T_FFS=103,T_GenP=207,&
+      longname='Wind speed in lowest model layer - time-filtered assimilation increment')
+PARAM(503675,'EDP',dis=0,cat=19,num=30,&
+      longname='Eddy Dissipation Parameter')
+PARAM(503676,'ICE_SEV',dis=0,cat=19,num=37,&
+      longname='Icing Severity (0=None, 1=Trace, 2=Light, 3=Moderate, 4=Severe)')
+PARAM(503677,'UST',dis=10,cat=0,num=21,&
+      longname='U-component surface Stokes drift')
+PARAM(503678,'VST',dis=10,cat=0,num=22,&
+      longname='V-component surface Stokes drift')
+PARAM(503679,'PWD',dis=10,cat=0,num=46,&
+      longname='Peak wave direction')
+PARAM(503680,'SWH1',dis=10,cat=0,num=47,&
+      longname='Significant wave height of first swell partition')
+PARAM(503681,'SWH2',dis=10,cat=0,num=48,&
+      longname='Significant wave height of second swell partition')
+PARAM(503682,'SWH3',dis=10,cat=0,num=49,&
+      longname='Significant wave height of third swell partition')
+PARAM(503683,'MWP1',dis=10,cat=0,num=50,&
+      longname='Mean wave period of first swell partition')
+PARAM(503684,'MWP2',dis=10,cat=0,num=51,&
+      longname='Mean wave period of second swell partition')
+PARAM(503685,'MWP3',dis=10,cat=0,num=52,&
+      longname='Mean wave period of third swell partition')
+PARAM(503686,'MWD1',dis=10,cat=0,num=53,&
+      longname='Mean wave direction of first swell partition')
+PARAM(503687,'MWD2',dis=10,cat=0,num=54,&
+      longname='Mean wave direction of second swell partition')
+PARAM(503688,'MWD3',dis=10,cat=0,num=55,&
+      longname='Mean wave direction of third swell partition')
+PARAM(503689,'DUST_TOTAL_MC',dis=0,cat=20,num=0,cTyp=62001,&
+      longname='Diagnostic total mass concentration of mineral dust aerosol')
+PARAM(503690,'SEAS_TOTAL_MC',dis=0,cat=20,num=0,cTyp=62008,&
+      longname='Diagnostic total mass concentration of sea salt aerosol')
+PARAM(503691,'BCARB_TOTAL_MC',dis=0,cat=20,num=0,cTyp=62009,&
+      longname='Diagnostic total mass concentration of black carbon aerosol (soot)')
+PARAM(503692,'AOD_BCARB',dis=0,cat=20,num=102,&
+      longname='Diagnostic black carbon aerosol (soot) optical depth')
+PARAM(503693,'TAOD_DUST',dis=0,cat=20,num=102,T_FFS=10,&
+      longname='Total atmosphere optical depth due to mineral dust aerosol')
+PARAM(503694,'TAOD_SEAS',dis=0,cat=20,num=102,T_FFS=10,&
+      longname='Total atmosphere optical depth due to sea salt aerosol')
+PARAM(503695,'TAOD_ASH',dis=0,cat=20,num=102,T_FFS=10,&
+      longname='Total atmosphere optical depth due to volcanic ash aerosol')
+PARAM(503696,'TAOD_BCARB',dis=0,cat=20,num=102,T_FFS=10,&
+      longname='Total atmosphere optical depth due to black carbon aerosol (soot)')
+PARAM(503697,'DUST',dis=0,cat=20,num=2,cTyp=62001,&
+      longname='Modal prognostic mass mixing ratio of mineral dust aerosol (all modes)')
+PARAM(503698,'SEAS',dis=0,cat=20,num=2,cTyp=62008,&
+      longname='Modal prognostic mass mixing ratio of sea salt aerosol (all modes)')
+PARAM(503699,'BCARB',dis=0,cat=20,num=2,cTyp=62009,&
+      longname='Modal prognostic mass mixing ratio of black carbon aerosol (soot) (all modes)')
+PARAM(503700,'BCARB0',dis=0,cat=20,num=60,cTyp=62009,&
+      longname='Modal prognostic specific number concentration of black carbon aerosol (soot) (all modes)')
+PARAM(503701,'ASH',dis=0,cat=20,num=2,cTyp=62025,&
+      longname='Modal prognostic mass mixing ratio of volcanic ash aerosol (all modes)')
+PARAM(503702,'SNC_AERO',dis=0,cat=20,num=60,cTyp=62000,&
+      longname='Modal prognostic specific number concentration of total aerosol (all modes)')
+PARAM(503703,'DBZLMX_LOW',dis=0,cat=15,num=4,T_SFS=103,SF_SFS=0,SV_SFS=500,T_FFS=103,SF_FFS=0,SV_FFS=2500,&
+      longname='Base reflectivity - low layer maximum')
+PARAM(503704,'POT_FLT_DIST',dis=0,cat=19,num=240,&
+      longname='Potential flight distance PFD (gliding)')
+PARAM(503705,'LIFT_RATIO',dis=0,cat=19,num=241,&
+      longname='Lifting ratio VST (gliding)')
+PARAM(503706,'SWDEN',dis=10,cat=4,num=16,&
+      longname='Sea water density')
+PARAM(503707,'SWPT',dis=10,cat=4,num=18,&
+      longname='Sea water potential temperature')
+PARAM(503708,'SWPDEN',dis=10,cat=4,num=19,&
+      longname='Sea water potential density')
+PARAM(503709,'SWPSAL',dis=10,cat=4,num=21,&
+      longname='Sea water practical salinity')
+PARAM(503710,'U_MEAN',dis=0,cat=2,num=212,&
+      longname='U-component of mean wind (vertical mean over specified layer)')
+PARAM(503711,'V_MEAN',dis=0,cat=2,num=213,&
+      longname='V-component of mean wind (vertical mean over specified layer)')
+PARAM(503712,'TOT_SNOW_EWI',dis=0,cat=1,num=240,T_StatP=1,&
+      longname='Extreme weather index of snow amount, grid-scale plus convective')
+PARAM(503713,'VMAX_10M_EWI',dis=0,cat=2,num=214,T_StatP=2,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='Extreme weather index of maximum Wind 10m')
+PARAM(503714,'TOT_PREC_EWI',dis=0,cat=1,num=239,T_StatP=1,&
+      longname='Extreme weather index of total precipitation (Accumulation)')
+PARAM(503715,'CLC_RAD',dis=0,cat=6,num=215,&
+      longname='Cloud cover for use in radiative transfer (modified where large hydrometeors are present)')
+PARAM(503716,'TofSNW_NODE_M',dis=2,cat=3,num=208,T_FFS=114,&
+      longname='Snow temperature at node (i.e. at snow layer interface or boundary) - multi level')
+PARAM(503717,'ICEinSNW_VC_T_M',dis=2,cat=3,num=209,T_SFS=114,T_FFS=114,&
+      longname='Volumetric ice content of snow layer (for use in tile approach) - multi level')
+PARAM(503718,'H2OinSNW_VC_T_M',dis=2,cat=3,num=210,T_SFS=114,T_FFS=114,&
+      longname='Volumetric water content of snow layer (for use in tile approach) - multi level')
+PARAM(503719,'AIRinSNW_VC_T_M',dis=2,cat=3,num=211,T_SFS=114,T_FFS=114,&
+      longname='Volumetric air content of snow layer (for use in tile approach) - multi level')
+PARAM(503720,'FP',dis=0,cat=19,num=242,&
+      longname='Probability for freezing precipitation/wet snow')
+PARAM(503721,'FPW',dis=0,cat=19,num=243,&
+      longname='Probability for freezing precipitation with wind')
+PARAM(503722,'DUST_TOTAL_MC_VI',dis=0,cat=20,num=1,T_FFS=10,cTyp=62001,&
+      longname='Diagnostic total column of mass concentration of mineral dust aerosol')
+PARAM(503723,'DUST_MAX_TOTAL_MC_LAYER',dis=0,cat=20,num=61,cTyp=62001,&
+      longname='Diagnostic vertical maximum total mass concentration of mineral dust aerosol in a layer')
+PARAM(503724,'MAXCs-137',dis=0,cat=18,num=10,T_StatP=2,cTyp=30172,&
+      longname='Diagnostic temporal maximum activity concentration of Caesium 137 in a time range')
+PARAM(503725,'MAXI-131',dis=0,cat=18,num=10,T_StatP=2,cTyp=30137,&
+      longname='Diagnostic temporal maximum activity concentration of Iodine 131 in a time range')
+PARAM(503726,'MAXCs-137_LMAX',dis=0,cat=18,num=15,T_StatP=2,cTyp=30172,&
+      longname='Diagnostic temporal maximum activity concentration of Caesium 137 in a time range and vertical maxim')
+PARAM(503727,'MAXI-131_LMAX',dis=0,cat=18,num=15,T_StatP=2,cTyp=30137,&
+      longname='Diagnostic temporal maximum activity concentration of Iodine 131 in a time range and vertical maximu')
+PARAM(503728,'TOT_ACCDRYDEPO_DUST',dis=0,cat=20,num=6,T_StatP=1,cTyp=62001,&
+      longname='Total accumulated dry deposition (surface) of dust (sum of all modes)')
+PARAM(503729,'TOT_ACCEMISS_DUST',dis=0,cat=20,num=3,T_StatP=1,cTyp=62001,&
+      longname='Total accumulated dust emission (sum of all modes)')
+PARAM(503730,'TOT_ACCSEDIM_DUST',dis=0,cat=20,num=11,T_StatP=1,cTyp=62001,&
+      longname='Total accumulated sedimentation of dust (sum of all modes)')
+PARAM(503731,'TOT_ACCWETDEPO_DUST',dis=0,cat=20,num=7,T_StatP=1,cTyp=62001,&
+      longname='Total accumulated wet deposition of dust (sum of all modes)')
+PARAM(503732,'NCM_AW_WP',dis=0,cat=15,num=220,&
+      longname='NowCastMIX-AutoWARN (Warnpolygone: Gewitter, Starkregen, Schnee, gefrierender Regen)')
+PARAM(503733,'NCM_AW_SPA',dis=0,cat=15,num=221,&
+      longname='NowCastMIX-AutoWARN (Schneepolygon-Attribute)')
+PARAM(503734,'NCM_A_RADOLAN',dis=0,cat=15,num=222,&
+      longname='NowCastMIX-Aviation (Konvektiver Status, Radolan-Gebiet)')
+PARAM(503735,'NCM_A_EUCOM',dis=0,cat=15,num=223,&
+      longname='NowCastMIX-Aviation (Konvektiver Status, EuCOM-Gebiet)')
+PARAM(503736,'NCM_A_WINTER_W',dis=0,cat=15,num=224,&
+      longname='NowCastMIX-Winterwetter (Schnee, gefrierender Regen, Radolan-Gebiet)')
+PARAM(503737,'TOT_PR_MAX',dis=0,cat=1,num=52,T_StatP=2,&
+      longname='Maximum total precipitation rate')
+PARAM(503738,'PERSCONTT',dis=0,cat=19,num=48,&
+      longname='Top of persistent contrails')
+PARAM(503739,'PERSCONTB',dis=0,cat=19,num=49,&
+      longname='Base of persistent contrails')
+PARAM(503740,'NCM_AW_WKVL',dis=0,cat=15,num=225,&
+      longname='NowCastMIX-AutoWARN (Gewitter-Warnkeulen mit variablen L??ngen)')
+PARAM(503741,'NCM_A_STARKREGEN',dis=0,cat=15,num=226,&
+      longname='NowCastMIX-Aviation (Starkregen, Radolan-Gebiet)')
+PARAM(503742,'NCM_AW_SFG',dis=0,cat=15,num=227,&
+      longname='NowCastMIX-AutoWARN (Schneefallgrenze)')
+PARAM(503743,'U_10M_AV',dis=0,cat=2,num=2,T_StatP=0,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='U-component of 10m wind - time average')
+PARAM(503744,'V_10M_AV',dis=0,cat=2,num=3,T_StatP=0,T_FFS=103,SF_FFS=0,SV_FFS=10,&
+      longname='V-component of 10m wind - time average')
+PARAM(503745,'SOBS_RAD_OS',dis=0,cat=4,num=9,T_FFS=208,&
+      longname='Net short wave radiation flux at surface on horizontal plane including orographic shading')
+PARAM(503746,'SOBS_RAD_TAN_OS',dis=0,cat=4,num=9,T_FFS=209,&
+      longname='Net short wave radiation flux at surface on tangent plane to terrain including orographic shading')
+PARAM(503747,'SWDIFUS_RAD_OS',dis=0,cat=4,num=8,T_FFS=208,&
+      longname='Upward diffusive short wave radiation flux at surface on horizontal plane including orographic shadi')
+PARAM(503748,'SWDIFUS_RAD_TAN_OS',dis=0,cat=4,num=8,T_FFS=209,&
+      longname='Upward diffusive short wave radiation flux at surface on tangent plane to terrain including orograph')
+PARAM(503749,'PABS_RAD_TAN_OS',dis=0,cat=4,num=10,T_FFS=209,&
+      longname='Photosynthetically active radiation at surface on tangent plane to terrain including orographic shad')
+PARAM(503750,'ASOB_S_OS',dis=0,cat=4,num=9,T_StatP=0,T_FFS=208,&
+      longname='Net short wave radiation flux at surface on horizontal plane including orographic shading - time ave')
+PARAM(503751,'ASOB_S_TAN_OS',dis=0,cat=4,num=9,T_StatP=0,T_FFS=209,&
+      longname='Net short wave radiation flux at surface on tangent plane to terrain including orographic shading - ')
+PARAM(503752,'ASWDIR_S_OS',dis=0,cat=4,num=198,T_StatP=0,T_FFS=208,&
+      longname='Downward direct short wave radiation flux at surface on horizontal plane including orographic shadin')
+PARAM(503753,'ASWDIR_S_TAN_OS',dis=0,cat=4,num=198,T_StatP=0,T_FFS=209,&
+      longname='Downward direct short wave radiation flux at surface on tangent plane to terrain including orographi')
+PARAM(503754,'ASOD_S_OS',dis=0,cat=4,num=7,T_StatP=0,T_FFS=208,&
+      longname='Downward short wave radiation flux at surface on horizontal plane including orographic shading - tim')
+PARAM(503755,'ASOD_S_TAN_OS',dis=0,cat=4,num=7,T_StatP=0,T_FFS=209,&
+      longname='Downward short wave radiation flux at surface on tangent plane to terrain including orographic shadi')
+PARAM(503756,'ASWDIFU_S_OS',dis=0,cat=4,num=8,T_StatP=0,T_FFS=208,&
+      longname='Upward diffusive short wave radiation flux at surface on horizontal plane including orographic shadi')
+PARAM(503757,'ASWDIFU_S_TAN_OS',dis=0,cat=4,num=8,T_StatP=0,T_FFS=209,&
+      longname='Upward diffusive short wave radiation flux at surface on tangent plane to terrain including orograph')
+PARAM(503758,'APAB_S_TAN_OS',dis=0,cat=4,num=10,T_StatP=0,T_FFS=209,&
+      longname='Photosynthetically active radiation at surface on tangent plane to terrain including orographic shad')
+PARAM(503759,'USEA',dis=10,cat=4,num=23,&
+      longname='Zonal component of sea water velocity (west-east direction counted positive)')
+PARAM(503760,'VSEA',dis=10,cat=4,num=24,&
+      longname='Meridional component of sea water velocity (south-north direction counted positive)')
+PARAM(503761,'H_SNOW_SEAICE',dis=10,cat=2,num=192,&
+      longname='Snow depth over sea ice (total depth)')
+PARAM(503762,'HSTRF_SEA',dis=10,cat=192,num=20,&
+      longname='Stretching factor of rescaled height coordinate zstar - ocean modelling')
+! END definitions
+#define TABSIZE 1685
