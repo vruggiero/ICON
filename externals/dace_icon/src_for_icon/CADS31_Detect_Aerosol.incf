@@ -1,0 +1,327 @@
+SUBROUTINE CADS_Detect_Aerosol ( &
+&    K__Sensor,                  &
+&    K__NChans,                  &
+&    K__ChanID,                  &
+&    K__Aerosol_Type,            &
+&    K__Aerosol_Flag,            &
+&    P__Land_Fraction,           &
+&    P__ObsBTs,                  &
+&    P__CldLev,                  &
+&    aer_out                   )  !RF
+
+!   This software was developed within the context of the EUMETSAT
+!   Satellite Application Facility on Numerical Weather Prediction
+!   (NWP SAF), under the Cooperation Agreement dated 7 December 2016,
+!   between EUMETSAT and the Met Office, UK, by one or more partners
+!   within the NWP SAF. The partners in the NWP SAF are the Met
+!   Office, ECMWF, DWD and MeteoFrance.
+!
+!   Copyright 2020, EUMETSAT, All Rights Reserved.
+
+!   * CADS_Detect_Aerosol *
+!   A. Collard  ECMWF 17/05/06
+
+!   * PURPOSE *
+!   -----------
+!   Identify IR radiances that are affected by aerosol in the FOV.
+
+!   * INTERFACE *
+!   -------------
+!   *CALL* * CADS_Detect_Aerosol()* from CADS_Main.
+
+!   * METHOD *
+!   ----------
+!   A unique theoretically derived aerosol signal is sought through
+!   observed brightness temperature differences in two spectral
+!   locations within long-wave window region. Two additional spectral
+!   locations are made use of to identify the aerosol type. Affected
+!   channels are flagged, and what is considered affected depends on
+!   the aerosol type.
+
+!   * MODIFICATIONS *
+!   -----------------
+!   17/05/06  1.0 Original code.                                   A. Collard
+!   19/10/06  1.1 Modification to present channels test.           A. Collard
+!   13/01/15  2.1 Make array size specifications implicit.         R. Eresmaa
+!   10/11/15  2.2 New algorithm.             J. Letertre-Danczak & R. Eresmaa
+!   29/12/16  2.3 Make sensor-independent.   J. Letertre-Danczak & R. Eresmaa
+!   05/02/19  2.4 Channel-specific flagging.                       R. Eresmaa
+!                 Explicit KIND specifications.                    R. Eresmaa
+!   16/04/20  3.0 Aerosol type recognition.                        R. Eresmaa
+
+USE CADS31_Module, ONLY : S__CADS_Setup_Aerosol
+
+IMPLICIT NONE
+
+! Subroutine arguments
+INTEGER(i4), INTENT(IN)  :: K__Sensor          ! Sensor ID
+INTEGER(i4), INTENT(IN)  :: K__NChans          ! Number of channels
+INTEGER(i4), INTENT(IN)  :: K__ChanID(:)       ! Channel index list
+INTEGER(i4), INTENT(OUT) :: K__Aerosol_Type    ! Aerosol type (output)
+INTEGER(i4), INTENT(OUT) :: K__Aerosol_Flag(:) ! Aerosol flags (output)
+REAL(wp),    INTENT(IN)  :: P__Land_Fraction   ! Land fraction in FOV
+REAL(wp),    INTENT(IN)  :: P__ObsBTs(:)       ! Brightness temperature
+                                                   ! observations
+REAL(wp),    INTENT(IN)  :: P__CldLev(:)       ! Channel height assignments
+type(t_aer_out), intent(inout), optional :: aer_out          ! RF
+
+! Local variables
+INTEGER(i4)              :: J, I__TB, I__K, I__Test, I__R
+INTEGER(i4)              :: I__MaxChans
+INTEGER(i4)              :: I__Num_Aerosol_Chans
+INTEGER(i4)              :: I__Num_Regression
+INTEGER(i4)              :: I__Aerosol
+INTEGER(i4), POINTER     :: I__Aerosol_Chans(:)
+INTEGER(i4)              :: I__M
+INTEGER(i4)              :: I__Mean_Aerosol_Chans
+INTEGER(i4), ALLOCATABLE :: I__NumFoundChans_1(:)
+INTEGER(i4)              :: I__Mean2_Aerosol_Chans
+
+REAL(wp)                 :: Z__DIFF_Aerosol
+REAL(wp)                 :: Z__Rank_Threshold
+REAL(wp)                 :: Z__Minposition
+REAL(wp)                 :: Z__Rank_Normalized(K__NChans)
+REAL(wp)                 :: Z__AOD, Z__Dust_AOD, Z__Ash_AOD, Z__Other_AOD
+REAL(wp), POINTER        :: Z__TBD(:)
+REAL(wp), POINTER        :: Z__coef_AOD(:)
+REAL(wp), ALLOCATABLE    :: Z_TBM(:)
+REAL(wp)                 :: Z__Rank_Thres_Coeff(3)
+REAL(wp)                 :: Z__Unclassified_Threshold
+REAL(wp)                 :: Z__LSM_Threshold
+REAL(wp)                 :: Z__Min_Cldlev, Z__Max_Cldlev
+REAL(wp)                 :: Z__SuperBTDiff(6)
+REAL(wp)                 :: z__p
+
+logical :: l_out, l_found_type
+
+!-----------------------------------
+! Initialise
+!-----------------------------------
+
+if (present(aer_out)) then !RF
+   l_out = aer_out%l_out
+else
+   l_out = .false.
+endif
+
+Z__SuperBTDiff(:)=0.0
+
+K__Aerosol_Type = 0 ! Initialize to 0: no aerosol
+                    ! Other possibilities:
+                    ! 1: Desert dust
+                    ! 2: Volcanic ash
+                    ! 3: Other
+                    ! 4: Any type over land
+
+I__MaxChans = &
+&      MAXVAL(S__CADS_Setup_Aerosol(K__Sensor) % N__Num_Aerosol_Chans(:))
+Z__Rank_Thres_Coeff(1:3) = &
+&      S__CADS_Setup_Aerosol(K__Sensor) % R__Rank_Thres_Coeff(1:3)
+Z__Unclassified_Threshold = &
+&      S__CADS_Setup_Aerosol(K__Sensor) % R__Unclassified_Thres
+Z__LSM_Threshold = &
+&      S__CADS_Setup_Aerosol(K__Sensor) % R__Land_Fraction_Thres
+
+!-----------------------------------
+! Loop through tests
+!-----------------------------------
+
+ALLOCATE(Z_TBM(I__MaxChans))
+ALLOCATE(I__NumFoundChans_1(I__MaxChans))
+
+I__Aerosol=0
+Z__AOD=0.0
+l_found_type=.false. !RF
+
+TestLoop : DO I__Test = &
+&                1, S__CADS_Setup_Aerosol(K__Sensor) % N__Num_Aerosol_Tests
+
+   I__Num_Aerosol_Chans = &
+&        S__CADS_Setup_Aerosol(K__Sensor) % N__Num_Aerosol_Chans(I__Test)
+   I__Num_Regression = &
+&        S__CADS_Setup_Aerosol(K__Sensor) % N__Num_Regression(I__Test)
+   I__Aerosol_Chans => S__CADS_Setup_Aerosol(K__Sensor) % &
+&        N__Aerosol_Chans(I__Test,1:I__Num_Aerosol_Chans)
+   Z__TBD => S__CADS_Setup_Aerosol(K__Sensor) % &
+&        R__Aerosol_TBD(I__Test,1:I__Num_Aerosol_Chans)
+   Z__coef_AOD => S__CADS_Setup_Aerosol(K__Sensor) % &
+&        R__coef_AOD(I__Test,1:I__Num_Regression)
+   I__Mean_Aerosol_Chans = S__CADS_Setup_Aerosol(K__Sensor) % &
+&        N__Mean_Aerosol_Chans
+   I__Mean2_Aerosol_Chans = int(I__Mean_Aerosol_Chans/2)+1
+
+   DO I__TB=1, I__Num_Aerosol_Chans
+      I__NumFoundChans_1(I__TB)=0
+      Z_TBM(I__TB)=0
+   ENDDO
+
+   Z__Min_Cldlev=P__CldLev(1)
+   Z__Max_Cldlev=P__CldLev(1)
+
+   DO I__K=1,K__NChans
+      IF (P__ObsBTs(I__K) <= 0.) CYCLE
+      DO I__TB=1, I__Num_Aerosol_Chans
+         DO J=1, I__Mean_Aerosol_Chans
+            I__M = I__Aerosol_Chans(I__TB)-I__Mean2_Aerosol_Chans+J
+            IF (I__M == K__ChanID(I__K)) THEN
+               Z_TBM(I__TB) = Z_TBM(I__TB)+P__ObsBTs(I__K)
+               I__NumFoundChans_1(I__TB) = I__NumFoundChans_1(I__TB)+1
+            ENDIF
+         ENDDO
+      ENDDO
+
+      IF (P__CldLev(I__K) <= 0. .OR. I__K==1) CYCLE
+      IF (P__CldLev(I__K)<Z__Min_Cldlev) Z__Min_Cldlev=P__CldLev(I__K)
+      IF (P__CldLev(I__K)>Z__Max_Cldlev) Z__Max_Cldlev=P__CldLev(I__K)
+
+   ENDDO
+   if (l_debug) print*, 'debug_spot detect_aer min/max_cldlev',Z__Min_Cldlev,Z__Max_Cldlev !RF
+   
+
+   DO I__TB=1, I__Num_Aerosol_Chans
+      if (l_debug) print*, 'debug_spot detect_aer z_tbm',i__tb,I__NumFoundChans_1(I__TB),Z_TBM(i__tb)  !RF
+      IF(I__NumFoundChans_1(I__TB)==0) CYCLE TestLoop
+      Z_TBM(I__TB) = Z_TBM(I__TB)/I__NumFoundChans_1(I__TB)
+   ENDDO
+
+   IF (I__Test==1) THEN
+      Z__SUPERBTDIFF(1)=Z_TBM(1)-Z_TBM(2)
+      Z__SUPERBTDIFF(2)=Z_TBM(3)-Z_TBM(4)
+   ELSEIF (I__Test==2) THEN
+      Z__SUPERBTDIFF(3)=Z_TBM(1)-Z_TBM(2)
+      Z__SUPERBTDIFF(4)=Z_TBM(3)-Z_TBM(4)
+   ELSE
+      Z__SUPERBTDIFF(5)=Z_TBM(1)-Z_TBM(2)
+      Z__SUPERBTDIFF(6)=Z_TBM(3)-Z_TBM(4)
+   ENDIF
+
+
+   Z__DIFF_Aerosol=Z_TBM(1)-Z_TBM(2)
+   if (l_debug) print*, 'debug_spot detect_aer z__tbd(1)',Z__DIFF_Aerosol, Z__TBD(1)
+   IF (Z__DIFF_Aerosol <= Z__TBD(1)) I__Aerosol=I__Aerosol+1
+   Z__DIFF_Aerosol=Z_TBM(3)-Z_TBM(4)
+   if (l_debug) print*, 'debug_spot detect_aer z__tbd(2)',Z__DIFF_Aerosol, Z__TBD(2)
+   IF (Z__DIFF_Aerosol <= Z__TBD(2)) I__Aerosol=I__Aerosol+1
+
+   if (l_debug) print*, 'debug_spot detect_aer i__aerosol',i__aerosol !RF
+
+   Z__AOD=0
+   DO I__R=1, I__Num_Regression
+      Z__AOD=Z__AOD+Z__coef_AOD(I__R)*(Z__DIFF_Aerosol**(I__R-1))
+   ENDDO
+   IF (Z__AOD < 0.0) Z__AOD=0.0
+
+   IF (I__Test==1) THEN
+      Z__Dust_AOD=Z__AOD
+      if (l_out) aer_out%aod_dust = z__aod !RF
+      if (.not.l_found_type) then !RF
+        IF (I__Aerosol==2) THEN
+          K__Aerosol_Type=1
+        ELSE
+          K__Aerosol_Type=0
+          l_found_type = .true.
+          if (.not.l_out) EXIT TestLoop ! No aerosol, thus no need to test further.
+        ENDIF
+      end if
+   ELSEIF (I__Test==2) THEN
+      Z__Ash_AOD=Z__AOD
+      if (l_out) aer_out%aod_ash = z__aod !RF
+      if (.not.l_found_type) then !RF
+        IF (I__Aerosol==4) THEN
+          K__Aerosol_Type=2
+          l_found_type = .true.
+          if (.not.l_out) EXIT TestLoop ! Aerosol present and identified as volcanic ash.
+        ELSE
+          I__Aerosol=2
+        ENDIF
+      end if
+   ELSEIF (I__Test==3) THEN
+      Z__Other_AOD=Z__AOD
+      if (l_out) aer_out%aod_other = z__aod !RF
+      if (.not.l_found_type) then !RF
+        IF (I__Aerosol==4) THEN
+          K__Aerosol_Type=1
+        ELSE
+          K__Aerosol_Type=3
+        ENDIF
+      end if
+   ENDIF
+
+ENDDO TestLoop
+
+if (l_out) aer_out%aer_type = k__aerosol_type !RF
+
+if (l_debug) print*, 'debug_spot detect_aer aerosol_type',k__aerosol_type !RF
+
+K__Aerosol_Flag(:)=0
+Z__Rank_Threshold = 0._wp
+IF (K__Aerosol_Type==1) THEN
+! For desert dust aerosol, rejection threshold depends on the AOD
+! estimate
+   Z__AOD=Z__Dust_AOD
+
+   Z__Rank_Threshold = 1.0
+   IF (Z__Dust_AOD>1.0E-6) THEN
+      Z__Rank_Threshold = ( &
+&      ( Z__Rank_Thres_Coeff(1)/Z__Dust_AOD) - Z__Rank_Thres_Coeff(2) ) / &
+&        Z__Rank_Thres_Coeff(3)
+   ENDIF
+
+ELSEIF (K__Aerosol_Type==2) THEN
+! For volcanic ash, set rejection threshold such that all channels get
+! rejected
+  Z__AOD=Z__Ash_AOD
+  Z__Rank_Threshold=-1.0
+
+ELSEIF (K__Aerosol_Type==3) THEN
+! For other aerosol detections, reject according to the unclassified
+! threshold (0.0 or less rejects all, 1.0 or more rejects none)
+  Z__AOD=Z__Other_AOD
+  Z__Rank_Threshold=Z__Unclassified_Threshold
+
+ENDIF
+
+! If a meaningful land-fraction threshold is set, reject full spectra
+! in case of any aerosol over land.
+IF (P__Land_Fraction>Z__LSM_Threshold .AND. K__Aerosol_Type/=0) THEN
+  K__Aerosol_Type=4
+  Z__Rank_Threshold=-1.0
+ENDIF
+
+if (l_out) aer_out%hgt_thresh = z__rank_threshold !RF
+
+if (l_debug) print*, 'debug_spot detect_aer rank_threshold',Z__Rank_Threshold, l_rank_p !RF
+
+! RF: correct for misdefinition of "normalized heights"
+! The thresholds are defined by ECMWF with their 137-levels. However, the
+! the "normalized height" depends on the vertical distribution of levels.
+if (l_rank_p .and. z__rank_threshold > 0._wp) then
+  ! transform normalized height into p
+  ! Works if input p__cldlev is pressure
+  call nhgt2p(z__rank_threshold, z__p, z__min_cldlev, z__max_cldlev)
+  z__rank_threshold = (z__p - z__min_cldlev) / (z__max_cldlev - z__min_cldlev)
+  if (l_debug) print*, 'debug_spot detect_aer rank_threshold corrected',&
+       Z__Rank_Threshold
+endif
+
+IF (K__Aerosol_Type>0) THEN
+  Z__Rank_Normalized(:) = (P__CldLev(:) - Z__Min_Cldlev) / &
+&      ( Z__Max_Cldlev-Z__Min_Cldlev )
+  WHERE (Z__Rank_Normalized(:)>Z__Rank_Threshold) K__Aerosol_Flag(:)=1
+
+  if (l_debug) then !RF
+    do j = 1, K__NChans
+       print*,'debug_spot detect_aer rank_normalized',j,k__chanID(j),p__cldlev(j),&
+           Z__Rank_Normalized(j),Z__Rank_Threshold,K__Aerosol_Flag(j)
+    end do
+  endif
+
+ENDIF
+
+IF (ALLOCATED(Z_TBM))              DEALLOCATE(Z_TBM)
+IF (ALLOCATED(I__NumFoundChans_1)) DEALLOCATE(I__NumFoundChans_1)
+
+NULLIFY(I__Aerosol_Chans)
+NULLIFY(Z__TBD,Z__coef_AOD)
+
+END SUBROUTINE CADS_Detect_Aerosol

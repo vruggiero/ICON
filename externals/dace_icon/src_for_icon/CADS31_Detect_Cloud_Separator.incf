@@ -1,0 +1,176 @@
+SUBROUTINE CADS_Detect_Cloud_Separator( &
+&    K__Sensor,         &
+&    K__Band,           &
+&    K__NumChans,       &
+&    K__GradChkInterval,&
+&    K__Index,          &
+&    K__Cloud_Flag,     &
+&    K__Cloud_Level,    &
+&    K__Clear_Level,    &
+&    K__Scen_Index,     &
+&    K__Start_Channel,  &
+&    P__DBT)
+
+!   This software was developed within the context of the EUMETSAT
+!   Satellite Application Facility on Numerical Weather Prediction
+!   (NWP SAF), under the Cooperation Agreement dated 7 December 2016,
+!   between EUMETSAT and the Met Office, UK, by one or more partners
+!   within the NWP SAF. The partners in the NWP SAF are the Met
+!   Office, ECMWF, DWD and MeteoFrance.
+!
+!   Copyright 2020, EUMETSAT, All Rights Reserved.
+
+!   * CADS_Detect_Cloud_Separator *
+!   PHIL WATTS   ECMWF   21/01/02
+
+!   * PURPOSE *
+!   -----------
+!   Along the vertically-ranked and smoothed array of departures, find
+!   the separating point at which all cloud-affected channels are on
+!   one side and all clear channels are on the other side.
+
+!   * INTERFACE *
+!    ------------
+!   * CALL* * CADS_Detect_Cloud_Separator( )* (from CADS_Detect_Cloud)
+!   WHERE K__Sensor          : Satellite sensor (AIRS/IASI/CrIS)
+!         K__Band            : Band number
+!         K__NumChans        : Number of channels in this band
+!         K__GradChkInterval : Gradient-checking interval
+!         K__Index           : Ranking index for the input dBT signal
+!         K__Cloud_Flag      : Cloud flag by channel; 0=clear, 1=cloudy
+!         K__Cloud_Level     : Index of the highest cloud-contaminated channel
+!         K__Clear_Level     : Index of the lowest clear channel
+!         K__Scen_Index      : Choice of cloud detection scenario (1, 2, or 3)
+!         K__Start_Channel   : Starting channel for the cloud search
+!         P__DBT             : Input dBT signal
+
+!    MODIFICATIONS
+!    03/02/06   A.Collard   1.0   Tidy up in preparation for IASI
+!    03/05/06   A.Collard   1.0.1 Band size is now passed in (allows for
+!                                 missing channels).
+!    04/05/06   A.Collard   1.0.2 The index of the first cloudy channel is now
+!                                 returned to allow cross-band cloud detection
+!    16/02/07   A.Collard   1.0.3 Change to the padding to allow the bottom
+!                                 channel to be flagged as clear in a
+!                                 non-quickstart situation.
+!    16/01/09   A.Collard   1.1   Gradient check on quick exit
+!                                 Start channel for cold start moved to highest
+!                                 channel where BT threshold exceeded
+!    11/11/11   R.Eresmaa   1,2   Index of the lowest clear channel added to
+!                                 the output parameters.
+!                                 Change of the starting channel is no longer
+!                                 allowed in cases where gradient > -threshold.
+!    04/12/13   R.Eresmaa   2.0   Allow quick exit only if collocated imager
+!                                 data supports hypothesis of a clear FOV
+!    13/01/15   R.Eresmaa   2.1   Remove the need to create temporary array in
+!                                 the call to MOVINGA.
+!    04/02/19   R.Eresmaa   2.4   Explicit KIND specifications.
+!    16/04/20   R.Eresmaa   3.0   Divide the previous CF_Digital in two:
+!                                 Cloud_Scenario and Cloud_Separator (here).
+
+USE CADS31_Module, ONLY : S__CADS_Setup_Cloud
+
+IMPLICIT NONE
+
+!* 0.1 Global arrays
+INTEGER(i4), INTENT(IN) :: K__SENSOR           ! Sensor
+INTEGER(i4), INTENT(IN) :: K__Band             ! Band number
+INTEGER(i4), INTENT(IN) :: K__NumChans         ! Number of usable channels
+                                                   ! in band
+INTEGER(i4), INTENT(IN) :: K__GradChkInterval  ! Gradient-check interval
+INTEGER(i4), INTENT(IN) :: K__INDEX(:)         ! Ranking index for dBT
+INTEGER(i4), INTENT(INOUT) :: K__Cloud_Flag(:) ! Cloud flags
+INTEGER(i4), INTENT(OUT)   :: K__Cloud_Level   ! Index of highest cloudy
+                                                   ! channel
+INTEGER(i4), INTENT(OUT)   :: K__Clear_Level   ! Index of lowest clear
+                                                   ! channel
+INTEGER(i4), INTENT(IN)    :: K__Scen_Index    ! Choice of scenario
+INTEGER(i4), INTENT(IN)    :: K__Start_Channel ! Choice of scenario
+REAL(wp), INTENT(IN)       :: P__DBT(:)        ! Input ranked dBT signal
+
+
+! Local variables
+REAL(wp), ALLOCATABLE :: Z__DBT_w_Buffer(:) ! Smoothed-ranked DBT
+INTEGER(i4) :: I__Buffer                    ! No. of buffer channels
+INTEGER(i4) :: JCH,I
+
+! These carry the values in S__CADS_Setup_Cloud
+REAL(wp)  :: Z__BT_Threshold          ! Solution contaminated threshold
+REAL(wp)  :: Z__Grad_Threshold        ! Gradient threshold at which to stop
+                                          ! filter procession
+
+!=============================================================================
+
+
+Z__BT_Threshold    = &
+&    S__CADS_Setup_Cloud(K__SENSOR) % R__BT_Threshold(K__Band)
+Z__Grad_Threshold =  &
+&    S__CADS_Setup_Cloud(K__SENSOR) % R__Grad_Threshold(K__Band)
+
+K__Cloud_Flag(:)=1
+
+
+!1. Include buffer channels at the start and end of the input smoothed
+!   departure array
+
+I__BUFFER = K__GradChkInterval
+ALLOCATE(Z__DBT_w_Buffer(-I__Buffer+1:K__NumChans+1))
+
+Z__DBT_w_Buffer(1:K__NumChans) = P__DBT(:)
+Z__DBT_w_Buffer(-I__BUFFER+1:0) = Z__DBT_w_Buffer(1)
+Z__DBT_w_Buffer(K__NumChans+1) = Z__DBT_w_Buffer(K__NumChans)
+
+
+!2. Search for the lowest non-contaminated channel
+
+JCH = K__Start_Channel
+
+SELECT CASE (K__Scen_Index)
+
+CASE (1) ! Quick Exit
+  K__Cloud_Level = 0
+
+CASE (2) ! Warm Start
+! In the case of Warm Start, progress towards higher channels whilst
+! -ve difference is decreasing
+  DO WHILE ( ((Z__DBT_w_Buffer(JCH-1)-Z__DBT_w_Buffer(JCH+1)) < &
+&              -1.0*Z__Grad_Threshold .OR. &
+&    (Z__DBT_w_Buffer(JCH-K__GradChkInterval)-Z__DBT_w_Buffer(JCH+1)) <  &
+&              -1.0*Z__Grad_Threshold .OR. &
+&       ABS(Z__DBT_w_Buffer(JCH)) > Z__BT_Threshold) .AND. JCH > 1 )
+    JCH = JCH-1
+  ENDDO
+  K__Cloud_Level = JCH
+
+CASE (3) ! Cold Start
+! In the case of Cold Start, progress towards higher channels whilst
+! -ve difference is decreasing
+  DO WHILE (( (Z__DBT_w_Buffer(JCH-1)-Z__DBT_w_Buffer(JCH+1)) > &
+&              Z__Grad_Threshold .OR. &
+&    (Z__DBT_w_Buffer(JCH-K__GradChkInterval)-Z__DBT_w_Buffer(JCH+1)) > &
+&              Z__Grad_Threshold .OR. &
+&     ABS(Z__DBT_w_Buffer(JCH)) > Z__BT_Threshold) .AND. JCH > 1 )
+    JCH = JCH-1
+  ENDDO
+  K__Cloud_Level = JCH
+
+CASE DEFAULT
+RETURN
+
+END SELECT
+
+!3. Output channel indices for the highest cloud and lowest clear levels
+IF (K__Cloud_Level > 1) THEN
+  K__Cloud_Flag(K__INDEX(1:K__Cloud_Level-1))=0
+  K__Clear_Level=K__INDEX(K__Cloud_Level-1)
+  K__Cloud_Level=K__INDEX(K__Cloud_Level)
+ELSEIF (K__Cloud_Level>0) THEN
+  K__Clear_Level=K__INDEX(K__Cloud_Level)
+  K__Cloud_Level=K__INDEX(K__Cloud_Level)
+ELSE
+  K__Cloud_Flag(:)=0
+ENDIF
+
+IF (ALLOCATED(Z__DBT_w_Buffer)) DEALLOCATE(Z__DBT_w_Buffer)
+
+END SUBROUTINE CADS_Detect_Cloud_Separator

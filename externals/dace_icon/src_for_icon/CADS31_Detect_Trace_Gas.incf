@@ -1,0 +1,187 @@
+SUBROUTINE CADS_Detect_Trace_Gas( &
+& K__Sensor,                      &
+& K__NChans,                      &
+& K__ChanID,                      &
+& P__ObsBTs,                      &
+& P__ModelBTs,                    &
+& K__Trace_Gas_Flag )
+
+!   This software was developed within the context of the EUMETSAT
+!   Satellite Application Facility on Numerical Weather Prediction
+!   (NWP SAF), under the Cooperation Agreement dated 7 December 2016,
+!   between EUMETSAT and the Met Office, UK, by one or more partners
+!   within the NWP SAF. The partners in the NWP SAF are the Met
+!   Office, ECMWF, DWD and MeteoFrance.
+!
+!   Copyright 2020, EUMETSAT, All Rights Reserved.
+
+!    *CADS_Detect_Trace_Gas*
+!    R. Eresmaa   ECMWF   16/04/20
+
+!    * PURPOSE *
+!    -----------
+!    Identify and flag those IR sounder channels that are affected by
+!    poorly-modelled trace gases (such as HCN; Indian Ocean anomaly
+!    2015 never forget).
+
+!    * INTERFACE *
+!    -------------
+!    *CALL* * CADS_Detect_Trace_Gas( )* (from CADS_Main)
+!    WHERE K__Sensor         : Satellite sensor (AIRS/IASI/CrIS)
+!          K__NChans         : Number of channels
+!          K__ChanID         : Channel indices of input channels
+!          P__ObsBTs         : Observed Tb (K)
+!          P__ModelBTs       : Forward-modelled clear-sky Tb (K)
+!          K__Trace_Gas_Flag : Output flags (0=unaffected, 1=affected)
+
+!    * METHOD *
+!    ----------
+
+!    Compare mean BT observation and its departure from model in
+!    groups consisting of either tracer or control channels. If
+!    certain thresholds are exceeded, this is considered as a sign of
+!    excessive trace gas in the IR FOV. In such a case, flag channels
+!    at certain wavelengths as contaminated.
+
+!    * MODIFICATIONS *
+!    -----------------
+!    None.
+
+USE CADS31_Module, ONLY : S__CADS_Setup_Trace_Gas
+
+IMPLICIT NONE
+
+!* 0.1 Global arrays
+INTEGER(i4),INTENT(IN)  :: K__Sensor
+INTEGER(i4),INTENT(IN)  :: K__Nchans
+INTEGER(i4),INTENT(IN)  :: K__ChanID(:)
+REAL(wp)   ,INTENT(IN)  :: P__ObsBTs(:)
+REAL(wp)   ,INTENT(IN)  :: P__ModelBTs(:)
+INTEGER(i4),INTENT(OUT) :: K__Trace_Gas_Flag(:)
+
+!* 0.2 local variables
+INTEGER(i4)              :: J, I_K, ICHAN
+INTEGER(i4),ALLOCATABLE  :: I__Sup_Count(:,:)
+REAL(wp),ALLOCATABLE     :: Z__Sup_Meanobs(:,:)
+REAL(wp),ALLOCATABLE     :: Z__Sup_MeanDep(:,:)
+LOGICAL                      :: L__Tracegas
+
+INTEGER(i4)          :: I__Num_Trace_Gas_Checks    ! Number of of trace
+                                                       ! gases
+INTEGER(i4), POINTER :: I__Num_Tracer_Channels(:)  ! Number of tracer
+                                                       ! channels
+INTEGER(i4), POINTER :: I__Tracer_Channels(:,:)    ! Tracer channel lists
+INTEGER(i4), POINTER :: I__Num_Control_Channels(:) ! Number of control
+                                                       ! channels
+INTEGER(i4), POINTER :: I__Control_Channels(:,:)   ! Control channel lists
+INTEGER(i4), POINTER :: I__Num_Flagged_Channels(:) ! Number of affected
+                                                       ! channels
+INTEGER(i4), POINTER :: I__Flagged_Channels(:,:)   ! Affected channel lists
+REAL(wp), POINTER    :: Z__D_Obs_Threshold(:)      ! Threshold for
+                                                       ! observation difference
+REAL(wp), POINTER    :: Z__D_Dep_Threshold(:)      ! Threshold for FG
+                                                       ! departure difference
+
+
+K__Trace_Gas_Flag(:)=0       ! default is to be not affected
+
+
+! Retrieve the tuning parameter values from the module
+
+I__Num_Trace_Gas_Checks =  S__CADS_Setup_Trace_Gas(K__Sensor) % &
+&     N__Num_Trace_Gas_Checks
+I__Num_Tracer_Channels  => S__CADS_Setup_Trace_Gas(K__Sensor) % &
+&     N__Num_Tracer_Channels
+I__Tracer_Channels      => S__CADS_Setup_Trace_Gas(K__Sensor) % &
+&     N__Tracer_Channels
+I__Num_Control_Channels => S__CADS_Setup_Trace_Gas(K__Sensor) % &
+&     N__Num_Control_Channels
+I__Control_Channels     => S__CADS_Setup_Trace_Gas(K__Sensor) % &
+&     N__Control_Channels
+I__Num_Flagged_Channels => S__CADS_Setup_Trace_Gas(K__Sensor) % &
+&     N__Num_Flagged_Channels
+I__Flagged_Channels     => S__CADS_Setup_Trace_Gas(K__Sensor) % &
+&     N__Flagged_Channels
+Z__D_Obs_Threshold      => S__CADS_Setup_Trace_Gas(K__Sensor) % &
+&     R__D_Obs_Threshold
+Z__D_Dep_Threshold      => S__CADS_Setup_Trace_Gas(K__Sensor) % &
+&     R__D_Dep_Threshold
+
+
+! Mean observed brightness temperature in tracer and control channel groups
+
+ALLOCATE (I__Sup_Count(I__Num_Trace_Gas_Checks,2))
+ALLOCATE (Z__Sup_Meanobs(I__Num_Trace_Gas_Checks,2))
+ALLOCATE (Z__Sup_MeanDep(I__Num_Trace_Gas_Checks,2))
+
+I__Sup_Count(:,:)=0
+Z__Sup_Meanobs(:,:)=0.0
+Z__Sup_MeanDep(:,:)=0.0
+
+DO ICHAN=1,K__Nchans
+
+   DO J=1,I__Num_Trace_Gas_Checks
+      DO I_K=1,I__Num_Tracer_Channels(J)
+         IF ( K__Chanid(ICHAN) == I__Tracer_Channels(J,I_K) .AND. &
+&             P__ObsBTs(ICHAN)>0.0 .AND. &
+&             P__ModelBTs(ICHAN)>0.0 ) THEN
+            I__Sup_Count(J,1)=I__Sup_Count(J,1)+1
+            Z__Sup_Meanobs(J,1)=Z__Sup_Meanobs(J,1)+P__ObsBTs(ICHAN)
+            Z__Sup_MeanDep(J,1)=Z__Sup_MeanDep(J,1)+ &
+&              P__ObsBTs(ICHAN) - P__ModelBTs(ICHAN)
+         ENDIF
+      ENDDO
+   ENDDO
+
+   DO J=1,I__Num_Trace_Gas_Checks
+      DO I_K=1,I__Num_Control_Channels(J)
+         IF ( K__Chanid(ICHAN) == I__Control_Channels(J,I_K) .AND. &
+&             P__ObsBTs(ICHAN)>0.0 .AND. &
+&             P__ModelBTs(ICHAN)>0.0 ) THEN
+            I__Sup_Count(J,2)=I__Sup_Count(J,2)+1
+            Z__Sup_Meanobs(J,2)=Z__Sup_Meanobs(J,2)+P__ObsBTs(ICHAN)
+            Z__Sup_MeanDep(J,2)=Z__Sup_MeanDep(J,2)+ &
+&             P__ObsBTs(ICHAN) - P__ModelBTs(ICHAN)
+         ENDIF
+      ENDDO
+   ENDDO
+
+ENDDO
+
+WHERE (I__Sup_Count(:,:)>1) Z__Sup_Meanobs(:,:) = &
+&  Z__Sup_Meanobs(:,:)/I__Sup_Count(:,:)
+
+WHERE (I__Sup_Count(:,:)>1) Z__Sup_MeanDep(:,:) = &
+&  Z__Sup_MeanDep(:,:)/I__Sup_Count(:,:)
+
+
+! Detection on the basis of brightness temperature and FG departure differences
+
+L__Tracegas=.FALSE.
+DO J=1,I__Num_Trace_Gas_Checks
+   IF ( ( Z__Sup_Meanobs(J,1)-Z__Sup_Meanobs(J,2) ) < &
+&         Z__D_Obs_Threshold(J) .AND. &
+&       ( Z__Sup_MeanDep(J,1)-Z__Sup_MeanDep(J,2) ) < &
+&         Z__D_Dep_Threshold(J) ) L__Tracegas=.TRUE.
+ENDDO
+
+
+! Flagging if necessary
+
+IF (L__Tracegas) THEN
+   DO ICHAN=1,K__Nchans
+      DO J=1,I__Num_Trace_Gas_Checks
+         DO I_K=1,I__Num_Flagged_Channels(J)
+            IF ( K__Chanid(ICHAN)==I__Flagged_Channels(J,I_K) ) &
+&                K__Trace_Gas_Flag(ICHAN)=1
+         ENDDO
+      ENDDO
+   ENDDO
+ENDIF
+
+IF (ALLOCATED(I__Sup_Count)) DEALLOCATE(I__Sup_Count)
+IF (ALLOCATED(Z__Sup_Meanobs)) DEALLOCATE(Z__Sup_Meanobs)
+IF (ALLOCATED(Z__Sup_MeanDep)) DEALLOCATE(Z__Sup_MeanDep)
+
+
+END SUBROUTINE CADS_Detect_Trace_Gas

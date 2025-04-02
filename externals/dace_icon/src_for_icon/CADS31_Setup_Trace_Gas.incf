@@ -1,0 +1,493 @@
+SUBROUTINE CADS_Setup_Trace_Gas
+
+!   This software was developed within the context of the EUMETSAT
+!   Satellite Application Facility on Numerical Weather Prediction
+!   (NWP SAF), under the Cooperation Agreement dated 7 December 2016,
+!   between EUMETSAT and the Met Office, UK, by one or more partners
+!   within the NWP SAF. The partners in the NWP SAF are the Met
+!   Office, ECMWF, DWD and MeteoFrance.
+!
+!   Copyright 2020, EUMETSAT, All Rights Reserved.
+
+!   *CADS_Setup_Trace_Gas*
+!   R. Eresmaa   ECMWF 16/04/20
+
+!   * PURPOSE *
+!   -----------
+!   Initialise trace-gas detection parameters for IR sounders.
+
+!   * INTERFACE *
+!   -------------
+!   CADS_Setup_Trace_Gas is called from CADS_Main.
+
+!   * METHOD *
+!   ----------
+!   Assign default values to the trace-gas detection parameters.
+
+!   * MODIFICATIONS *
+!   -----------------
+!   None.
+
+USE CADS31_Module, ONLY : JP__Min_Sensor_Index,    &
+&                       JP__Max_Sensor_Index,    &
+&                       INST_ID_AIRS,            &
+&                       INST_ID_CRIS,INST_ID_CRISFSR,            &
+&                       INST_ID_GIIRS,           &
+&                       INST_ID_HIRAS,           &
+&                       INST_ID_IASI,            &
+&                       INST_ID_IASING,          &
+&                       INST_ID_IKFS2,           &
+&                       INST_ID_IRS,             &
+&                       S__CADS_Setup_Trace_Gas
+
+IMPLICIT NONE
+
+! Local variables
+
+CHARACTER(LEN=6)  :: CL__InstrumentName
+CHARACTER(LEN=20) :: CL__Trace_Gas_Detection_File
+
+INTEGER(i4) :: J, J__Sensor      ! Loop variables
+INTEGER(i4) :: INIU1, IOS
+
+INTEGER(i4), PARAMETER :: JP__Max_Checks   =  8
+INTEGER(i4), PARAMETER :: JP__Max_Channels = 20
+
+!-----------------------
+! Namelist variables
+!-----------------------
+
+INTEGER(i4) :: M__Sensor
+INTEGER(i4) :: N__Num_Trace_Gas_Checks
+INTEGER(i4) :: N__Num_Tracer_Channels(JP__Max_Checks)
+INTEGER(i4) :: N__Tracer_Channels(JP__Max_Checks,JP__Max_Channels)
+INTEGER(i4) :: N__Num_Control_Channels(JP__Max_Checks)
+INTEGER(i4) :: N__Control_Channels(JP__Max_Checks,JP__Max_Channels)
+INTEGER(i4) :: N__Num_Flagged_Channels(JP__Max_Checks)
+INTEGER(i4) :: N__Flagged_Channels(JP__Max_Checks,JP__Max_Channels)
+REAL(wp)    :: R__D_Obs_Threshold(JP__Max_Checks)
+REAL(wp)    :: R__D_Dep_Threshold(JP__Max_Checks)
+
+
+! Namelist
+
+NAMELIST / Trace_Gas_Detect_Coeffs / M__Sensor,   &
+&   N__Num_Trace_Gas_Checks,                      &
+&   N__Num_Tracer_Channels, N__Tracer_Channels,   &
+&   N__Num_Control_Channels, N__Control_Channels, &
+&   N__Num_Flagged_Channels, N__Flagged_Channels, &
+&   R__D_Obs_Threshold, R__D_Dep_Threshold
+
+
+!INCLUDE 'CADS_Abort.intfb'
+
+
+!============================================================================
+
+WRITE (*,*) ''
+WRITE (*,*) 'Setting up the trace gas detection ... '
+
+!============================================================================
+!   Loop through sensors setting up trace gas detection
+!============================================================================
+
+SensorLoop : DO J__Sensor = JP__Min_Sensor_Index, JP__Max_Sensor_Index
+
+   SELECT CASE (J__Sensor)
+
+   CASE(INST_ID_AIRS)
+      !====================
+      ! Set up AIRS
+      !====================
+
+      CL__InstrumentName='AIRS'
+      CL__Trace_Gas_Detection_File = 'AIRS_TRGASDET.NL'
+
+      N__Num_Trace_Gas_Checks = 1
+
+      N__Num_Tracer_Channels(:) = 0
+      N__Num_Tracer_Channels(1:N__Num_Trace_Gas_Checks) = (/ 3 /)
+
+      N__Tracer_Channels(:,:) = 0
+      N__Tracer_Channels(1,1:N__Num_Tracer_Channels(1)) = &
+&         (/ 221, 309, 338 /)
+
+      N__Num_Control_Channels(:) = 0
+      N__Num_Control_Channels(1:N__Num_Trace_Gas_Checks) = (/ 3 /)
+
+      N__Control_Channels(:,:) = 0
+      N__Control_Channels(1,1:N__Num_Control_Channels(1)) = &
+&         (/ 227, 262, 362 /)
+
+      N__Num_Flagged_Channels(:) = 0
+      N__Num_Flagged_Channels(1:N__Num_Trace_Gas_Checks) = (/ 1 /)
+
+      N__Flagged_Channels(:,:) = 0
+      N__Flagged_Channels(1,1:N__Num_Flagged_Channels(1)) = &
+&         (/ 221 /)
+
+      R__D_Obs_Threshold(:) = 0.0
+      R__D_Obs_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -1.0 /)
+
+      R__D_Dep_Threshold(:) = 0.0
+      R__D_Dep_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -0.55 /)
+
+
+   CASE(INST_ID_IASI)
+      !====================
+      ! Set up IASI
+      !====================
+
+      CL__InstrumentName='IASI'
+      CL__Trace_Gas_Detection_File = 'IASI_TRGASDET.NL'
+
+      N__Num_Trace_Gas_Checks = 1
+
+      N__Num_Tracer_Channels(:) = 0
+      N__Num_Tracer_Channels(1:N__Num_Trace_Gas_Checks) = (/ 4 /)
+
+      N__Tracer_Channels(:,:) = 0
+      N__Tracer_Channels(1,1:N__Num_Tracer_Channels(1)) = &
+&         (/ 271, 272, 273, 375 /)
+
+      N__Num_Control_Channels(:) = 0
+      N__Num_Control_Channels(1:N__Num_Trace_Gas_Checks) = (/ 4 /)
+
+      N__Control_Channels(:,:) = 0
+      N__Control_Channels(1,1:N__Num_Control_Channels(1)) = &
+&         (/ 286, 333, 366, 379 /)
+
+      N__Num_Flagged_Channels(:) = 0
+      N__Num_Flagged_Channels(1:N__Num_Trace_Gas_Checks) = (/ 3 /)
+
+      N__Flagged_Channels(:,:) = 0
+      N__Flagged_Channels(1,1:N__Num_Flagged_Channels(1)) = &
+&         (/ 271, 272, 273 /)
+
+      R__D_Obs_Threshold(:) = 0.0
+      R__D_Obs_Threshold(1:N__Num_Trace_Gas_Checks) = (/  0.1 /)
+
+      R__D_Dep_Threshold(:) = 0.0
+      R__D_Dep_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -0.5 /)
+
+
+   CASE(INST_ID_CRIS,INST_ID_CRISFSR)
+      !====================
+      ! Set up CRIS
+      !====================
+
+      CL__InstrumentName='CRIS'
+      CL__Trace_Gas_Detection_File = 'CRIS_TRGASDET.NL'
+
+      N__Num_Trace_Gas_Checks = 1
+
+      N__Num_Tracer_Channels(:) = 0
+      N__Num_Tracer_Channels(1:N__Num_Trace_Gas_Checks) = (/ 2 /)
+
+      N__Tracer_Channels(:,:) = 0
+      N__Tracer_Channels(1,1:N__Num_Tracer_Channels(1)) = &
+&         (/ 101, 102 /)
+
+      N__Num_Control_Channels(:) = 0
+      N__Num_Control_Channels(1:N__Num_Trace_Gas_Checks) = (/ 2 /)
+
+      N__Control_Channels(:,:) = 0
+      N__Control_Channels(1,1:N__Num_Control_Channels(1)) = &
+&         (/ 103, 105 /)
+
+      N__Num_Flagged_Channels(:) = 0
+      N__Num_Flagged_Channels(1:N__Num_Trace_Gas_Checks) = (/ 1 /)
+
+      N__Flagged_Channels(:,:) = 0
+      N__Flagged_Channels(1,1:N__Num_Flagged_Channels(1)) = &
+&         (/ 101 /)
+
+      R__D_Obs_Threshold(:) = 0.0
+      R__D_Obs_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -0.60 /)
+
+      R__D_Dep_Threshold(:) = 0.0
+      R__D_Dep_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -0.20 /)
+
+
+   CASE(INST_ID_HIRAS)
+      !====================
+      ! Set up HIRAS
+      !====================
+
+      CL__InstrumentName='HIRAS'
+      CL__Trace_Gas_Detection_File = 'HIRAS_TRGASDET.NL'
+
+      N__Num_Trace_Gas_Checks = 1
+
+      N__Num_Tracer_Channels(:) = 0
+      N__Num_Tracer_Channels(1:N__Num_Trace_Gas_Checks) = (/ 2 /)
+
+      N__Tracer_Channels(:,:) = 0
+      N__Tracer_Channels(1,1:N__Num_Tracer_Channels(1)) = &
+&         (/ 101, 102 /)
+
+      N__Num_Control_Channels(:) = 0
+      N__Num_Control_Channels(1:N__Num_Trace_Gas_Checks) = (/ 2 /)
+
+      N__Control_Channels(:,:) = 0
+      N__Control_Channels(1,1:N__Num_Control_Channels(1)) = &
+&         (/ 103, 105 /)
+
+      N__Num_Flagged_Channels(:) = 0
+      N__Num_Flagged_Channels(1:N__Num_Trace_Gas_Checks) = (/ 1 /)
+
+      N__Flagged_Channels(:,:) = 0
+      N__Flagged_Channels(1,1:N__Num_Flagged_Channels(1)) = &
+&         (/ 101 /)
+
+      R__D_Obs_Threshold(:) = 0.0
+      R__D_Obs_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -999.9 /)
+
+      R__D_Dep_Threshold(:) = 0.0
+      R__D_Dep_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -999.9 /)
+
+
+   CASE(INST_ID_GIIRS)
+      !====================
+      ! Set up GIIRS
+      !====================
+
+      CL__InstrumentName='GIIRS'
+      CL__Trace_Gas_Detection_File = 'GIIRS_TRGASDET.NL'
+
+      N__Num_Trace_Gas_Checks = 1
+
+      N__Num_Tracer_Channels(:) = 0
+      N__Num_Tracer_Channels(1:N__Num_Trace_Gas_Checks) = (/ 2 /)
+
+      N__Tracer_Channels(:,:) = 0
+      N__Tracer_Channels(1,1:N__Num_Tracer_Channels(1)) = &
+&         (/  21,  22 /)
+
+      N__Num_Control_Channels(:) = 0
+      N__Num_Control_Channels(1:N__Num_Trace_Gas_Checks) = (/ 2 /)
+
+      N__Control_Channels(:,:) = 0
+      N__Control_Channels(1,1:N__Num_Control_Channels(1)) = &
+&         (/  23,  25 /)
+
+      N__Num_Flagged_Channels(:) = 0
+      N__Num_Flagged_Channels(1:N__Num_Trace_Gas_Checks) = (/ 1 /)
+
+      N__Flagged_Channels(:,:) = 0
+      N__Flagged_Channels(1,1:N__Num_Flagged_Channels(1)) = &
+&         (/  21 /)
+
+      R__D_Obs_Threshold(:) = 0.0
+      R__D_Obs_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -999.9 /)
+
+      R__D_Dep_Threshold(:) = 0.0
+      R__D_Dep_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -999.9 /)
+
+
+   CASE(INST_ID_IKFS2)
+      !====================
+      ! Set up IKFS2
+      !====================
+
+      CL__InstrumentName='IKFS2'
+      CL__Trace_Gas_Detection_File = 'IKFS2_TRGASDET.NL'
+
+      N__Num_Trace_Gas_Checks = 1
+
+      N__Num_Tracer_Channels(:) = 0
+      N__Num_Tracer_Channels(1:N__Num_Trace_Gas_Checks) = (/ 4 /)
+
+      N__Tracer_Channels(:,:) = 0
+      N__Tracer_Channels(1,1:N__Num_Tracer_Channels(1)) = &
+&         (/ 151, 152, 153, 225 /)
+
+      N__Num_Control_Channels(:) = 0
+      N__Num_Control_Channels(1:N__Num_Trace_Gas_Checks) = (/ 4 /)
+
+      N__Control_Channels(:,:) = 0
+      N__Control_Channels(1,1:N__Num_Control_Channels(1)) = &
+&         (/ 161, 195, 219, 228 /)
+
+      N__Num_Flagged_Channels(:) = 0
+      N__Num_Flagged_Channels(1:N__Num_Trace_Gas_Checks) = (/ 3 /)
+
+      N__Flagged_Channels(:,:) = 0
+      N__Flagged_Channels(1,1:N__Num_Flagged_Channels(1)) = &
+&         (/ 151, 152, 153 /)
+
+      R__D_Obs_Threshold(:) = 0.0
+      R__D_Obs_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -999.9 /)
+
+      R__D_Dep_Threshold(:) = 0.0
+      R__D_Dep_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -999.9 /)
+
+
+   CASE(INST_ID_IASING)
+      !====================
+      ! Set up IASING
+      !====================
+
+      CL__InstrumentName='IASING'
+      CL__Trace_Gas_Detection_File = 'IASING_TRGASDET.NL'
+
+      N__Num_Trace_Gas_Checks = 1
+
+      N__Num_Tracer_Channels(:) = 0
+      N__Num_Tracer_Channels(1:N__Num_Trace_Gas_Checks) = (/ 4 /)
+
+      N__Tracer_Channels(:,:) = 0
+      N__Tracer_Channels(1,1:N__Num_Tracer_Channels(1)) = &
+&         (/ 541, 543, 545, 749 /)
+
+      N__Num_Control_Channels(:) = 0
+      N__Num_Control_Channels(1:N__Num_Trace_Gas_Checks) = (/ 4 /)
+
+      N__Control_Channels(:,:) = 0
+      N__Control_Channels(1,1:N__Num_Control_Channels(1)) = &
+&         (/ 571, 665, 731, 757 /)
+
+      N__Num_Flagged_Channels(:) = 0
+      N__Num_Flagged_Channels(1:N__Num_Trace_Gas_Checks) = (/ 3 /)
+
+      N__Flagged_Channels(:,:) = 0
+      N__Flagged_Channels(1,1:N__Num_Flagged_Channels(1)) = &
+&         (/ 541, 543, 545 /)
+
+      R__D_Obs_Threshold(:) = 0.0
+      R__D_Obs_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -999.9 /)
+
+      R__D_Dep_Threshold(:) = 0.0
+      R__D_Dep_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -999.9 /)
+
+
+   CASE(INST_ID_IRS)
+      !====================
+      ! Set up IRS
+      !====================
+
+      CL__InstrumentName='IRS'
+      CL__Trace_Gas_Detection_File = 'IRS_TRGASDET.NL'
+
+      N__Num_Trace_Gas_Checks = 1
+
+      N__Num_Tracer_Channels(:) = 0
+      N__Num_Tracer_Channels(1:N__Num_Trace_Gas_Checks) = (/ 2 /)
+
+      N__Tracer_Channels(:,:) = 0
+      N__Tracer_Channels(1,1:N__Num_Tracer_Channels(1)) = &
+&         (/  21,  22 /)
+
+      N__Num_Control_Channels(:) = 0
+      N__Num_Control_Channels(1:N__Num_Trace_Gas_Checks) = (/ 2 /)
+
+      N__Control_Channels(:,:) = 0
+      N__Control_Channels(1,1:N__Num_Control_Channels(1)) = &
+&         (/  23,  25 /)
+
+      N__Num_Flagged_Channels(:) = 0
+      N__Num_Flagged_Channels(1:N__Num_Trace_Gas_Checks) = (/ 1 /)
+
+      N__Flagged_Channels(:,:) = 0
+      N__Flagged_Channels(1,1:N__Num_Flagged_Channels(1)) = &
+&         (/  21 /)
+
+      R__D_Obs_Threshold(:) = 0.0
+      R__D_Obs_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -999.9 /)
+
+      R__D_Dep_Threshold(:) = 0.0
+      R__D_Dep_Threshold(1:N__Num_Trace_Gas_Checks) = (/ -999.9 /)
+
+
+   CASE DEFAULT
+      CYCLE
+   END SELECT
+
+   !------------------------------------------------------------------
+   ! Open and read file containing trace gas detection setup for the
+   ! current instrument
+   !------------------------------------------------------------------
+
+   INIU1=10
+   call find_nml(nml='Trace_Gas_Detect_Coeffs', tag='m__sensor', val=j__sensor, status=ios, unit=iniu1)
+   if (ios == 0) then
+     write(*,'(3x,A)') trim(CL__InstrumentName)//': using namelist values'
+     read(iniu1,nml=Trace_Gas_Detect_Coeffs)
+   else
+     write(*,'(3x,A)') trim(CL__InstrumentName)//': using default values'
+   end if
+
+   M__Sensor = J__Sensor
+
+   !------------------------------------------------------------------
+   ! Set up the S__CADS_Setup_Trace_Gas structure for current sensor
+   !------------------------------------------------------------------
+
+   S__CADS_Setup_Trace_Gas(J__Sensor) % M__Sensor = M__Sensor
+
+   S__CADS_Setup_Trace_Gas(J__Sensor) % N__Num_Trace_Gas_Checks = &
+&     N__Num_Trace_Gas_Checks
+
+   ALLOCATE( S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&     N__Num_Tracer_Channels(N__Num_Trace_Gas_Checks) )
+
+   S__CADS_Setup_Trace_Gas(J__Sensor) % N__Num_Tracer_Channels(:) = &
+&     N__Num_Tracer_Channels(1:N__Num_Trace_Gas_Checks)
+
+   ALLOCATE( S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&     N__Tracer_Channels(N__Num_Trace_Gas_Checks, &
+&                         MAXVAL(N__Num_Tracer_Channels(:))) )
+
+   DO J = 1, N__Num_Trace_Gas_Checks
+      S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&        N__Tracer_Channels(J,1:N__Num_Tracer_Channels(J)) = &
+&        N__Tracer_Channels(J,1:N__Num_Tracer_Channels(J))
+   ENDDO
+
+   ALLOCATE( S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&     N__Num_Control_Channels(N__Num_Trace_Gas_Checks) )
+
+   S__CADS_Setup_Trace_Gas(J__Sensor) % N__Num_Control_Channels(:) = &
+&     N__Num_Control_Channels(1:N__Num_Trace_Gas_Checks)
+
+   ALLOCATE( S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&     N__Control_Channels(N__Num_Trace_Gas_Checks, &
+&                         MAXVAL(N__Num_Control_Channels(:))) )
+
+   DO J = 1, N__Num_Trace_Gas_Checks
+      S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&        N__Control_Channels(J,1:N__Num_Control_Channels(J)) = &
+&        N__Control_Channels(J,1:N__Num_Control_Channels(J))
+   ENDDO
+
+   ALLOCATE( S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&     N__Num_Flagged_Channels(N__Num_Trace_Gas_Checks) )
+
+   S__CADS_Setup_Trace_Gas(J__Sensor) % N__Num_Flagged_Channels(:) = &
+&     N__Num_Flagged_Channels(1:N__Num_Trace_Gas_Checks)
+
+   ALLOCATE( S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&     N__Flagged_Channels(N__Num_Trace_Gas_Checks, &
+&                         MAXVAL(N__Num_Flagged_Channels(:))) )
+
+   DO J = 1, N__Num_Trace_Gas_Checks
+      S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&        N__Flagged_Channels(J,1:N__Num_Flagged_Channels(J)) = &
+&        N__Flagged_Channels(J,1:N__Num_Flagged_Channels(J))
+   ENDDO
+
+   ALLOCATE( S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&     R__D_Obs_Threshold(N__Num_Trace_Gas_Checks) )
+
+   S__CADS_Setup_Trace_Gas(J__Sensor) % R__D_Obs_Threshold(:) = &
+&     R__D_Obs_Threshold(1:N__Num_Trace_Gas_Checks)
+
+   ALLOCATE( S__CADS_Setup_Trace_Gas(J__Sensor) % &
+&     R__D_Dep_Threshold(N__Num_Trace_Gas_Checks) )
+
+   S__CADS_Setup_Trace_Gas(J__Sensor) % R__D_Dep_Threshold(:) = &
+&     R__D_Dep_Threshold(1:N__Num_Trace_Gas_Checks)
+
+ENDDO SensorLoop
+
+END SUBROUTINE CADS_Setup_Trace_Gas

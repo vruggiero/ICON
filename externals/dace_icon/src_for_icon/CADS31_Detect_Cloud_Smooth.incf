@@ -1,0 +1,60 @@
+SUBROUTINE CADS_Detect_Cloud_Smooth(KV,KW,PV,PVA)
+
+!   This software was developed within the context of the EUMETSAT
+!   Satellite Application Facility on Numerical Weather Prediction
+!   (NWP SAF), under the Cooperation Agreement dated 7 December 2016,
+!   between EUMETSAT and the Met Office, UK, by one or more partners
+!   within the NWP SAF. The partners in the NWP SAF are the Met
+!   Office, ECMWF, DWD and MeteoFrance.
+!
+!   Copyright 2020, EUMETSAT, All Rights Reserved.
+
+!   * CADS_Detect_Cloud_Smooth * - Boxcar-averaging in a REAL array
+!   * Phil Watts  ECMWF 24/01/02
+
+!   * PURPOSE *
+!   -----------
+!   Calculate the moving average (smoothing filter) of array
+!   No error checking supplied.
+
+!   * INTERFACE *
+!   -------------
+!   *CALL* * CADS_Detect_Cloud_Smooth( )* (from CADS_Detect_Cloud)
+!   WHERE KV    : Number of elements in V
+!         KW    : Window width for filter
+!         PV    : Input array to be averaged
+!         PVA   : Averaged array
+
+!   * MODIFICATIONS *
+!   -----------------
+!   01/02/06   A.Collard   1.0   Original export version.
+!   13/01/15   R.Eresmaa   2.1   Make array size specifications implicit.
+!   05/02/19   R.Eresmaa   2.4   Explicit KIND specifications.
+!   16/04/20   R.Eresmaa   3.0   Rename and tidy up.
+
+IMPLICIT NONE
+
+!* 0.1 global variables
+INTEGER(i4), INTENT(IN)    :: KV      ! length of V
+INTEGER(i4), INTENT(IN)    :: KW      ! length of averaging window
+REAL(wp),    INTENT(IN)    :: PV(:)   ! original array
+REAL(wp),    INTENT(INOUT) :: PVA(:)  ! averaged array
+
+!* 0.2 local variables
+INTEGER(i4) :: INJ,J,I
+
+PVA(:)=0
+
+DO I = 1,KV  ! loop over array elements
+  INJ=0
+  DO J=I-KW/2,I+KW/2,1  ! loop over window
+    IF (J > 0 .AND. J < (KV+1)) THEN ! if window element exists in
+                                     ! original array
+      INJ=INJ+1
+      PVA(I)=PVA(I)+PV(J)            ! add value
+    ENDIF
+  ENDDO
+  PVA(I)=PVA(I)/REAL(INJ)            ! mean value
+ENDDO
+
+END SUBROUTINE CADS_Detect_Cloud_Smooth

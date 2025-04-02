@@ -1,0 +1,198 @@
+SUBROUTINE CADS_Setup_Land_Sensitivity
+
+!   This software was developed within the context of the EUMETSAT
+!   Satellite Application Facility on Numerical Weather Prediction
+!   (NWP SAF), under the Cooperation Agreement dated 7 December 2016,
+!   between EUMETSAT and the Met Office, UK, by one or more partners
+!   within the NWP SAF. The partners in the NWP SAF are the Met
+!   Office, ECMWF, DWD and MeteoFrance.
+!
+!   Copyright 2020, EUMETSAT, All Rights Reserved.
+
+
+!   *CADS_Setup_Land_Sensitivity*
+!   R. Eresmaa   ECMWF 16/04/20
+
+!   * PURPOSE *
+!   -----------
+!   Initialise land-sensitivity detection parameters for infrared sounders.
+
+!   * INTERFACE *
+!   -------------
+!   CADS_Setup_Land_Sensitivity is called from CADS_Main.
+
+!   * METHOD *
+!   ----------
+!   Assign default values to the land sensitivity detection parameters.
+
+!   * MODIFICATIONS *
+!   -----------------
+!   None.
+
+USE CADS31_Module, ONLY : JP__Min_Sensor_Index,    &
+&                       JP__Max_Sensor_Index,    &
+&                       INST_ID_AIRS,            &
+&                       INST_ID_CRIS,INST_ID_CRISFSR,            &
+&                       INST_ID_GIIRS,           &
+&                       INST_ID_HIRAS,           &
+&                       INST_ID_IASI,            &
+&                       INST_ID_IASING,          &
+&                       INST_ID_IKFS2,           &
+&                       INST_ID_IRS,             &
+&                       S__CADS_Setup_Land
+
+IMPLICIT NONE
+
+! Local variables
+
+CHARACTER(LEN=6)  :: CL__InstrumentName
+CHARACTER(LEN=20) :: CL__Land_Sensitivity_File
+
+INTEGER(i4) :: J, J__Sensor      ! Loop variables
+INTEGER(i4) :: INIU1, IOS
+
+!-----------------------
+! Namelist variables
+!-----------------------
+
+INTEGER(i4) :: M__Sensor
+REAL(wp)    :: R__Land_Fraction_Thres
+REAL(wp)    :: R__Level_Thres
+
+! Namelist
+
+NAMELIST / Land_Sensitivity_Coeffs / M__Sensor, &
+&        R__Land_Fraction_Thres, R__Level_Thres
+
+
+!INCLUDE 'CADS_Abort.intfb'
+
+
+!============================================================================
+
+WRITE (*,*) ''
+WRITE (*,*) 'Setting up the land sensitivity detection ...'
+
+!============================================================================
+!   Loop through sensors. As the first and so far only approximation,
+!   all sounders use the same default settings.
+!============================================================================
+
+SensorLoop : DO J__Sensor = JP__Min_Sensor_Index, JP__Max_Sensor_Index
+
+   SELECT CASE (J__Sensor)
+
+   CASE(INST_ID_AIRS)
+      !====================
+      ! Set up AIRS
+      !====================
+
+      CL__InstrumentName='AIRS'
+      CL__Land_Sensitivity_File = 'AIRS_LANDSENS.NL'
+      R__Land_Fraction_Thres = 0.5
+      R__Level_Thres = 0.9
+
+   CASE(INST_ID_CRIS,INST_ID_CRISFSR)
+      !====================
+      ! Set up CRIS
+      !====================
+
+      CL__InstrumentName='CRIS'
+      CL__Land_Sensitivity_File = 'CRIS_LANDSENS.NL'
+      R__Land_Fraction_Thres = 0.5
+      R__Level_Thres = 0.9
+
+   CASE(INST_ID_IASI)
+      !====================
+      ! Set up IASI
+      !====================
+
+      CL__InstrumentName='IASI'
+      CL__Land_Sensitivity_File = 'IASI_LANDSENS.NL'
+      R__Land_Fraction_Thres = 0.5
+      R__Level_Thres = 0.9
+
+   CASE(INST_ID_HIRAS)
+      !====================
+      ! Set up HIRAS
+      !====================
+
+      CL__InstrumentName='HIRAS'
+      CL__Land_Sensitivity_File = 'HIRAS_LANDSENS.NL'
+      R__Land_Fraction_Thres = 0.5
+      R__Level_Thres = 0.9
+
+   CASE(INST_ID_GIIRS)
+      !====================
+      ! Set up GIIRS
+      !====================
+
+      CL__InstrumentName='GIIRS'
+      CL__Land_Sensitivity_File = 'GIIRS_LANDSENS.NL'
+      R__Land_Fraction_Thres = 0.5
+      R__Level_Thres = 0.9
+
+   CASE(INST_ID_IKFS2)
+      !====================
+      ! Set up IKFS2
+      !====================
+
+      CL__InstrumentName='IKFS2'
+      CL__Land_Sensitivity_File = 'IKFS2_LANDSENS.NL'
+      R__Land_Fraction_Thres = 0.5
+      R__Level_Thres = 0.9
+
+   CASE(INST_ID_IASING)
+      !====================
+      ! Set up IASING
+      !====================
+
+      CL__InstrumentName='IASING'
+      CL__Land_Sensitivity_File = 'IASING_LANDSENS.NL'
+      R__Land_Fraction_Thres = 0.5
+      R__Level_Thres = 0.9
+
+   CASE(INST_ID_IRS)
+      !====================
+      ! Set up IRS
+      !====================
+
+      CL__InstrumentName='IRS'
+      CL__Land_Sensitivity_File = 'IRS_LANDSENS.NL'
+      R__Land_Fraction_Thres = 0.5
+      R__Level_Thres = 0.9
+
+   CASE DEFAULT
+      CYCLE
+   END SELECT
+
+   !------------------------------------------------------------------
+   ! Open and read file containing land sensitivity parameters for
+   ! the current instrument
+   !------------------------------------------------------------------
+   INIU1=10
+   call find_nml(nml='Land_Sensitivity_Coeffs', tag='m__sensor', val=j__sensor, status=ios, unit=iniu1)
+   if (ios == 0) then
+     write(*,'(3x,A)') trim(CL__InstrumentName)//': using namelist values'
+     read(iniu1,nml=Land_Sensitivity_Coeffs)
+   else
+     write(*,'(3x,A)') trim(CL__InstrumentName)//': using default values'
+   end if
+
+   M__Sensor = J__Sensor
+
+   !------------------------------------------------------------------
+   ! Set up the S__CADS_Setup_Land structure for current sensor
+   !------------------------------------------------------------------
+
+   S__CADS_Setup_Land(J__SENSOR) % M__SENSOR = M__Sensor
+
+   S__CADS_Setup_Land(J__SENSOR) % R__Land_Fraction_Thres = &
+&                                              R__Land_Fraction_Thres
+
+   S__CADS_Setup_Land(J__SENSOR) % R__Level_Thres = &
+&                                              R__Level_Thres
+
+ENDDO SensorLoop
+
+END SUBROUTINE CADS_Setup_Land_Sensitivity

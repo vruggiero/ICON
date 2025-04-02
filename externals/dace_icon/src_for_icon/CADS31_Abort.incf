@@ -1,0 +1,10 @@
+SUBROUTINE CADS_Abort(String)
+
+  use mo_exception, only: finish
+
+  IMPLICIT NONE
+  CHARACTER(LEN=*) :: String
+
+  call finish('CADS31',trim(string))
+
+END SUBROUTINE CADS_Abort

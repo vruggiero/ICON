@@ -1,0 +1,472 @@
+SUBROUTINE CADS_Detect_Cloud( &
+&    K__Sensor,               &
+&    K__NChans,               &
+&    K__ChanID,               &
+&    K__Minlev,               &
+&    K__Maxlev,               &
+&    K__Num_Imager_Chans,     &
+&    K__Chan_ID_Imager,       &
+&    K__Num_Imager_Clusters,  &
+&    K__Cloud_Flag,           &
+&    P__ObsBTs,               &
+&    P__ModelBTs,             &
+&    P__Chan_Level,           &
+&    P__Cluster_Fraction,     &
+&    P__BT_in_Cluster,        &
+&    P__BT_Overall_SDev,      &
+&    P__BT_Model_Imager,      &
+&    Cloud_Level,             & !RF: required by DWD
+&    K__Imager_Flag,          & !RF: useful for DWD
+&    cld_out                  ) !RF: useful for DWD
+
+!   This software was developed within the context of the EUMETSAT
+!   Satellite Application Facility on Numerical Weather Prediction
+!   (NWP SAF), under the Cooperation Agreement dated 7 December 2016,
+!   between EUMETSAT and the Met Office, UK, by one or more partners
+!   within the NWP SAF. The partners in the NWP SAF are the Met
+!   Office, ECMWF, DWD and MeteoFrance.
+
+!   Copyright 2020, EUMETSAT, All Rights Reserved.
+
+!   * CADS_Detect_Cloud *
+!   Phil Watts   ECMWF   21/01/02
+
+!   * PURPOSE *
+!   -----------
+!   Flag the presence or otherwise of cloud contamination in AIRS/IASI
+!   channels using a rank-sorted/model difference method. Currently
+!   only a digital filter is supported.
+
+!   * INTERFACE *
+!   -------------
+!   *CALL* * CADS_Detect_Cloud( )* (from CADS_Main)
+!   WHERE K__Sensor              : Satellite sensor (AIRS/IASI/CrIS)
+!         K__NChans              : Number of channels
+!         K__ChanID              : Channel indices of input channels
+!         K__Minlev              : Highest allowed starting point for the
+!                                  cloud search
+!         K__Maxlev              : Lowest allowed starting point in the
+!                                  initial cloud search
+!         K__Num_Imager_Chans    : Number of collocated imager channels
+!         K__Chan_ID_Imager      : Collocated imager channel indices
+!         K__Num_Imager_Clusters : Number of collocated clusters
+!         K__Cloud_Flag          : Cloud flag by channel; 0=clear, 1=cloudy
+!         P__ObsBTs              : Potentially cloud-affected observed BTs
+!         P__ModelBTs            : Clear background brightness temperatures
+!                                  (BTs)
+!         P__Chan_Level          : Channel height assignments
+!         P__Cluster_Fraction    : Fractional coverage of each cluster
+!                                  within FOV
+!         P__BT_in_Cluster       : Cluster-mean brightness temperature (BT)
+!                                  on each channel
+!         P__BT_Overall_SDev     : Overall BT standard deviation on each channel
+!         P__BT_Model_Imager     : Forward-modelled BT on each channel
+
+!   * EXTERNALS *
+!   -------------
+!   CADS_Detect_Cloud_Imager, CADS_Detect_Cloud_Heapsort,
+!   CADS_Detect_Cloud_Smooth, CADS_Detect_Cloud_Scenario,
+!   CADS_Detect_Cloud_Separator
+
+!   * MODIFICATIONS *
+!   -----------------
+!   A.Collard   1.0   01/02/06   Original export version
+!   A.Collard   1.0.1 03/05/06   Allow for missing channels
+!   A.Collard   1.0.2 04/05/06   Allow cross-band cloud detection
+!   A.Collard   1.0.3 15/01/07   Initialise with automatic cross-band for
+!                                all channels from band 1 for IASI
+!   R.Eresmaa   1.1   17/11/09   Include parameters of the Quick Exit /
+!                                long-wave window gradient check.
+!                                Pass K__Chan_Low to CF_DIGITAL to allow
+!                                detecting cirrus in case of compensating
+!                                humidity bg error in PBL.
+!   R.Eresmaa   1.2   11/11/11   Modify the cross-band option to be based
+!                                on the lowest clear channel rather than
+!                                on the highest cloud-contaminated one
+!   R.Eresmaa   2.0   27/11/13   Add input cloud flag based on collocated
+!                                imager data
+!   R.Eresmaa   2.1   13/01/15   Make array size specifications implicit.
+!   R.Eresmaa   2.2   10/11/15   Instrument ID naming convention made
+!                                consistent with RTTOV.
+!                                Changed setting of the aerosol flag.
+!   R.Eresmaa   2.2.1 13/11/15   Don't allow flagging missing channels clear
+!                                through the cross-band option.
+!   R.Eresmaa   2.3   20/12/16   Remove the call to aerosol detection.
+!   R.Eresmaa   2.4   05/02/19   Explicit KIND specifications.
+!   R.Eresmaa   3.0   16/04/20   Move the call to imager-based detection here. 
+
+USE CADS31_Module, ONLY : S__CADS_Setup_Cloud, &
+                        INST_ID_AIRS
+IMPLICIT NONE
+
+!* 0.1 Global arrays
+INTEGER(i4), INTENT(IN)  :: K__Sensor              ! Sensor
+INTEGER(i4), INTENT(IN)  :: K__NChans              ! No. of channels
+INTEGER(i4), INTENT(IN)  :: K__ChanID(:)           ! Channel IDs
+INTEGER(i4), INTENT(IN)  :: K__Minlev              ! Highest starting point
+                                                       ! for cloud search
+INTEGER(i4), INTENT(IN)  :: K__Maxlev              ! Lowest starting point
+                                                       ! in the initial search
+INTEGER(i4), INTENT(IN)  :: K__Num_Imager_Chans    ! No. of imager channels
+INTEGER(i4), INTENT(IN)  :: K__Chan_ID_Imager(:)   ! Imager channel IDs
+INTEGER(i4), INTENT(IN)  :: K__Num_Imager_Clusters ! No. of imager clusters
+INTEGER(i4), INTENT(OUT) :: K__Cloud_Flag(:)       ! Output cloud flags
+REAL(wp),    INTENT(IN)  :: P__ObsBTs(:)           ! Observed BTs
+REAL(wp),    INTENT(IN)  :: P__ModelBTs(:)         ! Model clear BTs
+REAL(wp),    INTENT(IN)  :: P__Chan_Level(:)       ! Channel height
+                                                       ! assignments
+REAL(wp),    INTENT(IN)  :: P__Cluster_Fraction(:) ! Cluster coverages
+REAL(wp),    INTENT(IN)  :: P__BT_in_Cluster(:,:)  ! Mean BT in cluster / 
+                                                       ! channel
+REAL(wp),    INTENT(IN)  :: P__BT_Overall_Sdev(:)  ! St.Dev of imager BT
+                                                       ! in FOV
+REAL(wp),    INTENT(IN)  :: P__BT_Model_Imager(:)  ! Model-based estimate
+                                                       ! of imager BT
+REAL(wp),    INTENT(OUT) :: Cloud_level(:)         ! RF: required by DWD
+INTEGER(i4), INTENT(INOUT), OPTIONAL :: K__Imager_Flag         ! Output cloud flags
+type(t_cld_out), intent(inout), optional :: cld_out          ! RF
+
+
+!* 0.2 local variables
+INTEGER(i4)              :: IST,ICOUNT,J,I_K,JBAND,JBAND2
+INTEGER(i4)              :: I__Imager_Flag   ! Preliminary cloud flag from
+                                                 ! collocated imager data
+
+!* 0.3 Local variables - band splitting details
+INTEGER(i4), POINTER     :: I__Bands(:,:)            ! Channel bands
+INTEGER(i4), POINTER     :: I__Band_Size(:)          ! Number of channels
+                                                         ! per band
+INTEGER(i4), POINTER     :: I__BandToUse(:)          ! Cross-band
+                                                         ! definitions
+INTEGER(i4)              :: I__Num_Bands             ! Number of bands
+INTEGER(i4)              :: I__NumFoundChans         ! Number of usable
+                                                         ! channels
+INTEGER(i4)              :: I__BandNumber(K__NChans) ! Channel band
+                                                         ! indicator
+INTEGER(i4)              :: I__WindowBounds(2)       ! Boundary of window
+INTEGER(i4)              :: I__Window_Chans(2)       ! Boundary of long-wave
+                                                         ! window
+INTEGER(i4), ALLOCATABLE :: I__INDEX(:)              ! Channel ranking
+                                                         ! within a band
+INTEGER(i4), ALLOCATABLE :: IDCHAN(:)                ! Overall channel
+                                                         ! ranking
+INTEGER(i4), ALLOCATABLE :: I__Cloud_Flag(:)         ! Rank-sorted output
+                                                         ! cloud flags
+INTEGER(i4)              :: I__Scenario_Index        ! 1--Quick Exit
+                                                         ! 2--Warm Start
+                                                         ! 3--Cold Start
+INTEGER(i4)              :: I__Start_Channel         ! Final starting
+                                                         ! channel in the
+                                                         ! cloud search
+
+LOGICAL  :: LL__Do_CrossBand
+
+! Input array projections (handling one detection band at a time)
+REAL(wp), ALLOCATABLE    :: Z__DBT(:)        ! Original departures
+REAL(wp), ALLOCATABLE    :: Z__Smooth_DBT(:) ! Smoothed departures
+REAL(wp), ALLOCATABLE    :: Z__LEVEL(:)      ! Channel height assignments
+
+!* 0.4 Local variables - digital filter parameters
+INTEGER(i4)              :: I__CHAN_HIGH          ! Channel at K__Minlev
+INTEGER(i4)              :: I__CHAN_LOW           ! Channel at K__Maxlev
+INTEGER(i4)              :: I__FirstCloudyChannel ! Highest cloud-affected
+                                                      ! channel
+INTEGER(i4)              :: I__LastClearChannel   ! Lowest clear channel
+INTEGER(i4),POINTER      :: I__Window_Width(:)    ! Box-car filter width
+INTEGER(i4),POINTER      :: I__GradChkInterval(:) ! Gradient-check interval
+
+REAL(wp)                 :: Z__Cloud_Level        ! Cloud height
+                                                      ! assignment
+
+logical :: l_out
+
+!INCLUDE 'CADS_Detect_Cloud_Imager.intfb'
+!INCLUDE 'CADS_Detect_Cloud_Heapsort.intfb'
+!INCLUDE 'CADS_Detect_Cloud_Smooth.intfb'
+!INCLUDE 'CADS_Detect_Cloud_Scenario.intfb'
+!INCLUDE 'CADS_Detect_Cloud_Separator.intfb'
+
+!======================================================================
+
+if (present(cld_out)) then !RF
+   l_out = cld_out%l_out
+else
+   l_out = .false.
+endif
+
+! Get correct processing parameters for this sensor:
+I__Num_Bands       =  S__CADS_Setup_Cloud(K__Sensor) % N__Num_Bands
+I__Band_Size       => S__CADS_Setup_Cloud(K__Sensor) % N__Band_Size
+I__Bands           => S__CADS_Setup_Cloud(K__Sensor) % N__Bands
+I__Window_Width    => S__CADS_Setup_Cloud(K__Sensor) % N__Window_Width
+I__BandToUse       => S__CADS_Setup_Cloud(K__Sensor) % N__BandToUse
+LL__Do_CrossBand   =  S__CADS_Setup_Cloud(K__Sensor) % L__Do_CrossBand
+I__GradChkInterval => S__CADS_Setup_Cloud(K__Sensor) % N__GradChkInterval
+
+if (l_debug) then
+  write(usd,*) 'cads k__nchans:',k__nchans
+  write(usd,*) 'cads k__ChanID:',k__ChanID
+  write(usd,*) 'cads i__num_Bands:',i__num_Bands
+  write(usd,*) 'cads i__band_size:',i__band_size
+  write(usd,*) 'cads i__Bands:',i__Bands
+endif
+
+! Initialise
+K__Cloud_Flag(:)=1       ! intialise ALL channels to cloudy
+! RF
+IF (PRESENT(K__Imager_Flag)) THEN
+   I__Imager_Flag = K__Imager_Flag
+ELSE
+   I__Imager_Flag = 0 ! Default assumption: no cloud affecting collocated imager data
+END IF
+
+
+! Imager-based cloud detection
+CALL CADS_Detect_Cloud_Imager( &
+& K__Sensor, &
+& K__Num_Imager_Chans, &
+& K__Chan_ID_Imager, &
+& K__Num_Imager_Clusters, &
+& I__Imager_Flag, &
+& P__Cluster_Fraction, & 
+& P__BT_in_Cluster, &
+& P__BT_Overall_SDev, &
+& P__BT_Model_Imager, &
+& cld_out)
+
+
+! If using cross-band, set up an array indicating which channels correspond
+! to which bands in K__ChanID
+IF (LL__Do_CrossBand) THEN
+   I__BandNumber(:)=-1  ! Initialise
+   DO JBAND = 1, I__Num_Bands
+      DO I_K=1,K__NChans
+         IF (ANY(I__BANDS(:,JBAND) == K__ChanID(I_K))) &
+&                I__BandNumber(I_K)=JBand
+      ENDDO
+   ENDDO
+ENDIF
+
+
+!1 Loop over bands
+Band_Loop: DO JBAND = 1, I__Num_Bands
+
+  ! Don't bother doing the cloud detection if we're just going to use
+  ! the results from another band anyway:
+  IF (LL__Do_CrossBand) THEN
+     IF (.NOT.(ANY(I__BandToUse(:) == JBAND))) CYCLE
+  ENDIF
+
+  ALLOCATE (Z__DBT(I__Band_Size(JBAND)))
+  Z__DBT(:) = 0.0
+
+  ALLOCATE (Z__LEVEL(I__Band_Size(JBAND)))
+  Z__LEVEL(:) = REAL(K__Maxlev)
+
+  ALLOCATE (I__Cloud_Flag(I__Band_Size(JBAND)))
+  ALLOCATE (I__INDEX(I__Band_Size(JBAND)))
+
+  ALLOCATE (IDCHAN(I__Band_Size(JBAND)))
+  IDCHAN(:) = 1
+
+  I__WindowBounds(:)   = &
+&      S__CADS_Setup_Cloud(K__Sensor) % N__Window_Bounds(JBand,:)
+
+!1.1 find channels within current band --------------------------------------
+  I__NumFoundChans = 0
+  I__Window_Chans(:) = -1
+
+  DO J=1,I__Band_Size(JBAND)
+
+    DO I_K=1,K__NChans
+      IF (K__ChanID(I_K) == I__BANDS(J,JBAND)) THEN
+        IF (P__ObsBTs(I_K) < 0. .OR. P__ModelBTs(I_K) < 0.) CYCLE
+        I__NumFoundChans = I__NumFoundChans + 1
+        Z__DBT(I__NumFoundChans)=P__ObsBTs(I_K)-P__ModelBTs(I_K)
+        Z__LEVEL(I__NumFoundChans)=P__Chan_Level(I_K)
+        I__INDEX(I__NumFoundChans)=I__NumFoundChans
+        IDCHAN(I__NumFoundChans)=I_K
+        if (l_debug) &
+              write(usd,*) 'cads_z_dbt',i_k,j,k__chanid(i_k),Z__DBT(I__NumFoundChans),P__ObsBTs(I_K),P__ModelBTs(I_K)
+
+        IF (K__ChanID(I_K) == I__WindowBounds(1)) &
+&             I__Window_Chans(1) = I__NumFoundChans
+        IF (K__ChanID(I_K) == I__WindowBounds(2)) &
+&             I__Window_Chans(2) = I__NumFoundChans
+      ENDIF
+    ENDDO
+  ENDDO
+  IF ( I__NumFoundChans == 0 ) THEN
+     WRITE(*,*) &
+&          '**CADS_Detect_Cloud - WARNING: ' // &
+&          'CHANNELS NOT FOUND CYCLING BAND: **', JBAND
+     IF (ALLOCATED(Z__DBT))        DEALLOCATE (Z__DBT)
+     IF (ALLOCATED(Z__LEVEL))      DEALLOCATE (Z__LEVEL)
+     IF (ALLOCATED(I__Cloud_Flag)) DEALLOCATE (I__Cloud_Flag)
+     IF (ALLOCATED(I__INDEX))      DEALLOCATE (I__INDEX)
+     IF (ALLOCATED(IDCHAN))        DEALLOCATE (IDCHAN)
+     CYCLE Band_Loop
+  ENDIF
+
+!----------------------------------------------------------------------------
+  IST=0
+  ICOUNT=I__NumFoundChans
+  I__Cloud_Flag(:)=1
+
+!2. Sort according to channel height assignments
+  CALL cads_sort(I__NumFoundChans,Z__Level,I__Index)
+  if (l_debug) then
+    do i_k = 1, i__NumFoundChans
+      j = i__index(i_k)
+      write(usd,*) 'cads_sort',i_k,j,idchan(j),k__chanID(idchan(j)),z__level(j)
+    enddo
+  endif
+
+
+!2.1 Find I__CHAN_LOW - lowest channel considered in the initial cloud search
+  J=1
+  DO WHILE (J < I__NumFoundChans .AND. Z__Level(I__Index(J)) < REAL(K__Maxlev))
+    J=J+1
+  ENDDO
+
+  IF (J == I__NumFoundChans) THEN
+    I__CHAN_LOW = I__NumFoundChans-1
+  ELSE
+    I__CHAN_LOW = J
+  ENDIF
+  IF(I__CHAN_LOW <= 1)I__CHAN_LOW=1
+
+!2.1a Find I__CHAN_HIGH - highest allowed channel for starting the cloud search
+  J=1
+  DO WHILE (J < I__NumFoundChans .AND. Z__Level(I__Index(J)) < REAL(K__Minlev))
+    J=J+1
+  ENDDO
+  I__CHAN_HIGH=J
+
+  if (l_out) then
+     cld_out%i__chan_low  = i__chan_low
+     cld_out%i__chan_high = i__chan_high
+  end if
+  if (l_debug) then
+    write(usd,*) 'i__chan_low',i__chan_low
+    write(usd,*) 'i__chan_high',i__chan_high
+  endif
+
+! Smoothing
+  ALLOCATE (Z__Smooth_DBT(I__NumFoundChans))
+  Z__Smooth_DBT(:) = 0.0
+
+  CALL CADS_Detect_Cloud_Smooth(   &
+       I__NumFoundChans,           &
+       I__Window_Width(JBAND),     &
+       Z__DBT(I__INDEX(1:I__NumFoundChans)), &
+       Z__Smooth_DBT(1:I__NumFoundChans) )
+  if (l_debug) then
+    do j = 1, i__numFoundChans
+      write(usd,*) 'cads_detect_cloud_smooth',j,i__index(j),z__smooth_dbt(j),z__dbt(j)
+    enddo
+  endif
+
+
+!3. Choice of cloud detection scenario
+
+  CALL CADS_Detect_Cloud_Scenario( &
+&        K__Sensor,                    &
+&        JBAND,                        &
+&        I__NumFoundChans,             &
+&        I__GradChkInterval(JBAND),    &
+&        I__Index(1:I__NumFoundChans), &
+&        I__CHAN_HIGH,                 &
+&        I__CHAN_LOW,                  &
+&        I__Window_Chans,              &
+&        I__Imager_Flag,               &
+&        I__Scenario_Index,            &
+&        I__Start_Channel,             &
+&        Z__Smooth_DBT(1:I__NumFoundChans))
+
+  if (l_out) then
+     cld_out%i__scenario_index = i__scenario_index
+     cld_out%i__start_channel  = i__start_channel
+  end if
+  if (l_debug) then
+    write(usd,*) 'i__scenario_index',i__scenario_index
+    write(usd,*) 'i__start_channel',i__start_channel
+  endif
+
+
+!4. Identify the separation between clear/cloudy channels
+
+  CALL CADS_Detect_Cloud_Separator( &
+&        K__Sensor,                    &
+&        JBAND,                        &
+&        I__NumFoundChans,             &
+&        I__GradChkInterval(JBAND),    &
+&        I__Index(1:I__NumFoundChans), &
+&        I__Cloud_Flag,                &
+&        I__FirstCloudyChannel,        &
+&        I__LastClearChannel,          &
+&        I__Scenario_Index,            &
+&        I__Start_Channel,             &
+&        Z__Smooth_DBT(1:I__NumFoundChans))
+
+  if (l_debug) then
+    write(usd,*) 'I__FirstCloudyChannel',I__FirstCloudyChannel
+    write(usd,*) 'I__LastClearChannel', I__LastClearChannel
+  endif
+
+
+  K__Cloud_Flag(IDCHAN(1:I__NumFoundChans)) = &
+&                        I__Cloud_Flag(1:I__NumFoundChans)
+
+  ! Set cloud level for cross-band:
+  IF (I__FirstCloudyChannel == 0) THEN   ! FOV is completely clear
+    Z__Cloud_Level = 1.e20   ! Large value
+  ELSE
+    Z__Cloud_Level = P__Chan_Level(IDCHAN(I__LastClearChannel))
+  ENDIF
+
+  Cloud_level(JBAND) = Z__Cloud_level
+
+  if (l_out) cld_out%z__cloud_level = z__cloud_level
+
+  ! Automatically do cross band cloud detection for all
+  ! interferometer channels (whether assigned a band or not) if
+  ! JBand == 1. This can be over-ridden for the other bands.
+
+  IF (K__Sensor /= INST_ID_AIRS .AND. JBand == 1) &
+&     WHERE(P__Chan_Level(:) < Z__Cloud_Level) K__Cloud_Flag(:) = 0
+
+  CrossBand : IF (LL__Do_CrossBand) THEN
+    ! Cross Band:
+    ! Loop through bands applying cloud detection to those that take their
+    ! cloud detection information from the current band JBAND.
+    DO JBand2 = 1, I__Num_Bands
+      IF (I__BandToUse(JBand2) == JBand) THEN
+        if (jband2 >= lbound(cloud_level,1) .and. jband2 <= ubound(cloud_level,1)) &
+            Cloud_level(JBand2) = Cloud_level(JBand)
+        WHERE(P__Chan_Level(:) < Z__Cloud_Level .AND. &
+&               I__BandNumber == JBand2 .AND. &
+&               P__OBSBTs(:)>0.0 ) K__Cloud_Flag(:) = 0
+      ENDIF
+    ENDDO
+  ENDIF CrossBand
+
+! Deallocate arrays
+  IF (ALLOCATED(Z__DBT))        DEALLOCATE (Z__DBT)
+  IF (ALLOCATED(Z__Smooth_DBT)) DEALLOCATE (Z__Smooth_DBT)
+  IF (ALLOCATED(Z__LEVEL))      DEALLOCATE (Z__LEVEL)
+  IF (ALLOCATED(I__Cloud_Flag)) DEALLOCATE (I__Cloud_Flag)
+  IF (ALLOCATED(I__INDEX))      DEALLOCATE (I__INDEX)
+  IF (ALLOCATED(IDCHAN))        DEALLOCATE (IDCHAN)
+
+ENDDO Band_Loop
+
+! Nullify pointers
+NULLIFY(I__Band_Size, I__Bands, I__Window_Width, I__BandToUse)
+
+! RF
+IF (PRESENT(K__Imager_Flag)) THEN
+   K__Imager_Flag = I__Imager_Flag
+END IF
+
+END SUBROUTINE CADS_Detect_Cloud

@@ -1,0 +1,267 @@
+SUBROUTINE CADS_Detect_Cloud_Scenario( &
+&    K__Sensor,          &
+&    K__Band,            &
+&    K__NumChans,        &
+&    K__GradChkInterval, &
+&    K__Index,           &
+&    K__Chan_High,       &
+&    K__Chan_Low,        &
+&    K__Chan_Windows,    &
+&    K__Imager_Flag,     &
+&    K__Scen_Index,      &
+&    K__Start_Channel,   &
+&    P__DBT)
+
+!   This software was developed within the context of the EUMETSAT
+!   Satellite Application Facility on Numerical Weather Prediction
+!   (NWP SAF), under the Cooperation Agreement dated 7 December 2016,
+!   between EUMETSAT and the Met Office, UK, by one or more partners
+!   within the NWP SAF. The partners in the NWP SAF are the Met
+!   Office, ECMWF, DWD and MeteoFrance.
+!
+!   Copyright 2020, EUMETSAT, All Rights Reserved.
+
+!   * CADS_Detect_Cloud_Scenario *
+!   PHIL WATTS   ECMWF   21/01/02
+
+!   * PURPOSE *
+!   -----------
+!   Determine which of the three possible scenarios best describes
+!   the input data.
+!   Quick Exit - no cloud in the FOV
+!   Warm Start - warm cloud above relatively colder surface
+!   Cold Start - cold cloud above relatively warmer surface (most common) 
+
+!   * INTERFACE *
+!   -------------
+!   * CALL* * CADS_Detect_Cloud_Scenario( )* (from CADS_Detect_Cloud)
+!   WHERE K__Sensor          : Satellite sensor (AIRS/IASI/CrIS)
+!         K__Band            : Band number
+!         K__NumChans        : Number of channels in this band
+!         K__GradChkInterval : Gradient-checking interval
+!         K__Index           : Ranking index for the input dBT signal
+!         K__Chan_High       : High channel considered in initial minimum search
+!         K__Chan_Low        : Low channel considered in initial minimum search
+!         K__Chan_Windows    : Two channels defining longwave window
+!         K__Imager_Flag     : Input flag from collocated imager data
+!         K__Scen_Index      : Choice of cloud detection scenario (1, 2, or 3)
+!         K__Start_Channel   : Channel index for the start of final search
+!         P__DBT             : Input dBT signal
+
+!    * MODIFICATIONS *
+!    -----------------
+!    03/02/06   A.Collard   1.0   Tidy up in preparation for IASI
+!    03/05/06   A.Collard   1.0.1 Band size is now passed in (allows for
+!                                 missing channels).
+!    04/05/06   A.Collard   1.0.2 The index of the first cloudy channel is now
+!                                 returned to allow cross-band cloud detection
+!    16/02/07   A.Collard   1.0.3 Change to the padding to allow the bottom
+!                                 channel to be flagged as clear in a
+!                                 non-quickstart situation.
+!    16/01/09   A.Collard   1.1   Gradient check on quick exit
+!                                 Start channel for cold start moved to highest
+!                                 channel where BT threshold exceeded
+!    11/11/11   R.Eresmaa   1,2   Index of the lowest clear channel added to
+!                                 the output parameters.
+!                                 Change of the starting channel is no longer
+!                                 allowed in cases where gradient > -threshold.
+!    04/12/13   R.Eresmaa   2.0   Allow quick exit only if collocated imager
+!                                 data supports hypothesis of a clear FOV
+!    13/01/15   R.Eresmaa   2.1   Remove the need to create temporary array in
+!                                 the call to MOVINGA.
+!    04/02/19   R.Eresmaa   2.4   Explicit KIND specifications.
+!    16/04/20   R.Eresmaa   3.0   Divide the previous CF_Digital in two:
+!                                 Cloud_Scenario (here) and Cloud_Separator.
+
+
+USE CADS31_Module, ONLY : S__CADS_Setup_Cloud
+
+IMPLICIT NONE
+
+!* 0.1 Global arrays
+INTEGER(i4), INTENT(IN) :: K__SENSOR           ! Sensor
+INTEGER(i4), INTENT(IN) :: K__Band             ! Band number
+INTEGER(i4), INTENT(IN) :: K__NumChans         ! Number of usable channels
+                                                   ! in band
+INTEGER(i4), INTENT(IN) :: K__GradChkInterval  ! Gradient-check interval
+INTEGER(i4), INTENT(IN) :: K__INDEX(:)         ! Ranking index for dBT
+INTEGER(i4), INTENT(IN) :: K__Chan_High        ! First channel clear of high
+                                                   ! stratospheric model errors
+INTEGER(i4), INTENT(IN) :: K__Chan_Low         ! Last channel clear of PBL
+                                                   ! humidity errors
+INTEGER(i4), INTENT(IN) :: K__Chan_Windows(2)  ! Two channels defining
+                                                   ! long-wave window bounds
+INTEGER(i4), INTENT(IN)    :: K__Imager_Flag   ! Input imager cloud flag
+INTEGER(i4), INTENT(OUT)   :: K__Scen_Index    ! Choice of scenario
+INTEGER(i4), INTENT(OUT)   :: K__Start_Channel ! Final starting channel
+REAL(wp), INTENT(IN)       :: P__DBT(:)        ! Input ranked-smoothed
+                                                   ! dBT signal
+
+! Local variables
+REAL(wp), ALLOCATABLE :: Z__DBT_w_Buffer(:) ! Smoothed-ranked DBT
+INTEGER(i4) :: I__Buffer                    ! No. of buffer channels
+INTEGER(i4) :: I__Start_Channel             ! Primary starting channel for
+                                                ! cloud search
+INTEGER(i4) :: I__Start_Channel_Surf        ! Secondary starting channel for
+                                                ! cloud search
+INTEGER(i4) :: I__Max_Channel               ! Channel corresponding to
+                                                ! maximum of the smoothed dBT
+INTEGER(i4) :: JCH,JMIN(1),JMAX(1),I
+
+LOGICAL :: LLCOLD, LL__WINDOW_GRAD_CHECK, LL__StartChannelChanged
+LOGICAL :: LL__Search_for_Cloud_Top
+
+! These carry the values in S__CADS_Setup_Cloud
+REAL(wp)  :: Z__BT_Threshold          ! Solution contaminated threshold
+REAL(wp)  :: Z__Grad_Threshold        ! Gradient threshold at which to stop
+                                          ! filter procession
+REAL(wp)  :: Z__Window_Grad_Threshold ! Gradient threshold for window check
+
+
+!=============================================================================
+
+
+Z__BT_Threshold    = &
+&    S__CADS_Setup_Cloud(K__SENSOR) % R__BT_Threshold(K__Band)
+Z__Grad_Threshold =  &
+&    S__CADS_Setup_Cloud(K__SENSOR) % R__Grad_Threshold(K__Band)
+Z__Window_Grad_Threshold = &
+&    S__CADS_Setup_Cloud(K__SENSOR) % R__Window_Grad_Threshold(K__Band)
+
+
+!1. Include buffer channels at the start and end of the input smoothed
+!   departure array
+
+I__BUFFER = K__GradChkInterval
+ALLOCATE(Z__DBT_w_Buffer(-I__Buffer+1:K__NumChans+1))
+
+Z__DBT_w_Buffer(1:K__NumChans) = P__DBT(:)
+Z__DBT_w_Buffer(-I__BUFFER+1:0) = Z__DBT_w_Buffer(1)
+Z__DBT_w_Buffer(K__NumChans+1) = Z__DBT_w_Buffer(K__NumChans)
+
+
+!2.  Prepare for the cloud search
+
+! First define a set of key channels
+
+JMIN=MINLOC(Z__DBT_w_Buffer(K__Chan_High:K__NumChans))
+I__Start_Channel_Surf = K__Chan_High+JMIN(1)-1
+
+JMIN=MINLOC(Z__DBT_w_Buffer(K__Chan_High:K__Chan_Low))
+I__Start_Channel = K__Chan_High+JMIN(1)-1
+
+! Look for highest channel with DBT<-BT_Threshold and move I__Start_Channel
+! there if higher than current I__Start_Channel:
+JCH = I__Start_Channel
+StartChanLoop : DO I=K__Chan_High,K__NumChans
+   IF (Z__DBT_w_Buffer(I) < -Z__BT_Threshold .OR. I == I__Start_Channel) THEN
+      JCH = I
+      Exit StartChanLoop
+   ENDIF
+ENDDO StartChanLoop
+I__Start_Channel = JCH
+
+! Do the same with I__Start_Channel_Surf
+JCH = I__Start_Channel_Surf
+StartChanLoop_Surf : DO I=K__Chan_High,K__NumChans
+   IF (Z__DBT_w_Buffer(I) < -Z__BT_Threshold .OR. I == I__Start_Channel_Surf) THEN
+      JCH = I
+      Exit StartChanLoop_Surf
+   ENDIF
+ENDDO StartChanLoop_Surf
+I__Start_Channel_Surf = JCH
+
+! Find the position of the equivalent maximum departure (for quick exit test)
+JMAX=MAXLOC(Z__DBT_w_Buffer(K__Chan_High:K__NumChans))
+I__Max_Channel = K__Chan_High+JMAX(1)-1
+
+! Long-wave window gradient check
+LL__WINDOW_GRAD_CHECK=.TRUE.
+IF (ALL(K__Chan_Windows > 0)) LL__WINDOW_GRAD_CHECK = &
+&    (ABS(Z__DBT_w_Buffer(K__INDEX(K__Chan_Windows(1))) - &
+&    Z__DBT_w_Buffer(K__INDEX(K__Chan_Windows(2)))) &
+&    < Z__Window_Grad_Threshold)
+
+! Choose scenario to be followed
+LL__Search_for_Cloud_Top=.TRUE.
+IF (ABS(Z__DBT_w_Buffer(I__Start_Channel_Surf)) < Z__BT_Threshold .AND. &
+&    ABS(Z__DBT_w_Buffer(I__Start_Channel)) < Z__BT_Threshold .AND. &
+&    ABS(Z__DBT_w_Buffer(I__Max_Channel)) < Z__BT_Threshold .AND. &
+&    ABS(Z__DBT_w_Buffer(K__NumChans)) < Z__BT_Threshold .AND. &
+&    LL__WINDOW_GRAD_CHECK .AND. &
+&    K__Imager_Flag==0 .AND. &
+&    S__CADS_Setup_Cloud(K__SENSOR) % L__Do_Quick_Exit) THEN
+   !Quick exit
+   LL__Search_for_Cloud_Top=.FALSE.
+ELSEIF (ABS(Z__DBT_w_Buffer(I__Start_Channel)) < Z__BT_Threshold .AND. &
+&    Z__DBT_w_Buffer(K__NumChans) > Z__BT_Threshold ) THEN
+   !Warm cloud start at next-to-bottom channel (allowing one channel for
+   !gradient calculations).
+   LLCOLD = .FALSE.
+   I__Start_Channel = K__NumChans-1
+ELSEIF (Z__DBT_w_Buffer(I__Start_Channel) < -Z__BT_Threshold ) THEN
+   LLCOLD = .TRUE.
+ELSEIF (Z__DBT_w_Buffer(I__Start_Channel) > Z__BT_Threshold ) THEN
+   LLCOLD = .FALSE.
+ELSE
+   LLCOLD = .TRUE.
+ENDIF
+
+IF (LL__Search_for_Cloud_Top) THEN  ! Either cold or warm start
+                                    ! (but not quick exit)
+
+  JCH=I__Start_Channel
+
+! Re-evaluate the choice of scenario:
+! If the primary starting channel appears clear, and the secondary
+! starting channel is lower, start from the latter. In that case
+! re-evaluate whether cold or warm start is more appropriate.
+  IF (I__Start_Channel /= I__Start_Channel_Surf) THEN
+
+    LL__StartChannelChanged  = .FALSE.
+    IF (LLCOLD .AND. ( (Z__DBT_w_Buffer(JCH-1)-Z__DBT_w_Buffer(JCH+1)) < &
+&       Z__Grad_Threshold .AND. &
+&       Z__DBT_w_Buffer(JCH-K__GradChkInterval)-Z__DBT_w_Buffer(JCH+1) < &
+&       Z__Grad_Threshold .AND. &
+&       ABS(Z__DBT_w_Buffer(JCH)) < Z__BT_Threshold)) THEN
+      I__Start_Channel = I__Start_Channel_Surf
+      LL__StartChannelChanged  = .TRUE.
+    ENDIF
+
+    IF (LL__StartChannelChanged) THEN
+
+      IF (ABS(Z__DBT_w_Buffer(I__Start_Channel)) < Z__BT_Threshold .AND. &
+&             Z__DBT_w_Buffer(K__NumChans) > Z__BT_Threshold ) THEN
+        !Warm cloud start at next-to-bottom channel (allowing one channel for
+        !gradient calculations).
+        LLCOLD = .FALSE.
+        I__Start_Channel = K__NumChans-1
+      ELSEIF (Z__DBT_w_Buffer(I__Start_Channel) < -Z__BT_Threshold ) THEN
+        LLCOLD = .TRUE.
+      ELSEIF (Z__DBT_w_Buffer(I__Start_Channel) > Z__BT_Threshold ) THEN
+        LLCOLD = .FALSE.
+      ELSE
+        LLCOLD = .TRUE.
+      ENDIF
+      JCH = I__Start_Channel
+
+    ENDIF
+  ENDIF
+
+  IF (LLCOLD) THEN
+    K__Scen_Index=3
+  ELSE
+    K__Scen_Index=2
+  ENDIF
+  K__Start_Channel = JCH
+
+ELSE
+
+  K__Scen_Index=1
+  K__Start_Channel=0
+
+ENDIF    ! Search for cloud top
+
+IF (ALLOCATED(Z__DBT_w_Buffer)) DEALLOCATE(Z__DBT_w_Buffer)
+
+END SUBROUTINE CADS_Detect_Cloud_Scenario

@@ -1,0 +1,76 @@
+SUBROUTINE CADS_Detect_Land_Sensitivity( &
+& K__Sensor,                             &
+& K__NumChans,                           &
+& P__Land_Fraction,                      &
+& P__CldLev,                             &
+& K__LandSens_Flag )
+
+!   This software was developed within the context of the EUMETSAT
+!   Satellite Application Facility on Numerical Weather Prediction
+!   (NWP SAF), under the Cooperation Agreement dated 7 December 2016,
+!   between EUMETSAT and the Met Office, UK, by one or more partners
+!   within the NWP SAF. The partners in the NWP SAF are the Met
+!   Office, ECMWF, DWD and MeteoFrance.
+!
+!   Copyright 2020, EUMETSAT, All Rights Reserved.
+
+!   * CADS_Detect_Land_Sensitivity *
+!   R. Eresmaa  ECMWF 16/04/20
+
+!   * PURPOSE *
+!   -----------
+!   Identify IR radiances that are affected by undeerlying land surface.
+
+!   * INTERFACE *
+!   -------------
+!   *CALL* * CADS_Detect_Land_Sensitivity()* from CADS_Main.
+
+!   * METHOD *
+!   ----------
+!   When IR radiances are measured over land, i.e. when the input land
+!   fraction exceeds a threshold value, normalize the channel height
+!   assignments such that the lowest-ranked channel gets value 1. Then
+!   compare the normalized heights against a threshold, separately on
+!   each channel. Those channels in excess of the threshold will be
+!   flagged sensitive to land surface.
+
+!   * MODIFICATIONS *
+!   -----------------
+!   None.
+
+USE CADS31_Module, ONLY : S__CADS_Setup_Land
+
+IMPLICIT NONE
+
+! Global arrays
+INTEGER(i4),INTENT(IN)  :: K__Sensor
+INTEGER(i4),INTENT(IN)  :: K__NumChans
+REAL(wp)   ,INTENT(IN)  :: P__Land_Fraction
+REAL(wp)   ,INTENT(IN)  :: P__CldLev(:)
+INTEGER(i4),INTENT(OUT) :: K__LandSens_Flag(:)
+
+! Local variables
+REAL(wp), ALLOCATABLE :: Z__CldLev_NORM(:)
+REAL(wp) :: Z__Land_Thres
+REAL(wp) :: Z__Level_Thres
+REAL(wp) :: Z__Maxlev
+
+Z__Land_Thres = &
+&    S__CADS_Setup_Land(K__Sensor) % R__Land_Fraction_Thres
+Z__Level_Thres = &
+&    S__CADS_Setup_Land(K__Sensor) % R__Level_Thres
+
+K__LandSens_Flag(:)=0
+
+IF (P__Land_Fraction > Z__Land_Thres) THEN
+
+Z__Maxlev = MAXVAL(P__CldLev)
+ALLOCATE(Z__CldLev_NORM(K__NumChans))
+Z__CldLev_Norm(:) = P__CldLev(:) / Z__Maxlev
+WHERE (Z__Cldlev_Norm(:)>Z__Level_Thres) K__LandSens_Flag(:)=1
+
+ENDIF
+
+IF (ALLOCATED(Z__CldLev_NORM)) DEALLOCATE (Z__CldLev_NORM)
+
+END SUBROUTINE CADS_Detect_Land_Sensitivity

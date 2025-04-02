@@ -1,0 +1,80 @@
+SUBROUTINE CADS_Detect_Cloud_Heapsort(N, A, K_Index)
+
+!   This software was developed within the context of the EUMETSAT
+!   Satellite Application Facility on Numerical Weather Prediction
+!   (NWP SAF), under the Cooperation Agreement dated 7 December 2016,
+!   between EUMETSAT and the Met Office, UK, by one or more partners
+!   within the NWP SAF. The partners in the NWP SAF are the Met
+!   Office, ECMWF, DWD and MeteoFrance.
+!
+!   Copyright 2020, EUMETSAT, All Rights Reserved.
+
+!   * CADS_Detect_Cloud_Heapsort *
+!   A.Collard   ECMWF   01/02/06
+
+!   * PURPOSE *
+!   -----------
+!   Basic heapsort algorithm.
+
+!   * INTERFACE *
+!   -------------
+!   *CALL* * CADS_Detect_Cloud_Heapsort( )* (from CADS_Detect_Cloud)
+!   WHERE N       : Length of input array
+!         A       : Real input array
+!         K_Index : Output ranked array
+
+!   * MODIFICATIONS *
+!   -----------------
+!   16/05/06   A.Collard   1.0   Original version.
+!   05/02/19   R.Eresmaa   2.4   Explicit KIND specifications
+!   16/04/20   R.Eresmaa   3.0   Rename as part of the big clean for CADS V3
+
+
+IMPLICIT NONE
+
+! Subroutine arguments
+INTEGER(i4), INTENT(IN)    :: N
+REAL(wp),    INTENT(IN)    :: A(:)
+INTEGER(i4), INTENT(INOUT) :: K_Index(:)
+
+INTEGER(i4) :: I,J,RIGHT,LEFT,IDX
+REAL(wp) :: TMP
+
+!------------------------------------------
+
+IF (N <= 1) RETURN
+LEFT  = N/2+1
+RIGHT = N
+
+DO
+  IF (LEFT > 1) THEN
+    LEFT = LEFT - 1
+    IDX  = K_Index(LEFT)
+  ELSE
+    IDX = K_Index(RIGHT)
+    K_Index(RIGHT) = K_Index(1)
+    RIGHT = RIGHT - 1
+    IF (RIGHT == 1) THEN
+      K_Index(1) = IDX
+      EXIT
+    ENDIF
+  ENDIF
+  TMP = A(IDX)
+  I = LEFT
+  J = 2*LEFT
+  DO WHILE (J <= RIGHT)
+    IF (J < RIGHT) THEN
+      IF (A(K_Index(J)) < A(K_Index(J+1))) J = J + 1
+    ENDIF
+    IF (TMP < A(K_Index(J))) THEN
+      K_Index(I) = K_Index(J)
+      I = J
+      J = 2*J
+    ELSE
+      J = RIGHT + 1
+    ENDIF
+  ENDDO
+  K_Index(I) = IDX
+ENDDO
+
+END SUBROUTINE CADS_Detect_Cloud_Heapsort
