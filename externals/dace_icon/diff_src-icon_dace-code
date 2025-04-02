@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# quick-and-dirty script to "diff -q" (only info if files differ or not) the dace-sources in this repo (dir ./src_for_icon) with
+# the originals in a clone of dace_code.git, which resides under $dacerefcodedir:
+
+daceicondir=src_for_icon
+#dacerefcodedir=${HOME}/DACE/dace_code/
+dacerefcodedir=/hpc/uwork/hreich/dace_code_0/dace_code/dace_icon
+
+for fi in $(ls $daceicondir)
+do
+
+    outfi=$(find ${dacerefcodedir} -type f -name $(basename $fi) | grep -v ${daceicondir})
+    if [ x${outfi} = x ]; then
+	echo $(basename $fi) could not be found under ${dacerefcodedir}!
+    else
+	diff -q ${daceicondir}/$fi $outfi	
+    fi
+    
+done
