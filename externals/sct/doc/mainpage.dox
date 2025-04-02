@@ -1,0 +1,123 @@
+/**
+ \mainpage The SC Timer Lib
+
+ \authors Joerg Behrens
+ \authors Hendryk Bockelmann
+
+ \copyright Copyright (C) 2017 Joerg Behrens <behrens@dkrz.de>, Hendryk Bockelmann <bockelmann@dkrz.de>
+
+Redistribution and use in source and binary forms, with or without modification, are  permitted provided that the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+Neither the name of the DKRZ GmbH nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+ \section idea The basic idea
+The SCT library was invented with the aim of having an easy to use timer with as little overhead as possible.
+The timers (which can also measure hardware performance counters via PAPI interface) are implemented for pure sequential, OpenMP, MPI and hybrid OpenMP-MPI usage with a special emphasis on selectable reduction operations in order to provide a compact presentation of the measurments of parallel applications.
+
+ \section example Examples
+All timer usage should be initializes by the call
+\code
+  timer_size = sct_init(timer_max, "context_name", 0);
+\endcode
+where timer_max denotes the maximum number of timers that will be used, "context_name" is the name of the default context and the last argument specifies the MPI-communicator to be used for this context (set to 0 in case of non-MPI src).
+
+New timer and/or new context can be added by
+\code
+  new_timer = sct_new_timer("timer_name");
+  new_context = sct_new_context("context_name", comm);
+\endcode
+The measurement of user-defined regions is done via
+\code
+  sct_start(timer_id);
+  sct_stop(timer_id);
+\endcode
+Last timed interval can be shown
+\code
+  interval = sct_last_dt(timer_id);
+\endcode
+and also the entire time taken by a timer
+\code
+  time = sct_val(timer_id);
+\endcode
+The final report on all timers is given by
+\code
+  sct_report(proc_choice, thread_choice, sp_merging);
+\endcode
+where
+- proc_choice describes a selection of MPI-tasks to be reported (see also below)
+ - integer task-id
+ - SCT_GET_ENV to use the envVar SCT_PROC_CHOICE
+- thread_choice describes a selection of OpenMP threads to be reported
+ - integer thread-id
+ - SCT_GET_ENV to use the envVar SCT_THREAD_CHOICE
+- sp_merging defines the merging strategy of serial and parallel OpenMP regions (see below)
+
+ \section install Install
+SCT uses autotools for the installation on your system. If you got the src from GIT-repo you need to have at least autoconf-2.69, automake 1.14 and libtool 2.4.2 installed. Produce a new configure script via:
+\code
+autoreconf -fvi
+\endcode
+If you downloaded the tar.gz file, you will already have the configure script, just use:
+\code
+./configure
+make
+make check
+make install
+\endcode
+You can also specify several configure options, try --help for all details.
+
+ \section control Controlling the output by environment variables
+
+We support writing the measured timers to
+- stdout, stderr
+- ASCII file
+- HDF5 file (if compiled with support for HDF5)
+
+Please use the folowing environment variables to control the output location:
+- SCT_OUT = [stdout | stderr | hdf5] (default: stdout)
+- SCT_FILENAME = \<filename\>
+
+Reduction of timer results over several MPI-tasks and/or OpenMP-threads (showing min/max/avg) or complete output is done via
+- SCT_PROC_CHOICE = [SCT_SELECT_ALL | SCT_REDUCE_ALL | \<proc_id\>]
+- SCT_THREAD_CHOICE = [SCT_SELECT_ALL | SCT_REDUCE_ALL | \<thread_id\>]
+Combining serial phase measurement and parallel phase measurement (this only matters for OpenMP): SCT_SP_MERGING = 
+ - SCT_SP_SERIAL_ONLY: only the serial phase measurement is used
+ - SCT_SP_PARALLEL_ONLY: only the thread-parallel measurement is used
+ - SCT_SP_MERGE_SIMPLE: the serial phase measurement is added to the master thread of parallel regions
+ - SCT_SP_SELECT_ALL: the serial phase measurement and the thread-parallel measurement are reported separately
+
+Recording of eventcounters (if sct is installed with PAPI support)
+- SCT_EVENTCOUNTERS = [0 | 1 | 2] (default: 1) show counter results either as absolute values (1) or as rates per second (2)
+- SCT_EVENT_LIST: list of PAPI (or system specific) events to be recorded
+
+Extended (showing statistics for each timer) or simple (showing only total sum for each timer) listing
+- SCT_CALLSTATS = [0 | 1] (default: 0)
+
+Simple bookkeeping of timer hierarchy
+- SCT_NESTEDTIMERS = [0 | 1] (default: 0) , timer have to be nested correctly, hence this is *not* allowed:
+\code
+sct_start(A);
+sct_start(B);
+...
+<do some useful stuff>
+...
+sct_stop(A);
+sct_stop(B)
+\endcode
+<HR>
+*/
+
+/** \example tests/test_serial.c
+    \example tests/test_omp.c
+    \example tests/test_mpi.c
+    \example tests/test_hybrid.c
+    \example tests/test_sct.f90
+    \example tests/test_papi.c
+ */
