@@ -1,0 +1,293 @@
+#!/bin/ksh
+#
+
+# Example from Markus Schultze for all radar moments in one go as hdf5:
+#
+# <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+# <sky:requestCollection xmlns:sky="http://dwd.de/sky">
+# <sky:read database="cirrus">
+# <sky:select category="/Radar Data/Radar Data Measurements">
+#     <sky:referenceDate>
+#         <sky:from>20200831120000</sky:from>
+#         <sky:to>20200831120500</sky:to>
+#     </sky:referenceDate>
+# </sky:select>
+# <sky:result>
+# <sky:binary/>
+# <sky:metaDataArray>
+#     <sky:requestedField name="REFERENCE_DATE"/>
+#     <sky:requestedField name="PRODUCT_TYPE"/>
+#     <sky:requestedField name="ANTENNA_ELEVATION"/>
+#     <sky:requestedField name="Z_LEVEL_INDEX"/>
+# </sky:metaDataArray>
+# </sky:result>
+# </sky:read>    
+# </sky:requestCollection>
+
+
+# All current DWD radar sites:
+#
+# BOO Boostedt              010132
+# DRS Dresden               010488
+# EIS Eisberg               010780
+# EMD Emden                 010204
+# ESS Essen                 010410
+# FBG Feldberg              010908
+# FLD Flechtdorf            010440
+# HNF Hannover              010339
+# NEU Neuhaus               010557
+# OFT Offenthal             010629
+# NHB Neuheilenbach         010605
+# PRO Proetzel              010392
+# MEM Memmingen             010950
+# ROS Rostock               010169
+# SNA Schnaupping           010873
+# TUR Tuerkheim             010832
+# UMD Ummendorf             010356
+#
+#
+# Old/temporary sites:
+#
+# ASR Borkum                010103
+# HAN Hannover              010338
+# BLN Berlin Tempelhof      010384
+# ASE Essen                 010412
+# ASF Feldberg              010907
+# ASR Rostock               010089
+# HAM Hamburg               010147
+# FRI Frankfurt Flughafen   010630
+# MUC Muenchen Fuerholzen   010871
+#
+# Reserach radar:
+#
+# MOH Hohenpeissenberg      010962
+
+
+# Default station list: fetch all old and new radars (without MOH Hohenpeissenberg):
+###rlist="10132 10488 10780 10204 10410 10908 10440 10339 10557 10605 10629 10392 10950 10169 10873 10832 10356     10103 10338 10412 10384 10147 10630 10871 10907 10089"
+rlist="all"
+
+
+START=202110120830
+END=0
+type_lst="vr z"
+precip=0
+nlev_to=9
+nlev_from=0
+gzip=false
+delta=0
+increment=0
+typeset -Z4 num
+category="radsssm"
+while getopts s:c:e:l:L:r:R:t:d:i:D:hzX opt;do
+  case $opt in
+    c ) category=$OPTARG;;
+    e ) END=$OPTARG;;
+    s ) START=$OPTARG;;
+    r ) rlist=$OPTARG;;
+    R ) rlist_ex=$OPTARG;;
+    t ) type_lst=$OPTARG;;
+    l ) nlev_to=$OPTARG;;
+    L ) nlev_from=$OPTARG;;
+    d ) delta=$OPTARG;;
+    i ) increment=$OPTARG;;
+    D ) precip=$OPTARG;;
+    z ) gzip=true;;
+    X ) set -x;;
+    h ) echo "
+Retrieve Radar Volume Data from sky data base
+-c set category (DEFAULT: ${category})
+-s start date (FMT: YYYYMMDDHHNN DEFAULT: ${START})
+-e end date (FMT: YYYYMMDDHHNN DEFAULT: start date)
+-i temporal increment given the frequence of data (minutes DEFAULT: $increment)
+-d temporal fuzziness around the referenceDate (minutes DEFAULT: $delta)
+-r list of radar stations (FMT: SSSSS DEFAULT: ${rlist}; set to allinone if all station should be stored in one file!)
+-R list of radar stations, not to be extracted
+-t list of radar data type (DEFAULT: ${type_lst}):
+   vr: radial velocity VhCorr
+    z: reflectivity AttCorrZhCorr
+  zdr: diff. reflectivity AttCorrZDRCorr
+  kdp: specific differential phase shift KDPCorr
+  all: all moments that are found in sky
+-D precipitation scan (0: don't get it, 1: get it alone, 2: get it, too)
+-l Z_level_index: all elevations are extracted up to the chosen value (DEFAULT: ${nlev_to})
+-L Z_level_index: all elevations are extracted from the chosen value (DEFAULT: ${nlev_from})
+++++++PLEASE NOTE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ since 20121126 the number of elevation angles is changed from 18 sweeps to 10 sweeps!
+ formerly is was given, that the highest elevation angle was measured first (index 0) and the
+ lowest angle was measured last (index 17). nowadays there is no strict order in measuring the
+ differents sweeps:
+   index: 0 --> angle 5.49
+   index: 1 --> angle 4.49
+   index: 2 --> angle 3.49
+   index: 3 --> angle 2.49
+   index: 4 --> angle 1.49
+   index: 5 --> angle 0.49
+   index: 6 --> angle 7.99
+   index: 7 --> angle 12.0
+   index: 8 --> angle 17.0
+   index: 9 --> angle 24.99
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-z gzip data file
+-X set -x debug output
+
+A note on the category (option -c):
+
+ radsssm    : ras07 data from POLARA production (single-moment single-sweep) for the following moments:
+                z   =  DBZH
+                vr  =  VRADH
+                zdr =  AttCorrZDRCorr
+                kdp =  KDPCorr
+              each field may contain quality flags in the path /dataset1/data1/quality1/data or so
+
+ radmeasure : ras13 data from the radar sites (multi-moment single-sweep) for all moments (many different moments!)
+
+
+Example for ras07 volscans:                get_radhdf5_data.sky -s 202408131600 -e 202408131700 -i 5 -d 1
+Example for ras07 precipcans:              get_radhdf5_data.sky -s 202408131600 -e 202408131700 -i 5 -d 1 -D 1
+Example for ras07 volscans, all moments:   get_radhdf5_data.sky -s 202408131600 -e 202408131700 -i 5 -d 1 -t all
+Example for ras07 volscans, z and zdr:     get_radhdf5_data.sky -s 202408131600 -e 202408131700 -i 5 -d 1 -t \"z zdr\"
+Example for ras07 volscans, vr and kdp:    get_radhdf5_data.sky -s 202408131600 -e 202408131700 -i 5 -d 1 -t \"vr kdp\"
+Example for ras07 volscans, vr and kdp:    get_radhdf5_data.sky -s 202408131600 -e 202408131700 -i 5 -d 1 -t \"vr kdp\"
+Example for ras13 volscans:                get_radhdf5_data.sky -s 202408131600 -e 202408131700 -i 5 -d 1 -c radmeasure
+Example for ras13 precipscans:             get_radhdf5_data.sky -s 202408131600 -e 202408131700 -i 5 -d 1 -D 1 -c radmeasure
+
+";exit;;
+  esac
+done
+DATE=${START}
+[[ ${END} -eq 0 ]] && END=${START}
+if [[ ${#DATE} -ne 12 || ${#END} -ne 12 ]] ; then
+   echo "wrong date format YYYYMMDDHHMN"
+   exit
+fi
+if [[ ! -z ${rlist_ex} ]] ; then
+  rlist_ex="all ${rlist_ex}"
+  for r_in in $rlist ; do
+    lfound=false
+    for r_ex in ${rlist_ex} ; do
+       [[ ${r_ex} = ${r_in} ]] && lfound=true
+    done
+    [[ "${lfound}" = "false" ]] && rlist_new=${rlist_new}" ${r_in}"
+  done
+  rlist=${rlist_new}
+fi
+
+precipsuffix=_volscan
+scan_type=vol10
+[[ ${precip} -eq 1 ]] && nlev_to=0 && nlev_from=0 && scan_type="pcp" precipsuffix=_precipscan
+
+inchr=$(( increment / 60 ))
+echo "$DATE $rlist"
+[[ "${category}" = "radmeasure" ]] && type_lst=all
+for rty in ${type_lst} ; do
+  case $rty in
+   vr )  quantity="VhCorr";;
+   z )   quantity="AttCorrZhCorr";;
+   zdr ) quantity="AttCorrZDRCorr";;
+   kdp ) quantity="KDPCorr";;
+   all ) quantity="all";;
+  esac
+
+ for station in $rlist ; do
+
+date=${START}
+num=0
+while [[ $date -le $END ]] ; do
+num=$((num + 1))
+if [[ "$station" = "all" ]]; then
+cat > qvz_radar_${rty}_${station}_${num} << %%/
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<requestCollection hitTotalFile="itotal" processing="parallel" timeout="0" xmlns="http://dwd.de/sky">
+    <read database="cirrus">
+        <select category="$category">
+            <referenceDate delta="${delta}" increment="${inchr}">
+                <value>${date}</value>
+            </referenceDate>
+            <field name="Z_LEVEL_INDEX">
+                <from increment="1">${nlev_from}</from>
+                <to>${nlev_to}</to>
+            </field>
+            <field name="SCAN">
+                <value>${scan_type}</value>
+            </field> 
+%%/
+if [ "$category" = "radsssm" -a "$quantity" != "all" ] ; then
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+            <field name="QUANTITY">
+                <value>${quantity}</value>
+            </field> 
+%%/
+fi
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+        </select>
+        <sort>
+            <order direction="ASC" name="STATION_NUMBER"/>
+            <order direction="ASC" name="ANTENNA_ELEVATION"/>
+        </sort>
+        <transfer>
+            <file name="\${FILENAME}"
+            />
+        </transfer>
+    </read>
+</requestCollection>
+%%/
+else
+cat > qvz_radar_${rty}_${station}_${num} << %%/
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<requestCollection hitTotalFile="itotal" processing="parallel" timeout="0" xmlns="http://dwd.de/sky">
+    <read database="cirrus">
+        <select category="$category">
+            <referenceDate delta="${delta}" increment="${inchr}">
+                <value>${date}</value>
+            </referenceDate>
+            <field name="Z_LEVEL_INDEX">
+                <from increment="1">${nlev_from}</from>
+                <to>${nlev_to}</to>
+            </field>
+            <field name="STATION_NUMBER">
+                <value>${station}</value>
+            </field>
+            <field name="SCAN">
+                <value>${scan_type}</value>
+            </field> 
+%%/
+if [ "$category" = "radsssm" -a "$quantity" != "all" ] ; then
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+            <field name="QUANTITY">
+                <value>${quantity}</value>
+            </field> 
+%%/
+fi
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+        </select>
+        <sort>
+            <order direction="ASC" name="STATION_NUMBER"/>
+            <order direction="ASC" name="ANTENNA_ELEVATION"/>
+        </sort>
+        <transfer>
+            <file name="\${FILENAME}"
+            />
+        </transfer>
+    </read>
+</requestCollection>
+%%/
+fi
+
+if [[ ${increment} -gt 0 ]] ; then
+   date=$(datconv -CNm ${date} | newterm -Cycm -d ${increment}mn)
+else
+   break
+fi
+done
+[[ "$station" = "all" ]] && break
+done
+[[ -r qvz_radar_${rty} ]] && rm -r qvz_radar_${rty}
+skyreq -merge -mergefile qvz_radar_${rty} qvz_radar_${rty}_*
+rm qvz_radar_${rty}_*
+for f in qvz_radar_${rty}.0* ; do
+  sky ${f}
+done
+
+done # rty
+

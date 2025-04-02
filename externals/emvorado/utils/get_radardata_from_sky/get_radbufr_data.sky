@@ -1,0 +1,430 @@
+#!/bin/ksh
+#
+
+# Important: needs the libdwd! If not already done, do a:
+#   module load libdwd
+
+### UB 20180206: -new option -b <minutes> to split the files into time batches of length <minutes>
+###              -new naming convention for -A option: cdfin_<field>_<stationID>_<STARTTIME>_<ENDTIME>_<volscan|precipscan>
+
+# Example for volscans:   get_radbufr_data.sky -s 202009051200 -e 202009051230 -b 10 -i 5 -d 1 -n -A -b 60
+# Example for precipcans: get_radbufr_data.sky -s 202009051200 -e 202009051230 -b 10 -i 5 -d 1 -n -A -D 1 -b 60
+
+
+# All current DWD radar sites:
+#
+# BOO Boostedt              010132
+# DRS Dresden               010488
+# EIS Eisberg               010780
+# EMD Emden                 010204
+# ESS Essen                 010410
+# FBG Feldberg              010908
+# FLD Flechtdorf            010440
+# HNF Hannover              010339
+# NEU Neuhaus               010557
+# OFT Offenthal             010629
+# NHB Neuheilenbach         010605
+# PRO Proetzel              010392
+# MEM Memmingen             010950
+# ROS Rostock               010169
+# SNA Schnaupping           010873
+# TUR Tuerkheim             010832
+# UMD Ummendorf             010356
+#
+#
+# Old/temporary sites:
+#
+# ASR Borkum                010103
+# HAN Hannover              010338
+# BLN Berlin Tempelhof      010384
+# ASE Essen                 010412
+# ASF Feldberg              010907
+# ASR Rostock               010089
+# HAM Hamburg               010147
+# FRI Frankfurt Flughafen   010630
+# MUC Muenchen Fuerholzen   010871
+#
+# Reserach radar:
+#
+# MOH Hohenpeissenberg      010962
+
+
+
+# Default station list: fetch all old and new radars (without MOH Hohenpeissenberg):
+rlist="10132 10488 10780 10204 10410 10908 10440 10339 10557 10605 10629 10392 10950 10169 10873 10832 10356     10103 10338 10412 10384 10147 10630 10871 10907 10089"
+
+# Default time variables:
+START=201307281200
+END=201307290000
+TIMESTEP=0
+
+# Other defaults for optional parameters:
+#type_lst="vr qv z qz"   # including quality flags
+type_lst="vr z"          # not including quality flags
+lcdf=false
+mv_ass=false
+precip=0
+nlev_to=17
+nlev_from=0
+gzip=false
+delta=0
+increment=0
+iradar_0=1
+dualPRFcorr=0
+ncrcat=false
+
+
+typeset -Z4 num
+while getopts s:e:b:l:L:r:R:t:d:i:I:D:chnACzX opt;do
+  case $opt in
+    e ) END=$OPTARG;;
+    s ) START=$OPTARG;;
+    b ) TIMESTEP=$OPTARG;;
+    r ) rlist="$OPTARG";;
+    R ) rlist_ex="$OPTARG";;
+    t ) type_lst="$OPTARG";;
+    n ) lcdf=true;;
+    l ) nlev_to=$OPTARG;;
+    L ) nlev_from=$OPTARG;;
+    d ) delta=$OPTARG;;
+    i ) increment=$OPTARG;;
+    A ) mv_ass=true;;
+    D ) precip=$OPTARG;;
+    z ) gzip=true;;
+    c ) dualPRFcorr=true;;
+    I ) iradar_0=$OPTARG;;
+    C ) ncrcat=true;;
+    X ) set -x;;
+    h ) echo "
+Retrieve Radar Volume Data from sky data base
+-s start date (FMT: YYYYMMDDHHNN DEFAULT: ${START})
+-e end date (FMT: YYYYMMDDHHNN DEFAULT: start date)
+-b split files in time batches instead of one file per station for the entire time period (minutes DEFAULT: $TIMESTEP)
+-i temporal increment given the frequence of data (minutes DEFAULT: $increment)
+-d temporal fuzziness around the referenceDate (minutes DEFAULT: $delta)
+-r list of radar stations (FMT: SSSSS DEFAULT: ${rlist}; set to allinone if all station should be stored in one file!)
+-R list of radar stations, not to be extracted
+-t list of radar data type (DEFAULT: ${type_lst}):
+ vr: radial velocity
+ qv: quality index of radial velocity
+  z: reflectivity
+ qz: quality index of reflectivity
+-n convert bufr to netCDF
+-C cat all netCDF of each data type in one file
+-A rename files to be read from COSMO-DE nudging (cdfin..)
+-I starting index of cdfin files (default: ${iradar_0})
+-D precipitation scan (0: don't get it, 1: get it alone, 2: get it, too)
+-l Z_level_index: all elevations are extracted up to the chosen value (DEFAULT: ${nlev_to})
+-L Z_level_index: all elevations are extracted from the chosen value (DEFAULT: ${nlev_from})
+++++++PLEASE NOTE++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ since 20121126 the number of elevation angles is changed from 18 sweeps to 10 sweeps!
+ formerly is was given, that the highest elevation angle was measured first (index 0) and the
+ lowest angle was measured last (index 17). nowadays there is no strict order in measuring the
+ differents sweeps:
+   index: 0 --> angle 5.49
+   index: 1 --> angle 4.49
+   index: 2 --> angle 3.49
+   index: 3 --> angle 2.49
+   index: 4 --> angle 1.49
+   index: 5 --> angle 0.49
+   index: 6 --> angle 7.99
+   index: 7 --> angle 12.0
+   index: 8 --> angle 17.0
+   index: 9 --> angle 24.99
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-z gzip data file
+-B bug fix of incorrect REFERENCE_DATE of new DUALPol radar, to achieve correct sorting by REFERENCE_DATE and ANTENNA_ELEVATION
+-c use radial wind data corrected for DualPRF error (PROBABLY NOT WORKING CORRECTLY!)
+-X set -x debug output
+
+Example for volscans:   get_radbufr_data.sky -s 202009051200 -e 202009051230 -b 10 -i 5 -d 1 -n -A
+Example for precipcans: get_radbufr_data.sky -s 202009051200 -e 202009051230 -b 10 -i 5 -d 1 -n -A -D 1
+
+";exit;;
+  esac
+done
+
+DATE=${START}
+[[ ${END} -eq 0 ]] && END=${START}
+if [[ ${#DATE} -ne 12 || ${#END} -ne 12 ]] ; then
+   echo "wrong date format YYYYMMDDHHMM"
+   exit
+fi
+
+typeset -Z2 iradar=${iradar_0}
+if [[ ! -z ${rlist_ex} ]] ; then
+  for r_in in $rlist ; do
+    lfound=false
+    for r_ex in ${rlist_ex} ; do
+       [[ ${r_ex} = ${r_in} ]] && lfound=true
+    done
+    [[ "${lfound}" = "false" ]] && rlist_new=${rlist_new}" ${r_in}"
+  done
+  rlist=${rlist_new}
+fi
+#[[ $dualPRFcorr = true ]] && type_lst="qv z qz"
+
+precipsuffix=_volscan
+[[ ${precip} -eq 1 ]] && nlev_to=0 && nlev_from=0 && precipsuffix=_precipscan
+nlev_from1=${nlev_from}
+[[ ${nlev_from} -eq 0 && ${precip} -eq 0 ]] && nlev_from1=1
+
+
+if [ $increment -gt 0 -a $TIMESTEP -gt 0 ]; then
+    STARTBATCH=$START
+    ENDBATCH=$(datconv -CNm ${START} | newterm -Cycm -d ${TIMESTEP}mn)
+    # avoid doubled data in subsequent files by decrementing the batch end time by the data time increment:
+    ENDBATCH=$(datconv -CNm ${ENDBATCH} | newterm -Cycm -d -${increment}mn)
+else
+    STARTBATCH=$START
+    ENDBATCH=$END
+fi
+while [[ $STARTBATCH -le $END ]]; do
+
+
+inchr=$(( increment / 60 ))
+echo "$STARTBATCH $rlist"
+for rty in ${type_lst} ; do
+
+  case $rty in
+#   vr ) data_local_sc=3;category=radialwind;;  # not quality controlled
+   vr ) data_local_sc=13;category=radialwind;;  #  quality controlled
+   qv ) data_local_sc=103;category=radialwind;;
+#   z ) data_local_sc=1;category=reflectivity;;   # not quality controlled
+   z ) data_local_sc=11;category=reflectivity;;   #  quality controlled
+   qz ) data_local_sc=101;category=reflectivity;;
+  esac
+
+ for station in $rlist ; do
+
+
+date=${STARTBATCH}
+num=0
+while [[ $date -le $ENDBATCH ]] ; do
+num=$((num + 1))
+cat > qvz_radar_${rty}_${station}_${num} << %%/
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<requestCollection hitTotalFile="itotal" processing="parallel" timeout="0" xmlns="http://dwd.de/sky">
+    <read database="cirrus">
+        <select category="$category">
+            <referenceDate delta="${delta}" increment="${inchr}">
+                <value>${date}</value>
+            </referenceDate>
+            <field name="DATA_LOCAL_SUBCATEGORY">
+                <value>${data_local_sc}</value>
+            </field>
+            <field name="Z_LEVEL_INDEX">
+                <from increment="1">${nlev_from1}</from>
+                <to>${nlev_to}</to>
+            </field>
+%%/
+if [[ $station = "allinone" ]] ; then
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+            <field name="STATION_NUMBER">
+                <notValue>10962</notValue>
+            </field>
+%%/
+else
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+            <field name="STATION_NUMBER">
+                <value>${station}</value>
+            </field>
+%%/
+fi
+if [[ $precip -eq 0 && ${nlev_from} -eq 0 ]] ; then
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+            <or/>
+            <field name="DATA_LOCAL_SUBCATEGORY">
+                <value>${data_local_sc}</value>
+            </field> 
+            <field name="Z_LEVEL_INDEX">
+                <value>0</value>
+            </field>
+            <field name="ANTENNA_ELEVATION">
+                <from>3</from>
+            </field>
+%%/
+if [[ $station = "allinone" ]] ; then
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+            <field name="STATION_NUMBER">
+                <notValue>10962</notValue>
+            </field>
+%%/
+else
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+            <field name="STATION_NUMBER">
+                <value>${station}</value>
+            </field>
+%%/
+fi
+elif [[ $precip -eq 1 ]] ; then
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+            <field name="ANTENNA_ELEVATION">
+                <to>3</to>
+            </field>
+%%/
+fi
+cat >> qvz_radar_${rty}_${station}_${num} << %%/
+        </select>
+        <sort>
+            <order direction="ASC" name="STATION_NUMBER"/>
+            <order direction="ASC" name="ANTENNA_ELEVATION"/>
+        </sort>
+        <transfer>
+            <file name="ueg_${rty}_${station}_${num}"
+            />
+        </transfer>
+    </read>
+</requestCollection>
+%%/
+
+
+if [[ ${increment} -gt 0 ]] ; then
+   date=$(datconv -CNm ${date} | newterm -Cycm -d ${increment}mn)
+else
+   break
+fi
+
+done
+done
+
+[[ -r qvz_radar_${rty} ]] && rm -r qvz_radar_${rty}
+skyreq -merge -mergefile qvz_radar_${rty} qvz_radar_${rty}_*
+rm qvz_radar_${rty}_*
+for f in qvz_radar_${rty}.0* ; do
+  sky ${f}
+done
+
+for station in $rlist ; do
+  nbufr=$(ls ueg_${rty}_${station}_* | wc -l 2> /dev/null)
+  if [ $nbufr -gt 0 ]; then
+      cat ueg_${rty}_${station}_* > ueg_${rty}_${station}
+  else
+      echo No data found for station ${station}
+  fi
+done
+
+done # rty
+
+# get corrected radial wind data
+if [[ $dualPRFcorr = true ]] ; then
+for station in $rlist ;
+do
+ tcount=0
+ [[ -r ueg_vr_${station} ]] && rm ueg_vr_${station}_* && mv ueg_vr_${station} UEG_vr_${station}
+ date=${STARTBATCH}
+ while [[ $date -le ${ENDBATCH} ]] ; do
+   tcount=$((tcount + 1))
+   cp /e/gtmp/kstephan/RadwindBUFR_korr/ras08-vscvol01_v_?-${date}*${station}--buf .
+   if [[ $? -ne 0 ]] ; then
+      echo "WARNING dualPRFcorr: no correted file available"
+      if [[ ${increment} -gt 0 ]] ; then
+        date=$(datconv -CNm ${date} | newterm -Cycm -d ${increment}mn)
+        continue
+      else
+        break
+      fi
+   fi
+   cat ras08-vscvol01_v_5-${date}*${station}--buf ras08-vscvol01_v_4-${date}*${station}--buf ras08-vscvol01_v_3-${date}*${station}--buf ras08-vscvol01_v_2-${date}*${station}--buf ras08-vscvol01_v_1-${date}*${station}--buf ras08-vscvol01_v_0-${date}*${station}--buf ras08-vscvol01_v_[6-9]-${date}*${station}--buf > ueg_vr_${station}_${tcount}
+   rm ras08-vscvol01_v_?-${date}*${station}--buf
+   if [[ ${increment} -gt 0 ]] ; then
+      date=$(datconv -CNm ${date} | newterm -Cycm -d ${increment}mn)
+   else
+      break
+   fi
+   [[ ! -s ueg_vr_${station}_${tcount} ]] && rm ueg_vr_${station}_${tcount}
+ done
+ cat ueg_vr_${station}_* > ueg_vr_${station}
+done
+fi
+
+if [[ ! -r ueg_vr_${station} ]] ; then
+ [[ -r UEG_vr_${station} ]] &&  mv UEG_vr_${station} ueg_vr_${station}
+else
+ [[ -r UEG_vr_${station} ]] &&  rm UEG_vr_${station}
+fi
+
+i_bufr=0
+typeset    cmd_bufr2netcdf='radbufr2netcdf-p.psh'
+if [[ -f ${cmd_bufr2netcdf} ]] ; then
+   rm ${cmd_bufr2netcdf}
+fi
+for station in $rlist ;
+do
+lradar=false
+for rty in ${type_lst} ; do
+      fn_bufr="ueg_${rty}_${station}"
+
+      if [ -s ${fn_bufr} ]; then
+
+      lradar=true
+      if [[ ${lcdf} = true ]] ; then
+
+	 stationstr=$(printf "id-%6.6d" station)
+
+         if [[ ${mv_ass} = true ]] ; then
+             fn_nc="cdfin_${rty}_${stationstr}_${STARTBATCH}_${ENDBATCH}${precipsuffix}"
+             { print "set -e ; \c"
+               print "print -- \"-->  BUFR_2_NETCDF [${i_bufr}]: create '${fn_nc}'\" >&2 ; \c"
+               print "bufr_2_netcdf ${fn_bufr} ${fn_nc}"
+             } >>${cmd_bufr2netcdf}
+         else
+             fn_nc="${stationstr}_${STARTBATCH}_${ENDBATCH}_${rty}${precipsuffix}.nc"
+             { print "set -e ; \c"
+               print "print -- \"-->  BUFR_2_NETCDF [${i_bufr}]: create '${fn_nc}'\" >&2 ; \c"
+               print "bufr_2_netcdf ${fn_bufr} ${fn_nc}"
+             } >>${cmd_bufr2netcdf}
+         fi
+
+      else
+         mv ueg_${rty}_${station} ${station}_${STARTBATCH}_${ENDBATCH}_${rty}.buf
+         [[ ${gzip} = true ]] && gzip -f ${station}_${STARTBATCH}_${ENDBATCH}_${rty}.buf
+      fi
+      ((i_bufr + 1))
+
+      else
+	  mv $fn_bufr not_present_${station}_${STARTBATCH}_${ENDBATCH}_${rty}
+      fi
+done
+
+[[ $lradar = true ]] && iradar=$((iradar+1))
+
+done
+if [[ ${lcdf} = true ]] ; then
+   pshell -L -f ${cmd_bufr2netcdf}
+
+   if [[ ${ncrcat} = true ]] ; then
+      for rty in ${type_lst} ; do
+        ncrcat -O *${STARTBATCH}_${ENDBATCH}_${rty}${precipsuffix}.nc ${STARTBATCH}_${ENDBATCH}_${rty}${precipsuffix}.nc
+        rm *_${STARTBATCH}_${ENDBATCH}_${rty}${precipsuffix}.nc
+      done
+   fi
+      
+   if [[ ${gzip} = true ]] ; then 
+      if [[ ${mv_ass} = true ]] ; then
+         for rty in ${type_lst} ; do
+           gzip -f cdfin_${rty}_*
+         done
+      else
+         gzip -f *.nc
+      fi
+   fi
+fi
+
+for fi in $(find . -name ueg_\*); do rm $fi; done
+for fi in $(find . -name qvz_\*); do rm $fi; done
+
+
+if [ $increment -gt 0 -a $TIMESTEP -gt 0 ]; then
+    STARTBATCH=$(datconv -CNm ${STARTBATCH} | newterm -Cycm -d ${TIMESTEP}mn)
+    ENDBATCH=$(datconv -CNm ${STARTBATCH} | newterm -Cycm -d ${TIMESTEP}mn)
+    # avoid doubled data in subsequent files by decrementing the new end time by the data time increment:
+    ENDBATCH=$(datconv -CNm ${ENDBATCH} | newterm -Cycm -d -${increment}mn)
+    if [ $ENDBATCH -gt $END ]; then
+	ENDBATCH=$END
+    fi
+else
+    break
+fi
+
+done # loop over TIMESTEP batches

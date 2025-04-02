@@ -1,0 +1,58 @@
+%%% compile with
+%%%     latexuli -n -q bilder.tex 1
+%%%
+%%% or equivalently
+%%%     latex bilder.tex
+%%%     dvips -o bilder.ps bilder.dvi
+%%%     
+%%% then convert to png using ps2pdf and gimp:
+%%%     ps2pdf bilder.ps
+%%%     gimp bilder.pdf  -> hand-select region, export as png "ramp_obserr_vr.png"
+
+\documentclass[11pt,a4paper,twoside,headinclude,footinclude,parskip=half]{scrartcl}
+
+\usepackage[english]{babel}
+\usepackage[OT1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage[a4paper,twoside,portrait,hmargin={1.2in,1.0in},vmargin={1.0in,1.0in},footskip=2.5em]{geometry}
+
+\usepackage{scrpage2}
+
+\usepackage{xspace}
+\usepackage{calc,ifthen}
+\usepackage{array,longtable,multicol,hhline}
+\usepackage[fleqn]{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx,color}
+\usepackage{pst-all}
+
+\begin{document}
+
+
+\begin{pspicture}[unit=0.5cm](20,12)
+  \pnode[2,-1]{A}
+  \pnode[2,10]{B}\pnode[1.5,10]{B1}\uput[180](B1){\textbf{\Large e\_0}}
+  \pnode[1,0]{C}
+  \pnode[20,0]{D}\pnode[19.5,-0.5]{D1}\uput[270](D1){\textbf{\Large dBZ}}
+  \pnode[1.5,8]{E1}\uput[180](E1){\textbf{\Large e\_o\_0}}
+  \pnode[6,8]{E2}
+  \pnode[12,2]{E3}
+  \pnode[18,2]{E4}
+  \pnode[1.5,2]{F}\uput[180](F){\textbf{\Large e\_o\_1}}
+  \pnode[18,8]{H4}
+  \pnode[6,-0.5]{I1}\uput[270](I1){\textbf{\Large dBZ\_0}}
+  \pnode[6,9]{I2}
+  \pnode[12,-0.5]{J1}\uput[270](J1){\textbf{\Large dBZ\_1}}
+  \pnode[12,9]{J2}
+  \psset{linewidth=2pt,arrowsize=4pt 2,arrowinset=0}
+  \ncline[]{->}{A}{B}
+  \ncline[]{->}{C}{D}
+  \ncline[linewidth=1pt,linestyle=dotted]{F}{E4}
+  \ncline[linewidth=1pt,linestyle=dotted]{E1}{H4}
+  \ncline[linewidth=1pt,linestyle=dotted]{I1}{I2}
+  \ncline[linewidth=1pt,linestyle=dotted]{J1}{J2}
+  \psline[linewidth=2pt,linestyle=dashed]{}(E1)(E2)(E3)(E4)
+\end{pspicture}
+
+\end{document}
