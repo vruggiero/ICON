@@ -1,0 +1,27 @@
+#! @SHELL@
+
+export SCT_OUT="stdout"
+
+export SCT_CALLSTATS=0
+# test for absolute values
+export SCT_EVENTCOUNTERS=1
+
+@OPENMP_TRUE@export OMP_NUM_THREADS=4
+
+@MPICHECK_TRUE@@MPI_TRUE@@MPI_LAUNCH@ -n 2 @abs_top_builddir@/tests/test_papi
+@MPICHECK_FALSE@@MPI_TRUE@@abs_top_builddir@/tests/test_papi
+@MPI_FALSE@@abs_top_builddir@/tests/test_papi
+retval0=$?
+
+export SCT_CALLSTATS=0
+# test for counter rate ... skipped due to inexact results on HSW/BDW
+retval1=0
+export SCT_EVENTCOUNTERS=2
+
+#@MPI_TRUE@@MPI_LAUNCH@ -n 2 @abs_top_builddir@/tests/test_papi
+#@MPI_FALSE@@abs_top_builddir@/tests/test_papi
+#retval1=$?
+
+if (test $retval0 != 0) || (test $retval1 != 0); then
+  exit 1
+fi

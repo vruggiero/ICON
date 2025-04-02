@@ -1,0 +1,33 @@
+The SCT library was invented with the aim of having an easy to use timer with as little overhead as possible.
+
+The timers (which can also measure hardware performance counters via PAPI interface) are implemented for pure sequential, OpenMP, MPI and hybrid OpenMP-MPI usage with a special emphasis on selectable reduction operations in order to provide a compact presentation of the measurements of parallel applications.
+
+We support writing the measured timers to
+* stdout
+* ASCII file
+* hdf5 file
+
+PLease use the folowwing envVars:
+- SCT_OUT = [stdout | stderr | hdf5] (default: stdout)
+- SCT_FILENAME = \<filename\> 
+
+
+The data layout of raw timer data (i.e. no reduction has been used) will always be used in hdf5 files and looks like
+
+timer[0 ... nb_tasks-1][0...nb_threads-1][0 ... nb_timer-1] for time executed in parallel regions
+timer[0 ... nb_tasks-1][nb_threads][0 ... nb_timer-1]       for time executed in serial part
+
+hence, the thread dimension is always nb_threads+1
+
+To reduce the amount of reported data when ASCII output is used, we provide the following envVars:
+
+- SCT_PROC_CHOICE = [SCT_SELECT_ALL | SCT_REDUCE_ALL | \<proc_id\>]
+- SCT_THREAD_CHOICE = [SCT_SELECT_ALL | SCT_REDUCE_ALL | \<thread_id\>]
+
+Special care needs to be taken when combining serial phase measurement and parallel phase measurement (this only matters for OpenMP):
+
+- SCT_SP_MERGING = 
+ - SCT_SP_SERIAL_ONLY: only the serial phase measurement is used
+ - SCT_SP_PARALLEL_ONLY: only the thread-parallel measurement is used
+ - SCT_SP_MERGE_SIMPLE: the serial phase measurement is added to the master thread of parallel regions
+ - SCT_SP_SELECT_ALL: the serial phase measurement and the thread-parallel measurement are reported separately

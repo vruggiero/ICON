@@ -1,0 +1,15 @@
+#! @PERL@
+
+use strict;
+use warnings;
+use lib '@abs_top_srcdir@/tests';
+require "test_base.pl";
+
+$ENV{SCT_OUT}="stdout";
+
+$ENV{SCT_CALLSTATS}=0;
+#parse(run_prg("@abs_top_builddir@/tests/test_precision")) && check_reports();
+run_prg("@abs_top_builddir@/tests/test_precision");
+
+$ENV{SCT_CALLSTATS}=1;
+#parse(run_prg("@abs_top_builddir@/tests/test_precision")) && check_reports();

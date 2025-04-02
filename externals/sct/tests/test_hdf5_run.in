@@ -1,0 +1,18 @@
+#! @SHELL@
+
+export SCT_OUT="hdf5"
+#export SCT_OUT="stdout"
+export SCT_FILENAME="sct-hdf5-run-testfile.h5"
+
+export SCT_CALLSTATS=1
+
+@OPENMP_TRUE@export OMP_NUM_THREADS=4
+
+@MPICHECK_TRUE@@MPI_TRUE@@MPI_LAUNCH@ -n 2 @abs_top_builddir@/tests/test_hdf5
+@MPICHECK_FALSE@@MPI_TRUE@@abs_top_builddir@/tests/test_hdf5
+@MPI_FALSE@@abs_top_builddir@/tests/test_hdf5
+retval=$?
+
+if (test $retval != 0) ; then
+  exit 1
+fi

@@ -1,0 +1,28 @@
+#! @PERL@
+
+use strict;
+use warnings;
+use lib '@abs_top_srcdir@/tests';
+require "test_base.pl";
+
+$ENV{SCT_OUT}="stdout";
+
+$ENV{SCT_CALLSTATS}=0;
+$ENV{OMP_NUM_THREADS}=4;
+#parse(run_prg("@abs_top_builddir@/tests/test_omp")) && check_reports();
+run_prg("@abs_top_builddir@/tests/test_omp");
+
+$ENV{SCT_CALLSTATS}=1;
+#parse(run_prg("@abs_top_builddir@/tests/test_omp")) && check_reports();
+
+$ENV{SCT_CALLSTATS}=0;
+$ENV{SCT_THREAD_CHOICE}="SCT_SELECT_ALL";
+$ENV{OMP_NUM_THREADS}=2;
+#parse(run_prg("@abs_top_builddir@/tests/test_omp")) && check_reports();
+
+$ENV{SCT_THREAD_CHOICE}="SCT_REDUCE_ALL";
+#parse(run_prg("@abs_top_builddir@/tests/test_omp")) && check_reports();
+
+$ENV{SCT_THREAD_CHOICE}="SCT_REDUCE_ALL";
+$ENV{OMP_NUM_THREADS}=4;
+#parse(run_prg("@abs_top_builddir@/tests/test_omp")) && check_reports();

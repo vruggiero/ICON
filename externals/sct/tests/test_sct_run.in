@@ -1,0 +1,16 @@
+#! @SHELL@
+
+export SCT_OUT="stdout"
+export SCT_CALLSTATS=0
+
+@OPENMP_TRUE@export OMP_NUM_THREADS=4
+
+@MPICHECK_TRUE@@MPI_TRUE@@MPI_LAUNCH@ -n 2 @abs_top_builddir@/tests/test_sct
+@MPICHECK_FALSE@@MPI_TRUE@@abs_top_builddir@/tests/test_sct
+@MPI_FALSE@@abs_top_builddir@/tests/test_sct
+
+retval=$?
+
+if (test $retval != 0) ; then
+  exit 1
+fi

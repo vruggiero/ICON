@@ -1,0 +1,18 @@
+#! /usr/bin/ksh93
+if [ x"$1" = x-n ]; then
+   shift
+   MP_PROCS="$1"
+   export MP_PROCS
+   shift
+fi
+hostname=$(hostname)
+if ! grep "$hostname" $HOME/.rhosts 2>/dev/null >&2 ; then
+  echo "Error: current hostname not in ~/.rhosts!" >&2
+  exit 1
+fi
+MP_HOSTFILE=`mktemp -t hostfile.tmpXXXXXX`
+trap '/bin/rm -f $MP_HOSTFILE' EXIT
+export MP_HOSTFILE
+yes "$hostname" | head -n ${MP_PROCS-1} >$MP_HOSTFILE
+
+poe "$@"

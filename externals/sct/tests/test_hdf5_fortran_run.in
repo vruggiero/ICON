@@ -1,0 +1,29 @@
+#! @SHELL@
+
+export SCT_OUT="hdf5"
+export SCT_FILENAME="sct-testfile.h5"
+rm -f $SCT_FILENAME
+export SCT_CALLSTATS=1
+
+@OPENMP_TRUE@export OMP_NUM_THREADS=4
+
+@MPICHECK_TRUE@@MPI_TRUE@@MPI_LAUNCH@ -n 2 @abs_top_builddir@/tests/test_hdf5_fortran
+@MPICHECK_FALSE@@MPI_TRUE@@abs_top_builddir@/tests/test_hdf5_fortran
+@MPI_FALSE@@abs_top_builddir@/tests/test_hdf5_fortran
+
+retval=$?
+
+if (test $retval != 0) ; then
+  exit 1
+fi
+
+@H5DUMP_TRUE@@H5DUMP@ -a '/report_attributes/test_att_int' $SCT_FILENAME  | grep 123 || exit 1
+@H5DUMP_TRUE@@H5DUMP@ -a '/report_attributes/test_att_long' $SCT_FILENAME  | grep 456 || exit 1
+@H5DUMP_TRUE@@H5DUMP@ -a '/report_attributes/test_att_float' $SCT_FILENAME  | grep 0.5 || exit 1
+@H5DUMP_TRUE@@H5DUMP@ -a '/report_attributes/test_att_double' $SCT_FILENAME  | grep 0.25 || exit 1
+@H5DUMP_TRUE@@H5DUMP@ -a '/report_attributes/test_att_string' $SCT_FILENAME  | grep abc || exit 1
+
+rm -f $SCT_FILENAME
+
+@H5DUMP_FALSE@exit 77
+@H5DUMP_TRUE@exit 0

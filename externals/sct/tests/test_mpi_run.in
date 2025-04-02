@@ -1,0 +1,40 @@
+#! @PERL@
+
+use strict;
+use warnings;
+use lib '@abs_top_srcdir@/tests';
+require "test_base.pl";
+
+if ("@HDF5_TRUE@" eq "")
+{
+$ENV{SCT_OUT}="hdf5";
+}
+else
+{
+$ENV{SCT_OUT}="stdout";
+}
+
+# test with 1 MPI task
+
+$ENV{SCT_PROC_CHOICE}="SCT_SELECT_ALL";
+$ENV{SCT_CALLSTATS}=0;
+#parse(run_prg("@MPI_LAUNCH@ -n 1 @abs_top_builddir@/tests/test_mpi")) && check_reports();
+#run_prg("@MPI_LAUNCH@ -n 1 @abs_top_builddir@/tests/test_mpi");
+
+# test with 1 MPI task
+
+$ENV{SCT_CALLSTATS}=1;
+#parse(run_prg("@MPI_LAUNCH@ -n 1 @abs_top_builddir@/tests/test_mpi")) && check_reports();
+
+# test with 2 MPI tasks
+
+$ENV{SCT_PROC_CHOICE}="SCT_SELECT_ALL";
+$ENV{SCT_CALLSTATS}=0;
+#parse(run_prg("@MPI_LAUNCH@ -n 2 @abs_top_builddir@/tests/test_mpi")) && check_reports();
+run_prg("@MPI_LAUNCH@ -n 2 @abs_top_builddir@/tests/test_mpi");
+
+# test with 4 and 8 MPI tasks
+
+$ENV{SCT_PROC_CHOICE}="SCT_REDUCE_ALL";
+#parse(run_prg("@MPI_LAUNCH@ -n 4 @abs_top_builddir@/tests/test_mpi")) && check_reports();
+#parse(run_prg("@MPI_LAUNCH@ -n 8 @abs_top_builddir@/tests/test_mpi")) && check_reports();

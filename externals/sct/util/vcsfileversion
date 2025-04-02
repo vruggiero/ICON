@@ -1,0 +1,12 @@
+#! /bin/sh
+test x${DEBUG+set} = xset && set -x
+if (cd `dirname $1` && git rev-parse --is-inside-work-tree \
+  >/dev/null 2>/dev/null); then
+  # this is a git repository
+  for srcfile in "$@" ; do
+    (cd `dirname $srcfile` && git log -1 --format='%h' `basename $srcfile`)
+  done
+else
+  # let's assume this is in svn
+  exec svn info "$@" | grep -i '^last changed rev:' | cut -d' ' -f 4
+fi
