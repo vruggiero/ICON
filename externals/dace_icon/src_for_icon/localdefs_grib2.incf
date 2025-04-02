@@ -1,0 +1,55 @@
+!
+!+ Local definitions for missing entries in DWD GRIB_API tables
+!
+! Description:
+! Local definitions for missing entries in DWD GRIB_API tables
+!
+! Current Code Owner: DWD, Harald Anlauf
+!    phone: +49 69 8062 4941
+!    fax:   +49 69 8062 3721
+!    email: harald.anlauf@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_47        2016-06-06 Harald Anlauf
+!  Split localdefs2 from shortnames_grib2.incf
+!
+!-------------------------------------------------------------
+! Missing in grib1/localConcepts/edzw/shortName.def:
+!-------------------------------------------------------------
+!PARAM(502315,'NCCLOUD',dis=0,cat=6,num=28,&
+!      longname='Number of cloud droplets per unit mass of air')
+!PARAM(502316,'NCICE',dis=0,cat=6,num=29,&
+!      longname='Number of cloud ice particles per unit mass of air')
+!PARAM(503106,'QH',dis=0,cat=1,num=71,&
+!      longname='Hail  mixing ratio')
+!PARAM(503115,'NCRAIN',dis=0,cat=1,num=228,&
+!      longname='Specific number concentration of rain')
+!PARAM(503117,'NCSNOW',dis=0,cat=1,num=217,&
+!      longname='Specific number concentration of snow')
+!PARAM(503118,'NCGRAUPEL',dis=0,cat=1,num=218,&
+!      longname='Specific number concentration of graupel')
+!PARAM(503119,'NCHAIL',dis=0,cat=1,num=219,&
+!      longname='Specific number concentration of hail')
+!-----------------------------------------
+! Local definitions for ECMWF-only entries
+!-----------------------------------------
+PARAM(999075,'crwc',dis=0,cat=1,num=85,&
+      longname='Specific rain water content')
+PARAM(999076,'cswc',dis=0,cat=1,num=86,&
+      longname='Specific snow water content')
+PARAM(999151,'msl',dis=0,cat=3,num=0,T_FFS=101,&
+      longname='Mean sea level pressure')
+PARAM(999152,'lnsp',dis=0,cat=3,num=25,T_FFS=105,&
+      longname='Logarithm of surface pressure')
+PARAM(999228,'tp',dis=0,cat=1,num=193,T_FFS=1,&
+      longname='Total precipitation')
+PARAM(999246,'clwc',dis=0,cat=1,num=83,&
+      longname='Specific cloud liquid water content')
+PARAM(999247,'ciwc',dis=0,cat=1,num=84,&
+      longname='Specific cloud ice water content')
+!------------------------------------------------
+! Number of local definitions for missing entries
+!------------------------------------------------
+#define TABSIZE_LOCAL (0+7)

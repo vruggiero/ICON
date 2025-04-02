@@ -1,0 +1,105 @@
+!> Find namelist with name "nml", that contains tag=val, and position the namelist file
+!! to the start of this namelist
+subroutine find_nml(nml,tag,val,status,unit)
+  use mo_exception, only: finish
+  use mo_namelist,  only: position_nml, &
+                          POSITIONED,   &
+                          nnml
+
+  character(len=*), intent(in)  :: nml
+  character(len=*), intent(in)  :: tag
+  integer,          intent(in)  :: val
+  integer,          intent(out) :: status
+  integer,          intent(out) :: unit
+  
+  character(len=1000) :: line = ''
+  logical :: lrewind = .true.
+  integer :: inml, inml_
+  integer :: stat, ios, val_
+  
+  status = -1
+  lrewind = .true.
+  inml    = 0
+  inml_   = 0
+  nml_loop: do
+    call position_nml(name=nml, lrewind=lrewind, status=stat)
+    if (stat == POSITIONED) then
+      inml_ = inml_ + 1
+      ! Scan namelist for occurence of tag
+      entries_loop: do 
+        read(nnml,'(A)',iostat=ios) line
+        ! write(0,*) inml_,'line:',trim(line)
+        if (ios /= 0) exit entries_loop
+        call del_white(line)
+        if (lmatch('/').or.lmatch('$end').or.lmatch('&end')) exit entries_loop
+        if (lmatch(trim(tag)//'=')) then
+          if (len_trim(line) > len_trim(tag)+1) then
+            read(line(len_trim(tag)+2:),*) val_
+            if (val == val_) then
+              inml = inml_
+              exit entries_loop
+            end if
+          end if
+        end if
+      end do entries_loop
+    else
+      exit nml_loop
+    end if
+    lrewind = .false.
+  end do nml_loop
+
+  if (inml > 0) then
+    lrewind = .true.
+    do inml_ = 1, inml
+      call position_nml(name=nml, lrewind=lrewind, status=stat)
+      if (stat /= POSITIONED) call finish('find_nml(for CADS)', &
+           'Inconsistent namelist positioning')
+    end do
+    status = 0
+    unit = nnml
+  end if
+  
+contains
+  
+  function lmatch(pattern)
+    logical :: lmatch
+    character(len=*), intent(in) :: pattern
+    character :: cp, cl
+    integer :: i, l
+    lmatch = .true.
+    l = len_trim(pattern)
+    if (len_trim(line) < l) then ; lmatch = .false. ; return ; endif
+    do i = 1, l
+      cp = lower(pattern(i:i))
+      cl = lower(line   (i:i))
+      if (cp /= cl) then ; lmatch = .false. ; return ; endif
+    end do
+  end function lmatch
+  
+  subroutine del_white(str)
+    character(len=*), intent(inout) :: str
+    integer :: i, ic, l
+    l = 0
+    do i = 1, len_trim(str)
+      ic = iachar(str(i:i))
+      if (ic /= 9 .and. ic /= 32) then
+        l = l+1
+        str(l:l) = str(i:i)
+      end if
+    end do
+    str(l+1:) = ''
+  end subroutine del_white
+  
+  function lower(c) result(cl)
+    character :: cl
+    character, intent(in) :: c
+    integer :: i
+    i = iachar(c)
+    if (i >= 65 .and. i <= 90) then
+      cl = achar(i+32)
+    else
+      cl = c
+    end if
+  end function lower
+  
+end subroutine find_nml

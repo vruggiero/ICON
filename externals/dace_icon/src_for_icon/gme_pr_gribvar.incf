@@ -1,0 +1,82 @@
+!
+!+ Define GRIB CODE table layout (derived type ar_des)
+!
+! Description:
+!   Define GRIB CODE table layout.
+!   This include file declares the derived data type ar_des
+!   which is used to describe the desired GRIB variables.
+!
+!   The parameter max_var_num needed to declare the maxinum number of
+!   possible GRIB variables is also given in this file.  (This is
+!   superseeded by parameter maktuell in file gme_gribtab.incf).
+!
+!   Note that this file may be included in FREE and FIXED form F90
+!   programs, since it contains no continuation lines
+!
+! Current Code Owner: DWD, Andreas Rhodin
+!    phone: +49 69 8062 2722
+!    fax:   +49 69 8062 3721
+!    email: andreas.rhodin@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_1         2008/11/05 Andreas Rhodin
+!  First operational 3D-Var release
+! V1_4         2009/03/26 Andreas Rhodin
+!  add 'center' to gribtable entries
+! V1_10        2010/04/20 Michael Gertz
+!  Adaptions for SVN
+! V1_13        2011/11/01 Andreas Rhodin
+!  changed 3dvar revision numbers (CVS->SVN)
+! V1_22        2013-02-13 Harald Anlauf
+!  remove SEQUENCE attribute: avoid unaligned variables (Intel compiler)
+! V1_47        2016-06-06 Harald Anlauf
+!  Handle ECMWF's GRIB1 coding of t2m ('2t')
+!
+! Code Description:
+! Language: Fortran 95.
+! Software Standards:
+!
+! Authors:
+! Andreas Rhodin  DWD  2003  extracted from GME code, adapted to 3dvar
+!=======================================================================
+!
+! Declarations:
+!
+!
+! Parameters:
+!
+!     INTEGER, PARAMETER :: max_var_num  = 150 ! Max. number of variables
+!
+!=======================================================================
+!
+! Declaration of ar_des
+!
+      TYPE ar_des
+!      SEQUENCE
+       CHARACTER(LEN=16)              :: name         ! name of variable
+       INTEGER                        :: center       ! code for center
+       INTEGER                        :: tabtyp       ! grib table number
+       INTEGER                        :: levtyp       ! code for leveltype
+       INTEGER                        :: ee           ! element code
+       INTEGER                        :: levtop       ! top of layer
+       INTEGER                        :: levbot       ! bottom of layer
+       REAL(wp)                       :: fak          ! factor
+       REAL(wp)                       :: bias         ! bias
+       CHARACTER(LEN=3)               :: dattyp       ! defined kind of data:
+!                                                       I: Initial data
+!                                                       P: Pressure level data
+!                                                       R: Restart data
+       INTEGER                        :: ntri         ! time range indicator
+       INTEGER                        :: rang         ! number of dimensions
+       CHARACTER (LEN=10)             :: iname        ! name used in the program
+       CHARACTER (LEN=8)              :: units        ! units
+       CHARACTER (LEN=3)              :: ipc          ! Interpolation Code:
+!
+!      1. Interpolation method Q, L, M, or N means Quadratic, Linear, Match
+!         or Nearest gridpoint
+!      2. Monotony switch F or T
+!      3. Positive Definite switch F or T
+!
+      END TYPE ar_des

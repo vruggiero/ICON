@@ -1,0 +1,26 @@
+!
+!+ Common block /info_3dvar_common/
+!
+! $Id$
+!
+! Description:
+!   disentangle dependencies between info_3dvar and mo_version
+!
+! Current Code Owner: DWD, Harald Anlauf
+!    phone: +49 69 8062 4941
+!    fax:   +49 69 8062 3721
+!    email: harald.anlauf@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_42        2015-06-08 Harald Anlauf
+!  Disentangle modules info_3dvar and mo_version
+!
+! Code Description:
+! Language: Fortran 2003.
+! Software Standards:
+!==============================================================================
+
+  character(len=20)       :: INFO_Tag, INFO_Date
+  common /info_3dvar_common/ INFO_Tag, INFO_Date

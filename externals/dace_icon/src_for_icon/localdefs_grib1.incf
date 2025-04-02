@@ -1,0 +1,111 @@
+!
+!+ Local definitions for missing entries in DWD GRIB_API tables
+!
+! Description:
+! Local definitions for missing entries in DWD GRIB_API tables
+!
+! Current Code Owner: DWD, Harald Anlauf
+!    phone: +49 69 8062 4941
+!    fax:   +49 69 8062 3721
+!    email: harald.anlauf@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_47        2016-06-06 Harald Anlauf
+!  Split localdefs1 from shortnames_grib1.incf
+!
+!-------------------------------------------------------------
+! Missing in grib1/localConcepts/edzw/shortName.def:
+!-------------------------------------------------------------
+PARAM(502315,'NCCLOUD',table=201,code=221, insert=.true.,     &
+      longname='Number of cloud droplets per unit mass of air')
+PARAM(502316,'NCICE',table=201,code=223, insert=.true.,            &
+      longname='Number of cloud ice particles per unit mass of air')
+!PARAM(502946,'VIS',table=2,code=20, insert=.true.,       &! fixed in
+!      longname='Visibility')                              ! eccodes-2.28
+PARAM(503055,'QV_DIA',table=203,code=211, insert=.true., &
+      longname='Specific humidity (diagnostic)')
+PARAM(503056,'QC_DIA',table=203,code=212, insert=.true., &
+      longname='Specific cloud water content (diagnostic)')
+PARAM(503057,'QI_DIA',table=203,code=213, insert=.true., &
+      longname='Specific cloud ice content (diagnostic)')
+PARAM(503079,'SMI',table=203,code=200,leveltype=111, insert=.true.,&
+      longname='Soil moisture index (multilayers)')
+PARAM(503106,'QH',table=201,code=98, insert=.true.,&
+      longname='Hail  mixing ratio')
+PARAM(503311,'NCRAIN',table=201,code=222, insert=.true.,&
+      longname='Specific number concentration of rain')
+PARAM(503313,'NCSNOW',table=201,code=224, insert=.true.,&
+      longname='Specific number concentration of snow')
+PARAM(503314,'NCGRAUPEL',table=201,code=225, insert=.true.,&
+      longname='Specific number concentration of graupel')
+PARAM(503315,'NCHAIL',table=201,code=226, insert=.true.,&
+      longname='Specific number concentration of hail')
+PARAM(503566,'RECLOUD',table=255,code=129, insert=.true.,&
+      longname='Effective radius of cloud water')
+PARAM(503567,'RERAIN',table=255, code=130, insert=.true.,&
+      longname='Effective radius of rain')
+PARAM(503568,'REICE',table=255, code=131, insert=.true.,&
+      longname='Effective radius of cloud ice')
+PARAM(503569,'RESNOW',table=255, code=132, insert=.true.,&
+      longname='Effective radius of snow')
+PARAM(503570,'REGRAUPEL',table=255, code=133, insert=.true.,&
+      longname='Effective radius of graupel')
+PARAM(503571,'REHAIL',table=255, code=134, insert=.true.,&
+      longname='Effective radius of hail')
+!--------------------------------------------------------------------------
+! Missing in grib1/localConcepts/edzw/shortName.def, using dummy table 255:
+!--------------------------------------------------------------------------
+PARAM(500597,'THETA_V',table=255,code=15, insert=.true.,&
+      longname='virtual potential temperature')
+PARAM(503241,'DUSTA',table=255,code=1, insert=.true.,&
+      longname='Modal prognostic mass mixing ratio of mineral dust particles (fine mode)')
+PARAM(503242,'DUSTB',table=255,code=2, insert=.true.,&
+      longname='Modal prognostic mass mixing ratio of mineral dust particles (medium mode)')
+PARAM(503243,'DUSTC',table=255,code=3, insert=.true.,&
+      longname='Modal prognostic mass mixing ratio of mineral dust particles (coarse mode)')
+PARAM(502340,'SNOWC',table=255,code=4, insert=.true.,&
+      longname='Snow cover')
+PARAM(503352,'T_2M_L',table=255,code=11,leveltype=105,level=2, insert=.true.,&
+      longname='2m Temperature')
+PARAM(503353,'TD_2M_L',table=255,code=17,leveltype=105,level=2, insert=.true.,&
+      longname='2m Dew Point Temperature')
+PARAM(503354,'RELHUM_2M_L',table=255,code=52,leveltype=105,level=2, insert=.true.,&
+      longname='2m Relative Humidity')
+PARAM(503743,'U_10M_AV',table=255,code=33,leveltype=105,level=10, insert=.true.,&
+      longname='U-component of 10m wind - time average')
+PARAM(503744,'V_10M_AV',table=255,code=34,leveltype=105,level=10, insert=.true.,&
+      longname='V-component of 10m wind - time average')
+PARAM(503752,'ASWDIR_S_OS',table=255,code=22,leveltype=208,range=3, insert=.true.,&
+      longname='Downward direct short wave radiation flux at surface &
+               &on horizontal plane including orographic shadin')
+!--------------------------------------------------
+! allsky dummies for grib1 (no templates available)
+!--------------------------------------------------
+PARAM(503358,'RCLD',table=255,code=5, insert=.true.,&
+      longname='Standard Deviation of saturation deficit')
+PARAM(503715,'CLC_RAD',table=255,code=215, insert=.true.,&
+      longname='Cloud cover for use in radiative transfer &
+               &(modified where large hydrometeors are present)')
+!-----------------------------------------
+! Local definitions for ECMWF-only entries
+!-----------------------------------------
+PARAM(999075,'crwc',table=128,code=75,&
+      longname='Specific rain water content')
+PARAM(999076,'cswc',table=128,code=76,&
+      longname='Specific snow water content')
+PARAM(999151,'msl',table=128,code=151,&
+      longname='Mean sea level pressure')
+PARAM(999152,'lnsp',table=128,code=152,&
+      longname='Logarithm of surface pressure')
+PARAM(999228,'tp',table=128,code=228,&
+      longname='Total precipitation')
+PARAM(999246,'clwc',table=128,code=246,&
+      longname='Specific cloud liquid water content')
+PARAM(999247,'ciwc',table=128,code=247,&
+      longname='Specific cloud ice water content')
+!------------------------------------------------
+! Number of local definitions for missing entries
+!------------------------------------------------
+#define TABSIZE_LOCAL (17+12+1+7)

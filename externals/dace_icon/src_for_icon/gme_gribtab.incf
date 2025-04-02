@@ -1,0 +1,503 @@
+!
+!+ Table of all variables which may be subjected to I/O via GRIB1 code
+!
+! Description:
+!   Table of all variables which may be subjected to I/O via GRIB1 code
+!
+!   A variable is characterized by the following entries:
+!
+!   name:     name of variable (used in the post-processing NAMELIST)
+!   tabtyp:   number of GRIB1 table (WMO or local DWD tables)
+!   levtyp:   type of level (e.g. single or multi level, pressure level)
+!   ee:       element number
+!   levtop:   level top (e.g. for some soil variables)
+!   levbot:   level bottom
+!   factor:   factor for GRIB1 encoding/decoding (due to unit change)
+!   bias:     bias for GRIB1 encoding/decoding (e.g. K to C)
+!   dattyp:   data type, e.g. I: Initial data, R: Restart data
+!   ntri:     time range indicator (GRIB1)
+!   rang:     number of array dimensions (3, 4 or 5)
+!   iname:    name used internally (3dvar)
+!   units:    units
+!   ipc:      interpolation code, 5 CHARACTER
+!           First character:
+!           Q: bicubic interpolation, L: bilinear interpolation
+!           M: match (bilinear interp. with land/sea mask)
+!           N: nearest gridpoint (no interpolation)
+!           X: no horizontal interpolation possible
+!           Second character:
+!           T: interpolate with shape preserving scheme
+!           Third character:
+!           T: interpolate with positive-definite scheme
+!           Fourth character:
+!           Vertical interpolation code
+!           S: Spline interpolation, L: linear interpolation
+!           Fifth character:
+!           L: Interpolate with logarithm of pressure; otherwise
+!           use linear function of pressure
+!
+! Current Maintainer: DWD, Harald Anlauf, Michael Bender
+!    phone: +49 69 8062 4941
+!    fax:   +49 69 8062 3721
+!    email: harald.anlauf@dwd.de
+!
+! History:
+! Version      Date       Name
+! ------------ ---------- ----
+! V1_1         2008/11/05 Andreas Rhodin
+!  First operational 3D-Var release
+! V1_2         2008/12/04 Andreas Rhodin
+!  add grib codes: prognostic rain, snow
+! V1_4         2009/03/26 Andreas Rhodin
+!  Add entries for COSMO LETKF
+! V1_6         2009/06/10 Harald Anlauf
+!  Add ECMWF code for RELHUM
+! V1_7         2009/08/24 Hendrik Reich
+!  Changes for COSMO/LETKF
+! V1_8         2009/12/09 Andreas Rhodin
+!  add aerosol fields to table of known GRIB codes
+! V1_10        2010/04/20 Michael Gertz
+!  Adaptions for SVN
+! V1_13        2011/11/01 Andreas Rhodin
+!  changed 3dvar revision numbers (CVS->SVN)
+! V1_19        2012-04-16 Harald Anlauf
+!  changes for passing H_ICE, T_ICE, H_SNOW; add TQR, TQS for GME LETKF
+! V1_22        2013-02-13 Harald Anlauf
+!  add PF, DEN, ECMWF codes for rho, tv, missing 'internal names',
+!  exchange entries HHL/HSURF (workaround for LIBCDI bug)
+! V1_26        2013/06/27 Harald Anlauf
+!  Add ECWMF definitions for prognostic rain, snow
+!  add some invariant surface fields to GRIB table: PRS_MIN, EMIS_RAD, NDVI_MAX
+!  Fix invalid DWD GRIB1 codes
+! V1_27        2013-11-08 Andreas Rhodin
+!  add GRIB1 codes for ECHAM
+! V1_28        2014/02/26 Andreas Rhodin
+!  include NDVI_MRAT in gme_gribtab.incf
+! V1_29        2014/04/02 Harald Anlauf
+!  Fix grib1 code for air density
+! V1_35        2014-11-07 Andreas Rhodin
+!  for pressure level data associate 'FI' with 'geof' (not 'geop')
+! V1_43        2015-08-19 Andreas Rhodin
+!  include 'flake' variables in 'dwd_codes'
+! V1_45        2015-12-15 Andreas Rhodin
+!  remove double entry in dwd_codes
+! V1_46        2016-02-05 Andreas Rhodin
+!  include 'alb_dif' in 'dwd_codes' table
+! V1_47        2016-06-06 Harald Anlauf
+!  add ECMWF grib1 code for 2d==td2m, handle ECMWF's GRIB1 coding of t2m ('2t')
+!  implement fields qh,nccloud,...,nchail, dpsdt
+! V1_48        2016-10-06 Harald Anlauf
+!  add RDIV (rel.divergence)
+! V1_50        2017-01-09 Harald Anlauf
+!  Add ECMWF GRIB codes; Scaling factor for ECMWF GRIB1 fields
+! V1_51        2017-02-24 Harald Anlauf
+!  Add ECMWF code for sea-ice cover, Z, MSL, internal names sso_stdh,sso_gamma,sso_theta,sso_sigma
+!
+! Code Description:
+! Language: Fortran 95.
+! Software Standards:
+!
+! Authors:
+! Andreas Rhodin  DWD  2003       extracted from GME code
+! Andreas Rhodin  DWD  2003-2007  modifications
+! Harald Anlauf   DWD  2007-2008  modifications
+! Michael Bender  DWD  2019
+!==============================================================================
+!
+! Declarations:
+!
+!
+! Current WMO-TABLE number
+      INTEGER      , PARAMETER  :: iwmo = 2
+!
+! Current number of variables in table
+      INTEGER      , PARAMETER  :: maktuell = 273
+!
+!=======================================================================================================================
+!
+!                        name,      center,tabtyp,levtyp,ee,levtop,levbot,factor,  bias,dattyp,ntri,rang,iname,units,ipc
+!-----------------------------------------------------------------------------------------------------------------------
+!
+!!! constant fields
+!
+allocate (dwd_codes (maktuell))
+
+dwd_codes(  1) = ar_des('FIS      ',WMO0_DWD , iwmo,   1,  6,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'geosp    ','','LFF  ') !
+dwd_codes(  2) = ar_des('Z0       ',WMO0_DWD , iwmo,   1, 83,   0,   0, 0.10197_wp, 0.0_wp,'I R', 0, 3,'z0       ','','MFF  ') !
+dwd_codes(  3) = ar_des('FR_LAND  ',WMO0_DWD , iwmo,   1, 81,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'lsm      ','','MFF  ') !
+dwd_codes(  4) = ar_des('SOILTYP  ',WMO0_DWD ,  202,   1, 57,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'soiltyp  ','','NFF  ') !
+dwd_codes(  5) = ar_des('PLCOV    ',WMO0_DWD , iwmo,   1, 87,   0,   0, 100.0_wp ,  0.0_wp,'I R', 0, 3,'plcov    ','','MFF  ') !
+dwd_codes(  6) = ar_des('PLCOV_MX ',WMO0_DWD ,  202,   1, 67,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'         ','','MFF  ') !
+dwd_codes(  7) = ar_des('PLCOV_MN ',WMO0_DWD ,  202,   1, 68,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'         ','','MFF  ') !
+dwd_codes(  8) = ar_des('FOR_E    ',WMO0_DWD ,  202,   1, 75,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'for_e    ','','MFF  ') !
+dwd_codes(  9) = ar_des('FOR_D    ',WMO0_DWD ,  202,   1, 76,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'for_d    ','','MFF  ') !
+dwd_codes( 10) = ar_des('LAI      ',WMO0_DWD ,  202,   1, 61,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'lai      ','','MFF  ') !
+dwd_codes( 11) = ar_des('LAI_MX   ',WMO0_DWD ,  202,   1, 69,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'         ','','MFF  ') !
+dwd_codes( 12) = ar_des('LAI_MN   ',WMO0_DWD ,  202,   1, 70,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'         ','','MFF  ') !
+dwd_codes( 13) = ar_des('ROOTDP   ',WMO0_DWD ,  202,   1, 62,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'rootdp   ','','MFF  ') !
+dwd_codes( 14) = ar_des('VIO3     ',WMO0_DWD ,  202,   1, 65,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'vio3     ','','LFF  ') !
+dwd_codes( 15) = ar_des('HMO3     ',WMO0_DWD ,  202,   1, 64,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'hmo3     ','','LFF  ') !
+dwd_codes( 16) = ar_des('AER_SEA  ',WMO0_DWD ,  202,   1, 99,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'         ','','LFF  ') !
+dwd_codes( 17) = ar_des('AER_LAN  ',WMO0_DWD ,  202,   1, 99,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'         ','','LFF  ') !
+dwd_codes( 18) = ar_des('AER_URB  ',WMO0_DWD ,  202,   1, 99,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'         ','','LFF  ') !
+dwd_codes( 19) = ar_des('AER_DES  ',WMO0_DWD ,  202,   1, 99,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'         ','','LFF  ') !
+dwd_codes( 20) = ar_des('ALBEDO_B ',WMO0_DWD , iwmo,   1, 84,   0,   0, 100._wp  ,  0.0_wp,'   ', 3, 3,'         ','','MFF  ') !
+dwd_codes( 21) = ar_des('SSO_STDH ',WMO0_DWD ,  202,   1, 46,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'sso_stdh ','','LFF  ') !
+dwd_codes( 22) = ar_des('SSO_GAMMA',WMO0_DWD ,  202,   1, 47,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'sso_gamma','','LFF  ') !
+dwd_codes( 23) = ar_des('SSO_THETA',WMO0_DWD ,  202,   1, 48,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'sso_theta','','LFF  ') !
+dwd_codes( 24) = ar_des('SSO_SIGMA',WMO0_DWD ,  202,   1, 49,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'sso_sigma','','LFF  ') !
+dwd_codes( 25) = ar_des('FC       ',WMO0_DWD ,  202,   1,113,   0,   0, 1.0_wp,     0.0_wp,'   ', 0, 3,'fc       ','','XFF  ') ! Coriolis parameter [1/s]
+dwd_codes( 26) = ar_des('RLAT     ',WMO0_DWD ,  202,   1,114,   0,   0, 57.296_wp,  0.0_wp,'   ', 0, 3,'rlat     ','','XFF  ') ! Geographical lat.  [deg]
+dwd_codes( 27) = ar_des('RLON     ',WMO0_DWD ,  202,   1,115,   0,   0, 57.296_wp,  0.0_wp,'   ', 0, 3,'rlon     ','','XFF  ') ! Geographical lon.  [deg]
+dwd_codes( 28) = ar_des('HHL      ',WMO0_DWD , iwmo, 109,  8,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'hhl      ','','     ') ! geometric height above NN
+dwd_codes( 29) = ar_des('HSURF    ',WMO0_DWD , iwmo,   1,  8,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'hsurf    ','','     ') ! geometric height above NN
+!
+!!! main multi level fields
+!
+dwd_codes( 30) = ar_des('U        ',WMO0_DWD , iwmo, 110, 33,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'u    ','','QFF  ') ! u - wind
+dwd_codes( 31) = ar_des('V        ',WMO0_DWD , iwmo, 110, 34,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'v    ','','QFF  ') ! v - wind
+dwd_codes( 32) = ar_des('T        ',WMO0_DWD , iwmo, 110, 11,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'t    ','','QFF  ') ! temperature
+dwd_codes( 33) = ar_des('QV       ',WMO0_DWD , iwmo, 110, 51,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'q    ','','QFT  ') ! spec.hum.
+dwd_codes( 34) = ar_des('QC       ',WMO0_DWD ,  201, 110, 31,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qcl  ','','QFT  ') ! cloud water
+dwd_codes( 35) = ar_des('QI       ',WMO0_DWD ,  201, 110, 33,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qci  ','','QFT  ') ! cloud ice
+dwd_codes( 36) = ar_des('QR       ',WMO0_DWD ,  201, 110, 35,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qr   ','','QFT  ') ! prognostic rain
+dwd_codes( 37) = ar_des('QS       ',WMO0_DWD ,  201, 110, 36,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qs   ','','QFT  ') ! prognostic snow
+dwd_codes( 38) = ar_des('QG       ',WMO0_DWD ,  201, 110, 39,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qg   ','','QFT  ') ! prognostic graupel
+!
+! +++ check +++
+!                                                        +++
+dwd_codes( 39) = ar_des('QH       ',WMO0_DWD ,  201, 110, 98,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qh       ','','QFT  ') ! prognostic hail
+dwd_codes( 40) = ar_des('NCCLOUD  ',WMO0_DWD ,  201, 110,221,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'nccloud  ','','QFT  ') ! Number of cloud droplets per unit mass of air
+dwd_codes( 41) = ar_des('NCRAIN   ',WMO0_DWD ,  201, 110,222,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'ncrain   ','','QFT  ') ! Specific number concentration of rain
+dwd_codes( 42) = ar_des('NCSNOW   ',WMO0_DWD ,  201, 110,224,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'ncsnow   ','','QFT  ') ! Specific number concentration of snow
+dwd_codes( 43) = ar_des('NCICE    ',WMO0_DWD ,  201, 110,223,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'ncice    ','','QFT  ') ! Number of cloud ice particles per unit mass of air
+dwd_codes( 44) = ar_des('NCGRAUPEL',WMO0_DWD ,  201, 110,225,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'ncgraupel','','QFT  ') ! Specific number concentration of graupel
+dwd_codes( 45) = ar_des('NCHAIL   ',WMO0_DWD ,  201, 110,226,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'nchail   ','','QFT  ') ! Specific number concentration of hail
+
+dwd_codes( 46) = ar_des('O3       ',WMO0_DWD ,  202, 110,180,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'o3   ','','QFT  ') !
+dwd_codes( 47) = ar_des('FIF      ',WMO0_DWD , iwmo, 110,  6,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'geof ','','LFF  ') ! geop.(full lev.)
+dwd_codes( 48) = ar_des('FI       ',WMO0_DWD , iwmo, 109,  6,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'geoh ','','LFF  ') ! geop.(half lev.)
+dwd_codes( 49) = ar_des('OMEGA    ',WMO0_DWD , iwmo, 110, 39,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'omega','','LFF  ') !
+dwd_codes( 50) = ar_des('RELHUM   ',WMO0_DWD , iwmo, 110, 52,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'rh   ','','LTTL ') !
+dwd_codes( 51) = ar_des('PSI      ',WMO0_DWD , iwmo, 110, 35,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'psi  ','','     ') ! streamfunction
+dwd_codes( 52) = ar_des('CHI      ',WMO0_DWD , iwmo, 110, 36,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'chi  ','','     ') ! velocity potential
+dwd_codes( 53) = ar_des('W        ',WMO0_DWD , iwmo, 109, 40,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'w    ','','     ') ! vertical wind (m/s)
+dwd_codes( 54) = ar_des('PP       ',WMO0_DWD ,  201, 110,139,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'pp   ','','     ') ! pressure perturbation (hPa)
+dwd_codes( 55) = ar_des('P        ',WMO0_DWD , iwmo, 110,  1,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'pf   ','','     ') ! pressure (full lev.) [Pa]
+dwd_codes( 56) = ar_des('TKE      ',WMO0_DWD ,  201, 109,152,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'tke  ','','     ') ! turbulent kinetic energy (m2/s2)
+dwd_codes( 57) = ar_des('RELV     ',WMO0_DWD , iwmo, 109, 43,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'vrt  ','','QFF  ') ! rel.vorticity  [s**-1]
+dwd_codes( 58) = ar_des('RDIV     ',WMO0_DWD , iwmo, 109, 44,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'div  ','','QFF  ') ! rel.divergence [s**-1]
+!
+! diagnostic ICON fields (see corresponding GRIB 1 settings in localdefs_grib1.incf)
+!
+dwd_codes( 59) = ar_des('QV_DIA   ',WMO0_DWD ,  203, 110,211,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qv_dia  ','','QFT  ') ! specific humidity (diagnostic)
+dwd_codes( 60) = ar_des('QC_DIA   ',WMO0_DWD ,  203, 110,212,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qc_dia  ','','QFT  ') ! specific cloud water content (diagnostic)
+dwd_codes( 61) = ar_des('QI_DIA   ',WMO0_DWD ,  203, 110,213,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qi_dia  ','','QFT  ') ! specific cloud ice content (diagnostic)
+!
+! fields without defined GRIB1 equivalent, we use dummy table 255
+!
+dwd_codes( 62) = ar_des('THETA_V  ',WMO0_DWD,   255, 110, 15,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'vptmp','','     ') ! virt.pot. temperature [K]
+!
+!!! main single level fields
+!
+dwd_codes( 63) = ar_des('PS       ',WMO0_DWD , iwmo,   1,  1,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'ps      ','','LFF  ') !
+dwd_codes( 64) = ar_des('T_SNOW   ',WMO0_DWD ,  201,   1,203,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'t_snow  ','','MFF  ') ! snow    temperature
+dwd_codes( 65) = ar_des('T_G      ',WMO0_DWD , iwmo,   1, 11,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'tsurf   ','','MFF  ') ! ground  temperature
+dwd_codes( 66) = ar_des('T_S      ',WMO0_DWD , iwmo, 111, 85,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'t_s     ','','MFF  ') ! surface temperature
+dwd_codes( 67) = ar_des('T_M      ',WMO0_DWD , iwmo, 111, 85,   0,   9, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'        ','','MFF  ') !
+dwd_codes( 68) = ar_des('T_CL     ',WMO0_DWD , iwmo, 111, 85,   0,  36, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'        ','','MFF  ') !
+dwd_codes( 69) = ar_des('W_SNOW   ',WMO0_DWD , iwmo,   1, 65,   0,   0, 1000.0_wp,  0.0_wp,'I R', 0, 4,'w_snow  ','','MFF  ') ! snow water content
+dwd_codes( 70) = ar_des('W_I      ',WMO0_DWD ,  201,   1,200,   0,   0, 1000.0_wp,  0.0_wp,'I R', 0, 4,'w_i     ','','MFF  ') ! interception reservoir
+dwd_codes( 71) = ar_des('W_G1     ',WMO0_DWD , iwmo, 112, 86,   0,  10, 1000.0_wp,  0.0_wp,'I R', 0, 4,'        ','','MFF  ') !
+dwd_codes( 72) = ar_des('W_G2     ',WMO0_DWD , iwmo, 112, 86,  10, 100, 1000.0_wp,  0.0_wp,'I R', 0, 4,'        ','','MFF  ') !
+dwd_codes( 73) = ar_des('W_G3     ',WMO0_DWD , iwmo, 112, 86,  10, 100, 1000.0_wp,  0.0_wp,'   ', 0, 4,'        ','','MFF  ') !
+dwd_codes( 74) = ar_des('W_CL     ',WMO0_DWD , iwmo, 112, 86, 100, 190, 1000.0_wp,  0.0_wp,'I R', 0, 3,'        ','','MFF  ') !
+dwd_codes( 75) = ar_des('QV_S     ',WMO0_DWD , iwmo,   1, 51,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'qv_s    ','','MFT  ') ! surface specific humidity
+dwd_codes( 76) = ar_des('T_2M     ',WMO0_DWD , iwmo, 105, 11,   0,   2, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'t2m     ','','MFF  ') ! 2m temperature
+dwd_codes( 77) = ar_des('TD_2M    ',WMO0_DWD , iwmo, 105, 17,   0,   2, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'td2m    ','','MFF  ') ! 2m dewpoint
+dwd_codes( 78) = ar_des('QV_2M    ',WMO0_DWD , iwmo, 105, 51,   0,   2, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'qv2m    ','','MFT  ') !
+dwd_codes( 79) = ar_des('RH_2M    ',WMO0_DWD , iwmo, 105, 52,   0,   2, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'rh2m    ','','MFT  ') ! 2m rel.hum.
+dwd_codes( 80) = ar_des('TMIN_2M  ',WMO0_DWD , iwmo, 105, 16,   0,   2, 1.0_wp   ,  0.0_wp,'  R', 2, 3,'tmin_2m ','','MFF  ') ! min. 2m temperature
+dwd_codes( 81) = ar_des('TMAX_2M  ',WMO0_DWD , iwmo, 105, 15,   0,   2, 1.0_wp   ,  0.0_wp,'  R', 2, 3,'tmax_2m ','','MFF  ') ! max. 2m temperature
+dwd_codes( 82) = ar_des('U_10M    ',WMO0_DWD , iwmo, 105, 33,   0,  10, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'u_10m   ','','MFF  ') !
+dwd_codes( 83) = ar_des('V_10M    ',WMO0_DWD , iwmo, 105, 34,   0,  10, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'v_10m   ','','MFF  ') !
+dwd_codes( 84) = ar_des('VMAX_10M ',WMO0_DWD ,  201, 105,187,   0,  10, 1.0_wp   ,  0.0_wp,'  R', 2, 3,'vmax_10m','','MFF  ') ! max.10m wind speed
+!
+!!! fields from PARTURS/A
+!
+dwd_codes( 85) = ar_des('TKVM     ',WMO0_DWD ,  201, 109,153,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+dwd_codes( 86) = ar_des('TKVH     ',WMO0_DWD ,  201, 109,154,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+dwd_codes( 87) = ar_des('TCM      ',WMO0_DWD ,  201,   1,170,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','MFF  ') !
+dwd_codes( 88) = ar_des('TCH      ',WMO0_DWD ,  201,   1,171,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','MFF  ') !
+!
+!!! fields from PARRAD and additional diagnostic fields
+!
+dwd_codes( 89) = ar_des('SOHR_RAD ',WMO0_DWD ,  201, 110, 13,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+dwd_codes( 90) = ar_des('THHR_RAD ',WMO0_DWD ,  201, 110, 14,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+dwd_codes( 91) = ar_des('CLC      ',WMO0_DWD ,  201, 110, 29,   0,   0, 100.0_wp ,  0.0_wp,'   ', 0, 4,'clc  ','','NFF  ') ! cloud cover
+dwd_codes( 92) = ar_des('ALB_RAD  ',WMO0_DWD , iwmo,   1, 84,   0,   0, 100.0_wp ,  0.0_wp,'  R', 0, 3,'     ','','LFF  ') !
+dwd_codes( 93) = ar_des('SOBS_RAD ',WMO0_DWD , iwmo,   1,111,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','LFF  ') !
+dwd_codes( 94) = ar_des('THBS_RAD ',WMO0_DWD , iwmo,   1,112,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','LFF  ') !
+dwd_codes( 95) = ar_des('PABS_RAD ',WMO0_DWD ,  201,   1,  5,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','LFF  ') !
+dwd_codes( 96) = ar_des('SOBT_RAD ',WMO0_DWD , iwmo,   8,113,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','LFF  ') !
+dwd_codes( 97) = ar_des('THBT_RAD ',WMO0_DWD , iwmo,   8,114,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','LFF  ') !
+dwd_codes( 98) = ar_des('CLCH     ',WMO0_DWD , iwmo,   1, 75,   0,   0, 100.0_wp ,  0.0_wp,'   ', 0, 3,'clch ','','NFF  ') ! high   cloud cover
+dwd_codes( 99) = ar_des('CLCM     ',WMO0_DWD , iwmo,   1, 74,   0,   0, 100.0_wp ,  0.0_wp,'   ', 0, 3,'clcm ','','NFF  ') ! medium cloud cover
+dwd_codes(100) = ar_des('CLCL     ',WMO0_DWD , iwmo,   1, 73,   0,   0, 100.0_wp ,  0.0_wp,'   ', 0, 3,'clcl ','','NFF  ') ! low    cloud cover
+dwd_codes(101) = ar_des('CLCT     ',WMO0_DWD , iwmo,   1, 71,   0,   0, 100.0_wp ,  0.0_wp,'   ', 0, 3,'clct ','','NFF  ') ! total  cloud cover
+dwd_codes(102) = ar_des('ASOB_S   ',WMO0_DWD , iwmo,   1,111,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 3, 3,'     ','','LFF  ') !
+dwd_codes(103) = ar_des('ATHB_S   ',WMO0_DWD , iwmo,   1,112,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 3, 3,'     ','','LFF  ') !
+dwd_codes(104) = ar_des('APAB_S   ',WMO0_DWD ,  201,   1,  5,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 3, 3,'     ','','LFF  ') !
+dwd_codes(105) = ar_des('ASOB_T   ',WMO0_DWD , iwmo,   8,113,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 3, 3,'     ','','LFF  ') !
+dwd_codes(106) = ar_des('ATHB_T   ',WMO0_DWD , iwmo,   8,114,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 3, 3,'     ','','LFF  ') !
+!
+!!! fields from PARCON and additional diagnostic fields
+!
+dwd_codes(107) = ar_des('CLC_CON  ',WMO0_DWD , iwmo, 110, 72,   0,   0, 100.0_wp ,  0.0_wp,'  R', 0, 4,'     ','','NFF  ') !
+dwd_codes(108) = ar_des('DT_CON   ',WMO0_DWD ,  201, 110, 74,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+dwd_codes(109) = ar_des('DQV_CON  ',WMO0_DWD ,  201, 110, 75,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+dwd_codes(110) = ar_des('DU_CON   ',WMO0_DWD ,  201, 110, 78,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+dwd_codes(111) = ar_des('DV_CON   ',WMO0_DWD ,  201, 110, 79,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+dwd_codes(112) = ar_des('PRR_CON  ',WMO0_DWD ,  201,   1,111,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 2, 3,'     ','','LFF  ') !
+dwd_codes(113) = ar_des('PRS_CON  ',WMO0_DWD ,  201,   1,112,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','LFF  ') !
+dwd_codes(114) = ar_des('BAS_CON  ',WMO0_DWD ,  201,   1, 72,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','NFF  ') !
+dwd_codes(115) = ar_des('TOP_CON  ',WMO0_DWD ,  201,   1, 73,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','NFF  ') !
+dwd_codes(116) = ar_des('HBAS_CON ',WMO0_DWD ,  201,   2, 68,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','NFF  ') !
+dwd_codes(117) = ar_des('HTOP_CON ',WMO0_DWD ,  201,   3, 69,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','NFF  ') !
+dwd_codes(118) = ar_des('HTOP_DC  ',WMO0_DWD ,  201,   1, 82,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','NFF  ') !
+dwd_codes(119) = ar_des('MFLX_CON ',WMO0_DWD ,  201,   1,240,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','     ') ! mass flux at cov.cl.base     (kg/s2m2)
+dwd_codes(120) = ar_des('CAPE_CON ',WMO0_DWD ,  201,   1,241,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','     ') ! conv.avail.pot.energy           (J/kg)
+dwd_codes(121) = ar_des('QCGV_CON ',WMO0_DWD ,  201,   1,242,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','     ') ! moisture convergence below c.c.b (1/s)
+dwd_codes(122) = ar_des('TKE_CON  ',WMO0_DWD ,  201,   1,243,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'     ','','     ') ! convective turbulent k.energy   (J/kg)
+!
+!!! fields from PARGSP and additional diagnostic fields
+!
+dwd_codes(123) = ar_des('DT_GSP   ',WMO0_DWD ,  201, 110,124,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'         ','','LFF  ') !
+dwd_codes(124) = ar_des('DQV_GSP  ',WMO0_DWD ,  201, 110,125,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'         ','','LFF  ') !
+dwd_codes(125) = ar_des('DQC_GSP  ',WMO0_DWD ,  201, 110,127,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'         ','','LFF  ') !
+dwd_codes(126) = ar_des('DQI_GSP  ',WMO0_DWD ,  201, 110,129,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'         ','','LFF  ') !
+dwd_codes(127) = ar_des('QRS_GSP  ',WMO0_DWD ,  201, 110, 99,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'         ','','LFF  ') !
+dwd_codes(128) = ar_des('PRR_GSP  ',WMO0_DWD ,  201,   1,100,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'         ','','LFF  ') !
+dwd_codes(129) = ar_des('PRS_GSP  ',WMO0_DWD ,  201,   1,101,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'         ','','LFF  ') !
+dwd_codes(130) = ar_des('RAIN_GSP ',WMO0_DWD ,  201,   1,102,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 4, 3,'         ','','LTT  ') !
+dwd_codes(131) = ar_des('SNOW_GSP ',WMO0_DWD , iwmo,   1, 79,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 4, 3,'         ','','LTT  ') !
+dwd_codes(132) = ar_des('RAIN_CON ',WMO0_DWD ,  201,   1,113,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 4, 3,'         ','','LTT  ') !
+dwd_codes(133) = ar_des('SNOW_CON ',WMO0_DWD , iwmo,   1, 78,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 4, 3,'         ','','LTT  ') !
+dwd_codes(134) = ar_des('TOT_PREC ',WMO0_DWD , iwmo,   1, 61,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 4, 3,'tot_prec ','','LTT  ') ! total precipitation
+dwd_codes(135) = ar_des('RUNOFF_S ',WMO0_DWD , iwmo, 112, 90,   0,  10, 1.0_wp   ,  0.0_wp,'  R', 4, 3,'         ','','LFF  ') !
+dwd_codes(136) = ar_des('RUNOFF_G ',WMO0_DWD , iwmo, 112, 90,  10, 100, 1.0_wp   ,  0.0_wp,'  R', 4, 3,'         ','','LFF  ') !
+dwd_codes(137) = ar_des('ASWDIR_S ',WMO0_DWD ,  201,   1, 22,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 4, 3,'aswdir_s ','','LFF  ') ! downward direct SW radiation
+dwd_codes(138) = ar_des('ASWDIFD_S',WMO0_DWD ,  201,   1, 23,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 4, 3,'aswdifd_s','','LFF  ') ! downward diffusive radiation
+!
+!!! fields from PARSSO
+!
+dwd_codes(139) = ar_des('DU_SSO   ',WMO0_DWD ,  202, 110, 44,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+dwd_codes(140) = ar_des('DV_SSO   ',WMO0_DWD ,  202, 110, 45,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+!
+!!! fields from PROGEXP and additional diagnostic fields
+!
+dwd_codes(141) = ar_des('AUMFL_S  ',WMO0_DWD , iwmo,   1,124,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 3, 3,'     ','','LFF  ') !
+dwd_codes(142) = ar_des('AVMFL_S  ',WMO0_DWD , iwmo,   1,125,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 3, 3,'     ','','LFF  ') !
+dwd_codes(143) = ar_des('ASHFL_S  ',WMO0_DWD , iwmo,   1,122,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 3, 3,'     ','','LFF  ') !
+dwd_codes(144) = ar_des('ALHFL_S  ',WMO0_DWD , iwmo,   1,121,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 3, 3,'     ','','LFF  ') !
+!!! The following codes are in conflict with DWD GRIB1 codes:
+!dwd_codes(   )= ar_des('EXP_SI   ',WMO0_DWD ,  202, 110,120,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'     ','','LFF  ') !
+!dwd_codes(   )= ar_des('RHS_SI   ',WMO0_DWD ,  202, 110,121,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'     ','','LFF  ') !
+!dwd_codes(   )= ar_des('DTTDIV   ',WMO0_DWD ,  202, 110,122,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 4,'     ','','LFF  ') !
+!!! Valid DWD GRIB1 codes:
+dwd_codes(145) = ar_des('ZTD      ',WMO0_DWD ,  202,   1,121,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'     ','','LFF  ') !
+dwd_codes(146) = ar_des('ZWD      ',WMO0_DWD ,  202,   1,122,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'     ','','LFF  ') !
+dwd_codes(147) = ar_des('ZHD      ',WMO0_DWD ,  202,   1,123,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'     ','','LFF  ') !
+!!!
+dwd_codes(148) = ar_des('XYZ      ',WMO0_DWD ,  201,   1,230,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'     ','','XFF  ') !
+dwd_codes(149) = ar_des('CLDEPTH  ',WMO0_DWD ,  203,   1,203,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'     ','','LFF  ') !
+dwd_codes(150) = ar_des('CLCT_MOD ',WMO0_DWD ,  203,   1,204,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'     ','','LFF  ') !
+dwd_codes(151) = ar_des('HZEROCL  ',WMO0_DWD ,  201,   4, 84,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'     ','','NFF  ') !
+dwd_codes(152) = ar_des('TWATER   ',WMO0_DWD ,  201,   1, 41,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'     ','','     ') ! integrated water (kg/m2)
+dwd_codes(153) = ar_des('TDIV_HUM ',WMO0_DWD ,  201,   1, 42,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'     ','','     ') ! integrated hum.divergence (kg/m2)
+dwd_codes(154) = ar_des('TQV      ',WMO0_DWD , iwmo,   1, 54,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'tqv  ','','LFT  ') ! integrated water vapour
+dwd_codes(155) = ar_des('TQC      ',WMO0_DWD , iwmo,   1, 76,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'tqc  ','','LFT  ') !
+dwd_codes(156) = ar_des('TQI      ',WMO0_DWD , iwmo,   1, 58,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'tqi  ','','LFT  ') !
+dwd_codes(157) = ar_des('TO3      ',WMO0_DWD , iwmo,   1, 10,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'     ','','LFT  ') !
+
+!
+!!! vertically interpolated fields - fields on pressure levels
+!
+dwd_codes(158) = ar_des('PMSL     ',WMO0_DWD , iwmo, 102,  2,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 3,'pmsl ','','QFF  ') !
+dwd_codes(159) = ar_des('U        ',WMO0_DWD , iwmo, 100, 33,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'u    ','','QFFS ') !
+dwd_codes(160) = ar_des('V        ',WMO0_DWD , iwmo, 100, 34,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'v    ','','QFFS ') !
+dwd_codes(161) = ar_des('T        ',WMO0_DWD , iwmo, 100, 11,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'t    ','','QFFS ') !
+dwd_codes(162) = ar_des('QV       ',WMO0_DWD , iwmo, 100, 51,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'q    ','','QFTL ') !
+dwd_codes(163) = ar_des('QC       ',WMO0_DWD ,  201, 100, 31,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'qc   ','','QFTL ') !
+dwd_codes(164) = ar_des('FI       ',WMO0_DWD , iwmo, 100,  6,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'geof ','','QFFSL') !
+dwd_codes(165) = ar_des('OMEGA    ',WMO0_DWD , iwmo, 100, 39,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'omega','','QFFS ') !
+dwd_codes(166) = ar_des('RELHUM   ',WMO0_DWD , iwmo, 100, 52,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'rh   ','','LTTL ') !
+dwd_codes(167) = ar_des('QI       ',WMO0_DWD ,  201, 100, 33,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'qi   ','','QFTL ') !
+dwd_codes(168) = ar_des('O3       ',WMO0_DWD ,  202, 100,180,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'o3   ','','QFTL ') !
+!
+!!! Soil multi level fields
+!
+dwd_codes(169) = ar_des('T_SO     ',WMO0_DWD ,  201, 111,197,   0,  10, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'t_so    ','','MFF  ') ! soil temperature
+dwd_codes(170) = ar_des('W_SO     ',WMO0_DWD ,  201, 111,198,   0,  10, 1000.0_wp,  0.0_wp,'I R', 0, 5,'w_so    ','','MFF  ') ! soil water content  (kg/m**2)
+dwd_codes(171) = ar_des('W_SO_ICE ',WMO0_DWD ,  201, 111,199,   0,  10, 1000.0_wp,  0.0_wp,'I R', 0, 5,'w_so_ice','','MFF  ') ! soil ice   content  (kg/m**2)
+dwd_codes(172) = ar_des('SMI      ',WMO0_DWD ,  203, 111,200,   0,  10, 1.0_wp,     0.0_wp,'I R', 0, 5,'smi     ','','MFF  ') ! soil moisture index (0-1)
+!
+!!! 'other fields'
+!
+dwd_codes(173) = ar_des('FR_ICE_NC',WMO0_DWD , iwmo, 102, 91,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'         ','','MFF  ') ! NCEP ice concentration)
+dwd_codes(174) = ar_des('FR_ICE   ',WMO0_DWD , iwmo,   1, 91,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'fr_ice   ','','MFF  ') ! DWD  sea ice fraction
+dwd_codes(175) = ar_des('H_ICE    ',WMO0_DWD , iwmo,   1, 92,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'h_ice    ','','MFF  ') ! DWD  ice thickness
+dwd_codes(176) = ar_des('T_ICE    ',WMO0_DWD ,  201,   1,215,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'t_ice    ','','MFF  ') ! DWD  ice surface temperature
+dwd_codes(177) = ar_des('T_SEA    ',WMO0_DWD , iwmo,   1, 80,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'t_sea    ','','MFF  ') ! DWD  sea water temperature
+dwd_codes(178) = ar_des('FRESHSNW ',WMO0_DWD ,  201,   1,129,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'freshsnw ','','MFF  ') ! DWD  fresh snow factor
+dwd_codes(179) = ar_des('RHO_SNOW ',WMO0_DWD ,  201,   1,133,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'rho_snow ','','     ') ! DWD  snow density (kg/m3)
+dwd_codes(180) = ar_des('RSMIN    ',WMO0_DWD ,  201,   1,212,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'prs_min  ','','     ') ! DWD  minimum stomata resistance
+dwd_codes(181) = ar_des('SKT      ',WMO0_DWD ,  202,   1, 38,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'skt      ','','     ') ! DWD  skin temperature
+dwd_codes(182) = ar_des('SKC      ',WMO0_DWD ,  202,   1, 39,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'skc      ','','     ') ! DWD  skin conductivity
+dwd_codes(183) = ar_des('EMIS_RAD ',WMO0_DWD ,  202,   1, 56,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'emis_rad ','','     ') ! DWD  surface emissivity
+dwd_codes(184) = ar_des('NDVI_MAX ',WMO0_DWD ,  202,   1, 78,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'ndvi_max ','','     ') ! DWD  normalized differential vegetation index
+dwd_codes(185) = ar_des('NDVI_MRAT',WMO0_DWD ,  202,   1, 79,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'ndvi_mrat','','     ') ! DWD  monthly mean / yearly maximim
+dwd_codes(186) = ar_des('VIS      ',WMO0_DWD , iwmo,   1, 20,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'vis      ','','MFF  ') ! Visibility
+dwd_codes(187) = ar_des('CEILING  ',WMO0_DWD ,  203,   1,157,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'ceiling  ','','     ') ! Ceiling (cloud frac. > 50%)
+
+dwd_codes(188) = ar_des('VAR_U    ',WMO0_DWD ,  202, 100, 41,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'u    ','','     ') ! OI analysis error
+dwd_codes(189) = ar_des('VAR_V    ',WMO0_DWD ,  202, 100, 42,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'v    ','','     ') ! OI analysis error
+dwd_codes(190) = ar_des('VAR_FI   ',WMO0_DWD ,  202, 100, 40,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'geof ','','     ') ! OI analysis error
+!
+!!! 'ECMWF codes'
+!
+dwd_codes(191) = ar_des('Z        ',WMO0_ECMWF, 128,   1,129,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'geosp','','LFF  ') ! geopotential at surface
+dwd_codes(192) = ar_des('Z        ',WMO0_ECMWF, 128, 100,129,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'geof ','','LFF  ') ! geopotential
+dwd_codes(193) = ar_des('T        ',WMO0_ECMWF, 128, 109,130,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'t    ','','QFF  ') ! temperature
+dwd_codes(194) = ar_des('U        ',WMO0_ECMWF, 128, 109,131,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'u    ','','QFF  ') ! u - wind
+dwd_codes(195) = ar_des('V        ',WMO0_ECMWF, 128, 109,132,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'v    ','','QFF  ') ! v - wind
+dwd_codes(196) = ar_des('Q        ',WMO0_ECMWF, 128, 109,133,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'q    ','','QFF  ') ! spec.hum.
+dwd_codes(197) = ar_des('SP       ',WMO0_ECMWF, 128,   1,134,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'ps   ','','LFF  ') ! surface pressure
+dwd_codes(198) = ar_des('MSL      ',WMO0_ECMWF, 128,   1,151,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 3,'pmsl ','','QFF  ') ! mean sea level pressure
+dwd_codes(199) = ar_des('LSM      ',WMO0_ECMWF, 128,   1,172,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'lsm  ','','MFF  ') ! land/sea mask
+dwd_codes(200) = ar_des('CI       ',WMO0_ECMWF, 128,   1, 31,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'fr_ice','','MFF ') ! sea ice cover
+dwd_codes(201) = ar_des('SR       ',WMO0_ECMWF, 128,   1,173,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'z0   ','','MFF  ') ! surface roughness (before 41r1)
+dwd_codes(202) = ar_des('FSR      ',WMO0_ECMWF, 128,   1,244,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 3,'z0   ','','MFF  ') ! forecast surface roughness
+dwd_codes(203) = ar_des('SKT      ',WMO0_ECMWF, 128,   1,235,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'tsurf','','MFF  ') ! surface temperature
+dwd_codes(204) = ar_des('CLWC     ',WMO0_ECMWF, 128, 109,246,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qcl  ','','QFT  ') ! cloud liquid water
+dwd_codes(205) = ar_des('CIWC     ',WMO0_ECMWF, 128, 109,247,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qci  ','','QFT  ') ! cloud ice water
+dwd_codes(206) = ar_des('LNSP     ',WMO0_ECMWF, 128,   1,152,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'lnsp ','','LFF  ') ! surface pressure
+dwd_codes(207) = ar_des('VO       ',WMO0_ECMWF, 128, 109,138,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'vrt  ','','QFF  ') ! rel. vorticity [s**-1]
+dwd_codes(208) = ar_des('D        ',WMO0_ECMWF, 128, 109,155,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'div  ','','QFF  ') ! divergence [s**-1]
+dwd_codes(209) = ar_des('RELHUM   ',WMO0_ECMWF, 128, 100,157,   0,   0, 1.0_wp   ,  0.0_wp,' P ', 0, 4,'rh   ','','LTTL ') !
+dwd_codes(210) = ar_des('CRWC     ',WMO0_ECMWF, 128, 109, 75,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qr   ','','QFT  ') ! cloud rain water
+dwd_codes(211) = ar_des('CSWC     ',WMO0_ECMWF, 128, 109, 76,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'qs   ','','QFT  ') ! cloud snow water
+
+dwd_codes(212) = ar_des('P        ',WMO0_ECMWF, 128, 110, 54,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'pf   ','','     ') ! pressure (full lev.) [Pa]
+dwd_codes(213) = ar_des('VPTMP    ',WMO0_ECMWF,   3, 110, 12,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'vptmp','','     ') ! virt.pot. temperature [K]
+dwd_codes(214) = ar_des('DEN      ',WMO0_ECMWF,iwmo, 110, 89,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'den  ','','     ') ! air density       [kg/m3]
+dwd_codes(215) = ar_des('10U      ',WMO0_ECMWF, 128, 105,165,   0,  10, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'u_10m','','MFF  ') ! 10m u-wind          [m/s]
+dwd_codes(216) = ar_des('10V      ',WMO0_ECMWF, 128, 105,166,   0,  10, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'v_10m','','MFF  ') ! 10m u-wind          [m/s]
+dwd_codes(217) = ar_des('2T       ',WMO0_ECMWF, 128, 105,167,   0,   2, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'t2m  ','','MFF  ') ! 2m temperature        [K]
+dwd_codes(218) = ar_des('2D       ',WMO0_ECMWF, 128, 105,168,   0,   2, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'td2m ','','MFF  ') ! 2m dewpoint temp.     [K]
+dwd_codes(219) = ar_des('TCC      ',WMO0_ECMWF, 128,   1,164,   0,   0, 100.0_wp ,  0.0_wp,'   ', 0, 3,'clct ','(0-1)','NFF  ') ! total  cloud cover
+dwd_codes(220) = ar_des('LCC      ',WMO0_ECMWF, 128,   1,186,   0,   0, 100.0_wp ,  0.0_wp,'   ', 0, 3,'clcl ','(0-1)','NFF  ') ! low    cloud cover
+dwd_codes(221) = ar_des('MCC      ',WMO0_ECMWF, 128,   1,187,   0,   0, 100.0_wp ,  0.0_wp,'   ', 0, 3,'clcm ','(0-1)','NFF  ') ! medium cloud cover
+dwd_codes(222) = ar_des('HCC      ',WMO0_ECMWF, 128,   1,188,   0,   0, 100.0_wp ,  0.0_wp,'   ', 0, 3,'clch ','(0-1)','NFF  ') ! high   cloud cover
+dwd_codes(223) = ar_des('MN2T     ',WMO0_ECMWF, 128, 105,202,   0,   2, 1.0_wp   ,  0.0_wp,'  R', 2, 3,'tmin_2m ',''  ,'MFF  ') ! min. 2m temperature
+dwd_codes(224) = ar_des('MX2T     ',WMO0_ECMWF, 128, 105,201,   0,   2, 1.0_wp   ,  0.0_wp,'  R', 2, 3,'tmax_2m ',''  ,'MFF  ') ! max. 2m temperature
+dwd_codes(225) = ar_des('10FG     ',WMO0_ECMWF, 128, 105, 49,   0,  10, 1.0_wp   ,  0.0_wp,'  R', 2, 3,'vmax_10m',''  ,'MFF  ') ! max.10m wind gust
+dwd_codes(226) = ar_des('MX2T6    ',WMO0_ECMWF, 128, 105,121,   0,   2, 1.0_wp   ,  0.0_wp,'  R', 2, 3,'tmax_2m ',''  ,'MFF  ') ! max. 2m temperature (6h)
+dwd_codes(227) = ar_des('MN2T6    ',WMO0_ECMWF, 128, 105,122,   0,   2, 1.0_wp   ,  0.0_wp,'  R', 2, 3,'tmin_2m ',''  ,'MFF  ') ! min. 2m temperature (6h)
+dwd_codes(228) = ar_des('10FG6    ',WMO0_ECMWF, 128, 105,123,   0,  10, 1.0_wp   ,  0.0_wp,'  R', 2, 3,'vmax_10m',''  ,'MFF  ') ! max.10m wind gust (6h)
+dwd_codes(229) = ar_des('TP       ',WMO0_ECMWF, 128,   1,228,   0,   0, 1000.0_wp,  0.0_wp,'   ', 4, 3,'tot_prec','m' ,'LTT  ') ! total precipitation
+dwd_codes(230) = ar_des('SSRD     ',WMO0_ECMWF, 128,   1,169,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 4, 3,'ssrd    ',''  ,'LTT  ') ! surf.solar rad. [J/m2]
+dwd_codes(231) = ar_des('STRD     ',WMO0_ECMWF, 128,   1,175,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 4, 3,'strd    ',''  ,'LTT  ') ! surf.therm.rad. [J/m2]
+!
+!!! Misc. model fields
+!
+dwd_codes(232) = ar_des('H_SNOW   ',WMO0_DWD, iwmo,   1, 66,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'h_snow ','','MFF  ') ! snow depth [m]
+dwd_codes(233) = ar_des('ALB_DIF  ',WMO0_DWD,  202,   1,129,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 3, 3,'alb_dif','','MFF  ') ! diffusive solar albedo
+dwd_codes(234) = ar_des('DPSDT    ',WMO0_DWD ,iwmo,   1,  3,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'dpsdt  ','','LFF  ') !
+dwd_codes(235) = ar_des('SNOWC    ',WMO0_DWD,  255,   1,  4,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 4,'snowc  ','','MFF  ') ! snow cover [%]
+!
+!  ****** aerosol fields **********
+!
+dwd_codes(236) = ar_des('AER_SO4  ',WMO0_DWD , 202,   1, 84,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'aer_so4 ','','LFF  ')
+dwd_codes(237) = ar_des('AER_DUST ',WMO0_DWD , 202,   1, 86,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'aer_dust','','LFF  ')
+dwd_codes(238) = ar_des('AER_ORG  ',WMO0_DWD , 202,   1, 91,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'aer_org ','','LFF  ')
+dwd_codes(239) = ar_des('AER_BC   ',WMO0_DWD , 202,   1, 92,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'aer_bc  ','','LFF  ')
+dwd_codes(240) = ar_des('AER_SS   ',WMO0_DWD , 202,   1, 93,   0,   0, 1.0_wp   ,  0.0_wp,'  R', 0, 3,'aer_ss  ','','LFF  ')
+
+dwd_codes(241) = ar_des('TQR      ',WMO0_DWD , 201,   1, 37,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'tqr     ','','     ') ! integrated rain water (kg/m2)
+dwd_codes(242) = ar_des('TQS      ',WMO0_DWD , 201,   1, 38,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'tqs     ','','     ') ! integrated snow water (kg/m2)
+!
+!  ****** ECHAM ******  Z, T, U, V, Q, SP, LSM, same as ECMWF table 128
+!
+! Based on table 128, centre 98, subcentre 232, or centre 252, subcentre 0:
+!
+!  code  levels memnonic  offsett   scale   long name [unit]
+!__________________________________________________________________________________________
+!   97      1    friac      0.00    1.00    ice cover (fraction of grid box) []
+!  129      1    geosp      0.00    1.00    surface geopotential (orography) [m**2/s**2]
+!  130     47    st         0.00    1.00    temperature [K]
+!  131     47    u          0.00    1.00    U velocity [m/s]
+!  132     47    v          0.00    1.00    V velocity [m/s]
+!  133     47    q          0.00    1.00    specific humidity [kg/kg]
+!  134      1    aps        0.00    1.00    surface pressure [Pa]
+!  153     47    xl         0.00    1.00    cloud water [kg/kg]
+!  154     47    xi         0.00    1.00    cloud ice [kg/kg]
+!  169      1    tsurf      0.00    1.00    surface temperature [K]
+!  172      1    slm        0.00    1.00    sea land mask [0|1]
+!__________________________________________________________________________________________
+dwd_codes(243) = ar_des('FR_ICE   ',WMO0_MPIFM,128,   1, 97,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'fr_ice  ','','     ') ! ice cover (fraction) []
+dwd_codes(244) = ar_des('QC       ',WMO0_MPIFM,128,   1,153,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'qcl     ','','     ') ! cloud water [kg/kg]
+dwd_codes(245) = ar_des('QI       ',WMO0_MPIFM,128,   1,154,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'qci     ','','     ') ! cloud ice [kg/kg]
+dwd_codes(246) = ar_des('T_G      ',WMO0_MPIFM,128,   1,169,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 4,'tsurf   ','','     ') ! surface temperature [K]
+!
+! FLAKE
+!
+dwd_codes(247) = ar_des('FR_LAKE  ',WMO0_DWD ,  202,  1, 55,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'fr_lake ','','     ') ! Lake fraction
+dwd_codes(248) = ar_des('DEPTH_LK ',WMO0_DWD ,  201,  1, 96,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'depth_lk','','     ') ! Lake depth
+dwd_codes(249) = ar_des('T_MNW_LK ',WMO0_DWD ,  201,  1,194,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'t_mnw_lk','','     ') ! Mean water column temperature
+dwd_codes(250) = ar_des('T_WML_LK ',WMO0_DWD ,  201,  1,193,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'t_wml_lk','','     ') ! Mixed-layer temperature
+dwd_codes(251) = ar_des('H_ML_LK  ',WMO0_DWD ,  201,  1, 95,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'h_ml_lk ','','     ') ! Mixed-layer depth
+dwd_codes(252) = ar_des('T_BOT_LK ',WMO0_DWD ,  201,  1,191,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'t_bot_lk','','     ') ! Bottom temperature
+dwd_codes(253) = ar_des('C_T_LK   ',WMO0_DWD ,  201,  1, 91,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'c_t_lk  ','','     ') ! Shape factor
+!
+! DUST VARIABLES
+!
+! (since there is no existing GRIB1 equivalent, we use dummy table 255)
+!
+dwd_codes(254) = ar_des('DUSTA    ',WMO0_DWD ,  255,110,  1,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'dusta   ','','QFF  ') ! Dust A
+dwd_codes(255) = ar_des('DUSTB    ',WMO0_DWD ,  255,110,  2,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'dustb   ','','QFF  ') ! Dust B
+dwd_codes(256) = ar_des('DUSTC    ',WMO0_DWD ,  255,110,  3,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'dustc   ','','QFF  ') ! Dust C
+!
+! CHEMICAL COMPOSITION OF AIR
+!
+dwd_codes(257) = ar_des('O3       ',WMO0_DWD ,  128,100,203,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'o3      ','','     ') ! Ozone
+dwd_codes(258) = ar_des('GO3      ',WMO0_DWD ,  210,100,203,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'o3      ','','     ') ! Ozone
+dwd_codes(259) = ar_des('CO2      ',WMO0_DWD ,  210,100, 61,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'co2     ','','     ') ! Carbon dioxide
+!
+! allsky variables, use GRIB1 dummy, and for variables except RCLD, GRIB2 dummies too.
+!
+dwd_codes(260) = ar_des('RCLD     ',WMO0_DWD ,  255,110,  5,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'rcld    ','','     ') ! stddev sat. deficit
+dwd_codes(261) = ar_des('CLC_RAD  ',WMO0_DWD ,  255,110,215,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 0, 5,'clc_rad ','','     ') ! cloud cover (mod.)
+!                        name,      tabtyp,  levtyp,ee, levtop,levbot,factor,bias,dattyp, ntri, rang,  iname,   units,ipc
+
+dwd_codes(262) = ar_des('RECLOUD  ',WMO0_DWD ,  255,110,129,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'reff_qc ','','QFT  ') ! effective radius: cloud water
+dwd_codes(263) = ar_des('RERAIN   ',WMO0_DWD ,  255,110,130,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'reff_qr ','','QFT  ') ! effective radius: rain
+dwd_codes(264) = ar_des('REICE    ',WMO0_DWD ,  255,110,131,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'reff_qi ','','QFT  ') ! effective radius: cloud ice
+dwd_codes(265) = ar_des('RESNOW   ',WMO0_DWD ,  255,110,132,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'reff_qs ','','QFT  ') ! effective radius: snow
+dwd_codes(266) = ar_des('REGRAUPEL',WMO0_DWD ,  255,110,133,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'reff_qg ','','QFT  ') ! effective radius: graupel
+dwd_codes(267) = ar_des('REHAIL   ',WMO0_DWD ,  255,110,134,   0,   0, 1.0_wp   ,  0.0_wp,'I R', 0, 5,'reff_qh ','','QFT  ') ! effective radius: hail
+!
+! Land-tile average variables (ICON)
+!
+dwd_codes(268) = ar_des('T_2M_L     ',WMO0_DWD, 255,105, 11,   0,   2, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'t2m_land ','' ,'MFF  ') ! 2m temperature
+dwd_codes(269) = ar_des('TD_2M_L    ',WMO0_DWD, 255,105, 17,   0,   2, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'td2m_land','' ,'MFF  ') ! 2m dewpoint
+dwd_codes(270) = ar_des('RELHUM_2M_L',WMO0_DWD, 255,105, 52,   0,   2, 0.01_wp  ,  0.0_wp,'   ', 0, 3,'rh2m_land','%','MFT  ') ! 2m rel.hum. [%]
+!
+! Time-averaged versions of diagnostic variables (ICON)
+!
+dwd_codes(271) = ar_des('U_10M_AV   ',WMO0_DWD, 255,105, 33,   0,  10, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'u_10m    ','' ,'MFF  ') !
+dwd_codes(272) = ar_des('V_10M_AV   ',WMO0_DWD, 255,105, 34,   0,  10, 1.0_wp   ,  0.0_wp,'   ', 0, 3,'v_10m    ','' ,'MFF  ') !
+!
+! Radiation with orographic shading (ICON)
+!
+dwd_codes(273) = ar_des('ASWDIR_S_OS',WMO0_DWD, 255,208, 22,   0,   0, 1.0_wp   ,  0.0_wp,'   ', 4, 3,'aswdir_s ','' ,'LFF  ') ! downward direct SW radiation w/shading
