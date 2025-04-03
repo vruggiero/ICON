@@ -1,0 +1,24 @@
+# ICON
+#
+# ------------------------------------------
+# Copyright (C) 2004-2024, DWD, MPI-M, DKRZ, KIT, ETH, MeteoSwiss
+# Contact information: icon-model.org
+# See AUTHORS.TXT for a list of authors
+# See LICENSES/ for license information
+# SPDX-License-Identifier: BSD-3-Clause
+# ------------------------------------------
+
+tests:
+  - name: dwd_run_ICON_09_R2B4N5_EPS 
+    machines:
+      - name: horeka
+        include_only: ['horeka_cpu_nvhpc','horeka_gpu_nvhpc']
+    refgen: ['horeka_cpu_nvhpc']
+    tags: ['merge2rc','probtest']
+    checksuite_modes:
+      - horeka: 't'
+    ensemble_num:
+      - horeka_cpu_nvhpc: [50,22,38,16,41,21,13,25,23,20,5,39,18,35,8]
+    tolerance_factor:
+      - horeka: 15
+  
